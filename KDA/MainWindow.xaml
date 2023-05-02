@@ -1,0 +1,439 @@
+﻿<mah:MetroWindow x:Class="KDA.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:ctrls="clr-namespace:KDA.Controls"
+                 mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+                 Title="MainWindow" Height="400" Width="1300" ResizeMode="NoResize"
+                 Background="Transparent" UseNoneWindowStyle="True"  AllowsTransparency="True" BorderThickness="0" >
+    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" MouseLeftButtonDown="Border_MouseLeftButtonDown" CornerRadius="10" >
+        <Grid >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Button Command="{Binding MinimizeWindowCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
+                            <Setter Property="Height" Value="36"/>
+                            <Setter Property="Width" Value="40"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="ToolTip" Value="最小化"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}">
+                                            <Path StrokeThickness="1" 
+                                                Stroke="{TemplateBinding Foreground}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                                <Path.Data>
+                                                    <LineGeometry EndPoint="10,0"/>
+                                                </Path.Data>
+                                            </Path>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="50"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Command="{Binding CloseApplicationCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
+                            <Setter Property="Height" Value="36"/>
+                            <Setter Property="Width" Value="40"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="ToolTip" Value="关闭"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="0 10 0 0">
+                                            <Path StrokeThickness="1" 
+                                                Stroke="{TemplateBinding Foreground}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                                <Path.Data>
+                                                    <GeometryGroup>
+                                                        <LineGeometry StartPoint="0,0" EndPoint="10,10"/>
+                                                        <LineGeometry StartPoint="0,10" EndPoint="10,0"/>
+                                                    </GeometryGroup>
+                                                </Path.Data>
+                                            </Path>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="50"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="330" Width="1250">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,10">
+                        <ctrls:KeyControl KeyCode="Esc" IsKeyPressed="{Binding KeyEscape.IsPressed}" />
+                        <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
+                            <ctrls:KeyControl KeyCode="F1" IsKeyPressed="{Binding KeyF1.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F2" IsKeyPressed="{Binding KeyF2.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F3" IsKeyPressed="{Binding KeyF3.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F4" IsKeyPressed="{Binding KeyF4.IsPressed}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="30,0,0,0">
+                            <ctrls:KeyControl KeyCode="F5" IsKeyPressed="{Binding KeyF5.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F6" IsKeyPressed="{Binding KeyF6.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F7" IsKeyPressed="{Binding KeyF7.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F8" IsKeyPressed="{Binding KeyF8.IsPressed}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
+                            <ctrls:KeyControl KeyCode="F9" IsKeyPressed="{Binding KeyF9.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F10" IsKeyPressed="{Binding KeyF10.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F11" IsKeyPressed="{Binding KeyF11.IsPressed}" />
+                            <ctrls:KeyControl KeyCode="F12" IsKeyPressed="{Binding KeyF12.IsPressed}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyPrintScreen.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="Print" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Sc" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyScroll.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel>
+                                        <TextBlock Text="Scroll" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Lock" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyPause.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel>
+                                        <TextBlock Text="Pause" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="[Break]" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <ctrls:KeyControl KeyCode="`" IsKeyPressed="{Binding KeyOem3.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="1" IsKeyPressed="{Binding KeyD1.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="2" IsKeyPressed="{Binding KeyD2.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="3" IsKeyPressed="{Binding KeyD3.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="4" IsKeyPressed="{Binding KeyD4.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="5" IsKeyPressed="{Binding KeyD5.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="6" IsKeyPressed="{Binding KeyD6.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="7" IsKeyPressed="{Binding KeyD7.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="8" IsKeyPressed="{Binding KeyD8.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="9" IsKeyPressed="{Binding KeyD9.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="0" IsKeyPressed="{Binding KeyD0.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="-" IsKeyPressed="{Binding KeyOemMinus.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="=" IsKeyPressed="{Binding KeyOemPlus.IsPressed}"/>
+                        <ctrls:KeyControl Width="80" IsKeyPressed="{Binding KeyBack.IsPressed}" IsPressedZoomIn="False">
+                            <ctrls:KeyControl.KeyCode>
+                                <StackPanel >
+                                    <TextBlock Text="Backspace" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="←" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </ctrls:KeyControl.KeyCode>
+                        </ctrls:KeyControl>
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyInsert.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="插入" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Insert" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyHome.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel>
+                                        <TextBlock Text="起始" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Home" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyPageUp.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel>
+                                        <TextBlock Text="上页" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Pg Up" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumLock.IsPressed}">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="Num" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Lock" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyDivide.IsPressed}">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel>
+                                        <TextBlock Text="/" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyMultiply.IsPressed}">
+                                <ctrls:KeyControl.KeyCode>
+                                    <TextBlock Text="*" HorizontalAlignment="Center"/>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <ctrls:KeyControl KeyCode="Tab" IsKeyPressed="{Binding KeyTab.IsPressed}" Width="80"/>
+                        <ctrls:KeyControl KeyCode="Q" IsKeyPressed="{Binding KeyQ.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="W" IsKeyPressed="{Binding KeyW.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="E" IsKeyPressed="{Binding KeyE.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="R" IsKeyPressed="{Binding KeyR.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="T" IsKeyPressed="{Binding KeyT.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Y" IsKeyPressed="{Binding KeyY.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="U" IsKeyPressed="{Binding KeyU.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="I" IsKeyPressed="{Binding KeyI.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="O" IsKeyPressed="{Binding KeyO.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="P" IsKeyPressed="{Binding KeyP.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="[" IsKeyPressed="{Binding KeyOem4.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="]" IsKeyPressed="{Binding KeyOem6.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="\" IsKeyPressed="{Binding KeyOem5.IsPressed}"/>
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyDelete.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="删除" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Delete" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyEnd.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel>
+                                        <TextBlock Text="结束" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="End" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyPageDown.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel>
+                                        <TextBlock Text="上页" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Pg Dn" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad7.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="7" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Home" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad8.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="8" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="↑" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad9.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="9" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Pg Up" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <ctrls:KeyControl KeyCode="CapsLock" IsKeyPressed="{Binding KeyCapsLock.IsPressed}" Width="92"/>
+                        <ctrls:KeyControl KeyCode="A" IsKeyPressed="{Binding KeyA.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="S" IsKeyPressed="{Binding KeyS.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="D" IsKeyPressed="{Binding KeyD.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="F" IsKeyPressed="{Binding KeyF.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="G" IsKeyPressed="{Binding KeyG.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="H" IsKeyPressed="{Binding KeyH.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="J" IsKeyPressed="{Binding KeyJ.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="K" IsKeyPressed="{Binding KeyK.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="L" IsKeyPressed="{Binding KeyL.IsPressed}" />
+                        <ctrls:KeyControl KeyCode=";" IsKeyPressed="{Binding KeyOemSemicolon.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="'" IsKeyPressed="{Binding KeyOemQuotes.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="Enter" IsKeyPressed="{Binding KeyEnter.IsPressed}"  Width="94" />
+                        <StackPanel Orientation="Horizontal" Margin="208,0,0,0">
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad4.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="4" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="←" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad5.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="5" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="---" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad6.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="6" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="→" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <ctrls:KeyControl KeyCode="Shift" Width="121" IsKeyPressed="{Binding KeyLeftShift.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Z" IsKeyPressed="{Binding KeyZ.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="X" IsKeyPressed="{Binding KeyX.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="C" IsKeyPressed="{Binding KeyC.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="V" IsKeyPressed="{Binding KeyV.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="B" IsKeyPressed="{Binding KeyB.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="N" IsKeyPressed="{Binding KeyN.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="M" IsKeyPressed="{Binding KeyM.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="," IsKeyPressed="{Binding KeyOemComma.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="." IsKeyPressed="{Binding KeyOemPeriod.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="/" IsKeyPressed="{Binding KeyOemQuestion.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Shift" Width="121" IsKeyPressed="{Binding KeyRightShift.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="↑"  Margin="80,0,0,0" IsKeyPressed="{Binding KeyModelUp.IsPressed}"/>
+                        <StackPanel Orientation="Horizontal" Margin="78,0,0,0">
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad1.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="1" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="End" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad2.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="2" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="↓" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+
+                            <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad3.IsPressed}" IsPressedZoomIn="False">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="3" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Pg Dn" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <ctrls:KeyControl KeyCode="Ctrl" Width="80" IsKeyPressed="{Binding KeyLeftCtrl.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Fn" />
+                        <ctrls:KeyControl KeyCode="Win" IsKeyPressed="{Binding KeyLWin.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Alt" IsKeyPressed="{Binding KeyLeftAlt.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Space" Width="356" IsKeyPressed="{Binding KeySpace.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Alt" IsKeyPressed="{Binding KeyRightAlt.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Apps" IsKeyPressed="{Binding KeyApps.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="Ctrl" Width="80" IsKeyPressed="{Binding KeyRightCtrl.IsPressed}"/>
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0" >
+                            <ctrls:KeyControl KeyCode="←" IsKeyPressed="{Binding KeyModelLeft.IsPressed}"/>
+                            <ctrls:KeyControl KeyCode="↓" IsKeyPressed="{Binding KeyModelDown.IsPressed}"/>
+                            <ctrls:KeyControl KeyCode="→" IsKeyPressed="{Binding KeyModelRight.IsPressed}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                            <ctrls:KeyControl Width="106" IsPressedZoomIn="False" IsKeyPressed="{Binding KeyNumPad0.IsPressed}">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="0" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Insert" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+
+
+                            <ctrls:KeyControl IsPressedZoomIn="False" IsKeyPressed="{Binding KeyDecimal.IsPressed}">
+                                <ctrls:KeyControl.KeyCode>
+                                    <StackPanel >
+                                        <TextBlock Text="." HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Delete" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </ctrls:KeyControl.KeyCode>
+                            </ctrls:KeyControl>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel  VerticalAlignment="Bottom" Margin="0 0 0 4">
+                    <ctrls:KeyControl IsKeyPressed="{Binding KeySubtract.IsPressed}" >
+                        <ctrls:KeyControl.KeyCode>
+                            <StackPanel >
+                                <TextBlock Text="-" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </ctrls:KeyControl.KeyCode>
+                    </ctrls:KeyControl>
+                    <ctrls:KeyControl Height="96" IsKeyPressed="{Binding KeyAdd.IsPressed}" KeyCode="+"/>
+
+
+                    <ctrls:KeyControl IsKeyPressed="{Binding KeyReturn.IsPressed}" Height="96" IsPressedZoomIn="False">
+                        <ctrls:KeyControl.KeyCode>
+                            <StackPanel >
+                                <TextBlock Text="回车" HorizontalAlignment="Center"/>
+                                <TextBlock Text="Enter" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </ctrls:KeyControl.KeyCode>
+                    </ctrls:KeyControl>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</mah:MetroWindow>

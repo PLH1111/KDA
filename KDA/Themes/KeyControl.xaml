@@ -1,0 +1,57 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ctrl="clr-namespace:KDA.Controls" >
+
+
+    <Style TargetType="ctrl:KeyControl">
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Background" Value="{StaticResource MahApps.Brushes.Accent4}"/>
+        <Setter Property="KeyPressedBrush" Value="Cyan"/>
+        <Setter Property="MouseOverBrush" Value="{StaticResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="MousePressedBrush" Value="Cyan"/>
+        <Setter Property="BorderBrush" Value="{StaticResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.ThemeForeground}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="IsPressedZoomIn" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ctrl:KeyControl">
+                    <Border x:Name="PART_Border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding KeyCode}" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Center"
+                                   Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyPressed" Value="True">
+                            <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=KeyPressedBrush}"/>
+                            <Setter  Property="FontWeight" Value="Bold"/>
+                            <Setter  Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MouseOverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MousePressedBrush}"/>
+                            <Setter  Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsKeyPressed" Value="true"/>
+                                <Condition Property="IsPressedZoomIn" Value="true"/>
+                            </MultiTrigger.Conditions>
+                            <Setter  Property="FontSize" Value="21"/>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
