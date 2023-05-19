@@ -1,4 +1,4 @@
-﻿global using PropertyChanged;
+﻿
 using KDA.Hooks;
 using KDA.Models;
 using MahApps.Metro.Controls;
@@ -249,7 +249,9 @@ public partial class MainWindow : MetroWindow
 
     public DelegateCommand MinimizeWindowCommand { get; private set; }
 
+    public DelegateCommand ShowSettingViewCommand { get; private set; }
 
+    
     #endregion
 
     #region 初始化
@@ -395,6 +397,7 @@ public partial class MainWindow : MetroWindow
     {
         CloseApplicationCommand = new DelegateCommand(CloseApplication);
         MinimizeWindowCommand = new DelegateCommand(MinimizeWindow);
+        ShowSettingViewCommand = new DelegateCommand(ShowSettingView);
     }
 
 
@@ -462,6 +465,14 @@ public partial class MainWindow : MetroWindow
 
     #region 方法
 
+    private void ShowSettingView()
+    {
+       new SettingView().ShowDialog();
+    }
+
+
+
+
     private void CloseApplication()
     {
         Close();
@@ -474,7 +485,8 @@ public partial class MainWindow : MetroWindow
         SetCurrentValue(WindowStateProperty, WindowState.Minimized);
     }
 
-    #endregion
 
+
+    #endregion
 
 }

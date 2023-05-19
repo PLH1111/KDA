@@ -5,99 +5,53 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:ctrls="clr-namespace:KDA.Controls"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:twc="clr-namespace:TianWeiToolsPro.Controls;assembly=TianWeiToolsPro"
                  mc:Ignorable="d" WindowStartupLocation="CenterScreen"
                  Title="MainWindow" Height="400" Width="1300" ResizeMode="NoResize"
-                 Background="Transparent" UseNoneWindowStyle="True"  AllowsTransparency="True" BorderThickness="0" >
-    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" MouseLeftButtonDown="Border_MouseLeftButtonDown" CornerRadius="10" >
+                 Background="Transparent" UseNoneWindowStyle="True" 
+                 AllowsTransparency="True" BorderThickness="0"
+                 >
+    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+            MouseLeftButtonDown="Border_MouseLeftButtonDown" CornerRadius="10" >
         <Grid >
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button Command="{Binding MinimizeWindowCommand}">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
-                            <Setter Property="Height" Value="36"/>
-                            <Setter Property="Width" Value="40"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="ToolTip" Value="最小化"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}">
-                                            <Path StrokeThickness="1" 
-                                                Stroke="{TemplateBinding Foreground}"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center">
-                                                <Path.Data>
-                                                    <LineGeometry EndPoint="10,0"/>
-                                                </Path.Data>
-                                            </Path>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsEnabled" Value="False">
-                                                <Setter Property="Opacity" Value="50"/>
-                                            </Trigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Command="{Binding CloseApplicationCommand}">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
-                            <Setter Property="Height" Value="36"/>
-                            <Setter Property="Width" Value="40"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="ToolTip" Value="关闭"/>
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="0 10 0 0">
-                                            <Path StrokeThickness="1" 
-                                                Stroke="{TemplateBinding Foreground}"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center">
-                                                <Path.Data>
-                                                    <GeometryGroup>
-                                                        <LineGeometry StartPoint="0,0" EndPoint="10,10"/>
-                                                        <LineGeometry StartPoint="0,10" EndPoint="10,0"/>
-                                                    </GeometryGroup>
-                                                </Path.Data>
-                                            </Path>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsEnabled" Value="False">
-                                                <Setter Property="Opacity" Value="50"/>
-                                            </Trigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-
-                </Button>
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type twc:FilletButton}" BasedOn="{StaticResource FilletButtonBase}">
+                        <Setter Property="Height" Value="36"/>
+                        <Setter Property="Width" Value="40"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="CornerRadius" Value="0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
+                    </Style>
+                </StackPanel.Resources>
+                <twc:FilletButton x:Name="SettingButton" 
+                        Command="{Binding ShowSettingViewCommand}" 
+                        ToolTip="设置">
+                    <iconPacks:Modern Kind="Settings" />
+                </twc:FilletButton>
+                <twc:FilletButton x:Name="MinimizeButton" 
+                        Command="{Binding MinimizeWindowCommand}" 
+                        ToolTip="最小化">
+                    <Path StrokeThickness="1"  Stroke="{Binding ElementName=MinimizeButton,Path=Foreground}">
+                        <Path.Data>
+                            <LineGeometry EndPoint="10,0"/>
+                        </Path.Data>
+                    </Path>
+                </twc:FilletButton>
+                <twc:FilletButton x:Name="CloseApplicationButton" 
+                        Command="{Binding CloseApplicationCommand}"
+                        ToolTip="关闭" CornerRadius="0 10 0 0">
+                    <Path StrokeThickness="1" Stroke="{Binding ElementName=CloseApplicationButton,Path=Foreground}">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <LineGeometry StartPoint="0,0" EndPoint="10,10"/>
+                                <LineGeometry StartPoint="0,10" EndPoint="10,0"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </twc:FilletButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="330" Width="1250">
                 <StackPanel>
