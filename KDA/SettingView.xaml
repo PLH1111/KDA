@@ -5,7 +5,8 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:twc="clr-namespace:TianWeiToolsPro.Controls;assembly=TianWeiToolsPro"
-                 mc:Ignorable="d"  Title="设置" Height="600" Width="960"
+                 xmlns:models="clr-namespace:KDA.Models"
+                 mc:Ignorable="d"  Title="设置" Height="720" Width="1280"
                  TitleCharacterCasing="Normal" WindowStartupLocation="CenterScreen">
     <mah:MetroWindow.Resources>
         <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
@@ -16,6 +17,13 @@
         <Style TargetType="ComboBox" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderBrush" Value="{StaticResource MahApps.Brushes.Accent}"/>
+        </Style>
+        <Style x:Key="WriteButtonBase" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Background" Value="Green"/>
+            <Setter Property="Content" Value="Write"/>
+        </Style>
+        <Style x:Key="ReadButtonBase" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Content" Value="Read"/>
         </Style>
     </mah:MetroWindow.Resources>
     <Grid>
@@ -49,7 +57,7 @@
         </StackPanel>
         <TabControl Grid.Row="1" TabStripPlacement="Left"  BorderThickness="1 1 0 0" 
                     BorderBrush="{StaticResource MahApps.Brushes.Accent}" Margin="-2 0 0 0">
-            <TabItem Header="Comunication"  Margin="0,-2,0,2" Padding="10,6" >
+            <TabItem Header="Comunication"  Margin="0,-2,0,2"  >
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -73,7 +81,7 @@
                             </StackPanel>
                         </Grid>
                     </twc:GroupPanel>
-                    
+
                     <twc:GroupPanel Grid.Column="1" 
                                     Header="Write Data" 
                                     Padding="0"
@@ -96,64 +104,65 @@
                             </StackPanel>
                         </Grid>
                     </twc:GroupPanel>
-                  
+
                 </Grid>
             </TabItem>
-            <TabItem Header="Commands" Margin="0,-2,0,2" Padding="10,6">
-                <Grid Margin="10" >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <twc:FilletHeaderControl Header="Command" Height="36">
-                            <ComboBox ItemsSource="{Binding CommandList}"
-                                    SelectedItem="{Binding SelectedCommand}"
-                                    Width="120"/>
-                        </twc:FilletHeaderControl>
-                        <Button Content="Get" Command="{Binding GetModelValueCommand}" Margin="20,0"/>
-                        <Button Content="Set" Command="{Binding SetModelValueCommand}"/>
-                    </StackPanel>
-                    <TabControl Grid.Row="1" Margin="0 10 0 0" Padding="0" SelectedIndex="{Binding TCSelectedIndex}">
-                        <TabControl.Resources>
-                            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource MahApps.Styles.TabItem}">
-                                <Setter Property="MinHeight" Value="0"/>
-                                <Setter Property="MinWidth" Value="0"/>
-                                <Setter Property="Width" Value="0"/>
-                                <Setter Property="Height" Value="0"/>
-                                <Setter Property="BorderThickness" Value="0"/>
+            <TabItem Header="Commands" Margin="0,-2,0,2" >
+                <ScrollViewer >
+                    <StackPanel >
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type twc:GroupPanel}" BasedOn="{StaticResource GroupPanelBase}">
+                                <Setter Property="Padding" Value="10"/>
+                                <Setter Property="Margin" Value="10"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
                             </Style>
                             <Style TargetType="{x:Type twc:FilletHeaderControl}" BasedOn="{StaticResource FilletHeaderControlBase}">
                                 <Setter Property="Margin" Value="0 10 20 10"/>
-                                <Setter Property="Height" Value="36"/>
+                                <Setter Property="Height" Value="32"/>
                             </Style>
-                        </TabControl.Resources>
-                        <TabItem x:Name="ModelName_Index0" Header="Model Name">
-                            <twc:FilletHeaderControl Header="Model Name" 
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Top"
-                                    Width="300"  >
-                                <TextBox  Text="{Binding KeyModelName}" IsReadOnly="True"/>
-                            </twc:FilletHeaderControl>
-                        </TabItem>
-                        <TabItem x:Name="SleepTime_Index1" Header="SleepTime">
-                            <WrapPanel>
-                                <twc:FilletHeaderControl Header="Sleep Time" 
+                            <Style x:Key="CommandWriteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource WriteButtonBase}">
+                                <Setter Property="Command" Value="{Binding CommandWriteCommand}"/>
+                            </Style>
+                            <Style x:Key="CommandReadButton" TargetType="{x:Type Button}" BasedOn="{StaticResource ReadButtonBase}">
+                                <Setter Property="Command" Value="{Binding CommandReadCommand}"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <StackPanel x:Name="Model_Sleep" Orientation="Horizontal">
+                            <twc:GroupPanel Header="Model">
+                                <StackPanel Orientation="Horizontal">
+                                    <twc:FilletHeaderControl Header="Model Name" Width="300" 
+                                                             HorizontalAlignment="Left"
+                                                             VerticalAlignment="Top">
+                                        <TextBox  Text="{Binding KeyModelName}" IsReadOnly="True"/>
+                                    </twc:FilletHeaderControl>
+                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="Model"/>
+                                </StackPanel>
+                            </twc:GroupPanel>
+
+                            <twc:GroupPanel Header="Sleep">
+                                <StackPanel Orientation="Horizontal">
+                                    <twc:FilletHeaderControl Header="Sleep Time" 
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
                                         Width="200"  >
-                                    <ComboBox ItemsSource="{Binding SleepTimeList}"  SelectedValue="{Binding SleepModel.SleepTime}"/>
-                                </twc:FilletHeaderControl>
-                                <twc:FilletHeaderControl Header="Lighting Mode" 
+                                        <ComboBox ItemsSource="{Binding SleepTimeList}"  SelectedValue="{Binding SleepModel.SleepTime}"/>
+                                    </twc:FilletHeaderControl>
+                                    <twc:FilletHeaderControl Header="Lighting Mode" 
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
                                         Width="200" >
-                                    <ComboBox ItemsSource="{Binding LightingModeList}"  SelectedValue="{Binding SleepModel.SleepMode}"/>
-                                </twc:FilletHeaderControl>
-                            </WrapPanel>
-                        </TabItem>
-                        <TabItem x:Name="KeyMacro_Index2" Header="Key Macro">
-                            <WrapPanel>
+                                        <ComboBox ItemsSource="{Binding LightingModeList}"  SelectedValue="{Binding SleepModel.SleepMode}"/>
+                                    </twc:FilletHeaderControl>
+                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="Sleep"/>
+                                    <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Sleep"/>
+                                </StackPanel>
+                            </twc:GroupPanel>
+
+                        </StackPanel>
+
+                        <twc:GroupPanel x:Name="KeyMacro" Header="KeyMacro">
+                            <StackPanel Orientation="Horizontal">
                                 <twc:FilletHeaderControl Header="Key Index(Hex)" 
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
@@ -172,10 +181,13 @@
                                         Width="200" >
                                     <TextBox Text="{Binding KeyMacroModel.KeyCodeHex}" />
                                 </twc:FilletHeaderControl>
-                            </WrapPanel>
-                        </TabItem>
-                        <TabItem x:Name="KeyColor_Index3">
-                            <WrapPanel>
+                                <Button Style="{StaticResource CommandReadButton}" CommandParameter="KeyMacro"/>
+                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="KeyMacro"/>
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Key_RBG" Header="Key_RBG">
+                            <WrapPanel Orientation="Horizontal">
                                 <twc:FilletHeaderControl Header="Key Index(Hex)" 
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
@@ -206,9 +218,12 @@
                                         Width="180" >
                                     <TextBox Text="{Binding KeyColorModel.ColorAHex}" />
                                 </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource CommandReadButton}" CommandParameter="Key_RBG"/>
+                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Key_RBG"/>
                             </WrapPanel>
-                        </TabItem>
-                        <TabItem x:Name="KeyAnimation_Index4">
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Animation" Header="Animation">
                             <WrapPanel>
                                 <twc:FilletHeaderControl Header="Animation ID" 
                                         HorizontalAlignment="Left"
@@ -258,34 +273,190 @@
                                         Width="180" >
                                     <ComboBox ItemsSource="{Binding DirectionList}" SelectedValue="{Binding AnimationModel.Direction}" />
                                 </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource CommandReadButton}" CommandParameter="Animation"/>
+                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Animation"/>
                             </WrapPanel>
-                        </TabItem>
-                        <TabItem x:Name="Profile_Index5">
-                            <WrapPanel>
-                                <twc:FilletHeaderControl Header="Profile No" 
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Top"
-                                        Width="200">
-                                    <TextBox  Text="{Binding ProfileModel.NumberHex}"/>
-                                </twc:FilletHeaderControl>
-                            </WrapPanel>
-                        </TabItem>
-                        <TabItem x:Name="KeyColorMap_Index6">
-                            <StackPanel Orientation="Horizontal" >
-                                <twc:FilletHeaderControl Header="Map Index" 
+                        </twc:GroupPanel>
+                        <StackPanel x:Name="Profile_Language"  Orientation="Horizontal">
+                            <twc:GroupPanel Header="Profile">
+                                <StackPanel Orientation="Horizontal">
+                                    <twc:FilletHeaderControl Header="Profile No(Hex)" 
+                                                             HorizontalAlignment="Left"
+                                                             VerticalAlignment="Top"
+                                                             Width="160">
+                                        <TextBox  Text="{Binding ProfileModel.NumberHex}"/>
+                                    </twc:FilletHeaderControl>
+                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="Profile"/>
+                                    <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Profile"/>
+                                </StackPanel>
+                            </twc:GroupPanel>
+
+                            <twc:GroupPanel Header="Language">
+                                <StackPanel Orientation="Horizontal">
+                                    <twc:FilletHeaderControl Header="Language" 
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
                                         Width="150" >
-                                    <ComboBox ItemsSource="{Binding MapList}"  SelectedValue="{Binding SelectedMap}"/>
-                                </twc:FilletHeaderControl>
-                                <DataGrid ItemsSource="{Binding SelectedMap.ColorModelList}"
+                                        <ComboBox ItemsSource="{Binding LanguageList}"  SelectedValue="{Binding SelectedLanguage}"/>
+                                    </twc:FilletHeaderControl>
+                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="Language"/>
+                                    <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Language"/>
+                                </StackPanel>
+                            </twc:GroupPanel>
+
+                        </StackPanel>
+
+                        <twc:GroupPanel x:Name="RBG_Map" Header="RBG_Map">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" >
+                                    <twc:FilletHeaderControl Header="Map No" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="150" >
+                                        <ComboBox ItemsSource="{Binding KeyColorMaps}"  SelectedValue="{Binding SelectedKeyColorMap}"/>
+                                    </twc:FilletHeaderControl>
+                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="RBG_Map"/>
+                                    <Button Style="{StaticResource CommandWriteButton}" CommandParameter="RBG_Map"/>
+                                    <DataGrid ItemsSource="{Binding SelectedKeyColorMap.MapDatas}"
                                         BorderBrush="{StaticResource MahApps.Brushes.Accent}"
                                         BorderThickness="1" Margin="10"
                                         AutoGenerateColumns="False" 
                                         CanUserAddRows="False"
                                         CanUserDeleteRows="False" 
-                                        VerticalScrollBarVisibility="Auto"
-                                        HorizontalScrollBarVisibility="Auto">
+                                        VerticalScrollBarVisibility="Disabled">
+                                        <DataGrid.ColumnHeaderStyle >
+                                            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}">
+                                                <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource MahApps.Brushes.Accent}" />
+                                                <Setter Property="BorderThickness" Value="1" />
+                                            </Style>
+                                        </DataGrid.ColumnHeaderStyle>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Data No." Binding="{Binding NumberStr}" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="R Color(Hex)" Binding="{Binding ColorRHex}" />
+                                            <DataGridTextColumn Header="B Color(Hex)" Binding="{Binding ColorBHex}"/>
+                                            <DataGridTextColumn Header="G Color(Hex)" Binding="{Binding ColorGHex}"/>
+                                            <DataGridTextColumn Header="Brightness(Hex)" Binding="{Binding ColorAHex}"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                                
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Macro_Data" Header="Macro_Data">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" >
+                                    <twc:FilletHeaderControl Header="Map No" Width="150" 
+                                                             HorizontalAlignment="Left"
+                                                             VerticalAlignment="Top">
+                                        <ComboBox ItemsSource="{Binding MarcoMaps}"  SelectedValue="{Binding SelectedMarcoMap}"/>
+                                    </twc:FilletHeaderControl>
+                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="Macro_Data"/>
+                                    <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Macro_Data"/>
+                                    <DataGrid ItemsSource="{Binding SelectedMarcoMap.MapDatas}"
+                                              BorderBrush="{StaticResource MahApps.Brushes.Accent}"
+                                              BorderThickness="1" Margin="10"
+                                              AutoGenerateColumns="False" 
+                                              CanUserAddRows="False"
+                                              CanUserDeleteRows="False" 
+                                              mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="False">
+                                        <DataGrid.ColumnHeaderStyle >
+                                            <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}">
+                                                <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource MahApps.Brushes.Accent}" />
+                                                <Setter Property="BorderThickness" Value="1" />
+                                            </Style>
+                                        </DataGrid.ColumnHeaderStyle>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Data No." Binding="{Binding NumberStr}" IsReadOnly="True"/>
+                                            <DataGridTextColumn Header="Code(Hex)" Binding="{Binding CodeHex}" />
+                                            <DataGridTemplateColumn Header="Mode" >
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ComboBox ItemsSource="{Binding MarcoModes}" SelectedValue="{Binding Mode,UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <DataGridTextColumn Header="Times" Binding="{Binding Times}"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                               
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Profile_Data" Header="Profile_Data">
+                            <WrapPanel>
+                                <twc:FilletHeaderControl Header="Map No" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="150" >
+                                    <ComboBox ItemsSource="{Binding ProfileMaps}"  SelectedValue="{Binding SelectedProfileMap}"/>
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Index(Hex)" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="120" >
+                                    <TextBox Text="{Binding SelectedProfileMap.IndexRHex}"/>
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Animation ID" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="200">
+                                    <ComboBox ItemsSource="{Binding AnimationIdList}"  SelectedValue="{Binding SelectedProfileMap.AnimationId}"/>
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="R(Hex)" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="120" >
+                                    <TextBox Text="{Binding SelectedProfileMap.ColorRHex}"/>
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="G(Hex)" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="120" >
+                                    <TextBox  Text="{Binding SelectedProfileMap.ColorGHex}"/>
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="B(Hex)" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="120" >
+                                    <TextBox  Text="{Binding SelectedProfileMap.ColorBHex}"/>
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Brightness(Hex)" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="180" >
+                                    <TextBox Text="{Binding SelectedProfileMap.ColorAHex}" />
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Speed(Hex)" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="180" >
+                                    <TextBox Text="{Binding SelectedProfileMap.SpeedHex}" />
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Display(Hex)" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="200" >
+                                    <ComboBox ItemsSource="{Binding DisplayList}" SelectedValue="{Binding SelectedProfileMap.Display}" />
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Direction" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="180" >
+                                    <ComboBox ItemsSource="{Binding DirectionList}" SelectedValue="{Binding SelectedProfileMap.Direction}" />
+                                </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource CommandReadButton}" CommandParameter="Animation"/>
+                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Animation"/>
+                                <DataGrid ItemsSource="{Binding SelectedProfileMap.MapDatas}"
+                                        BorderBrush="{StaticResource MahApps.Brushes.Accent}"
+                                        BorderThickness="1" Margin="0 10 20 10"
+                                        AutoGenerateColumns="False" 
+                                        CanUserAddRows="False"
+                                        CanUserDeleteRows="False" 
+                                        VerticalScrollBarVisibility="Disabled">
                                     <DataGrid.ColumnHeaderStyle >
                                         <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}">
                                             <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal" />
@@ -294,30 +465,234 @@
                                         </Style>
                                     </DataGrid.ColumnHeaderStyle>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Key Map Data No" Binding="{Binding NumberStr}" IsReadOnly="True"/>
-                                        <DataGridTextColumn Header="R Color(Hex)" Binding="{Binding ColorRHex}" TextBlock.TextAlignment="Center"/>
+                                        <DataGridTextColumn Header="Data No." Binding="{Binding NumberStr}" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="KeyIndex(Hex)" Binding="{Binding KeyIndexRHex}" />
+                                        <DataGridTemplateColumn Header="Mode" >
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding MarcoModes}" SelectedValue="{Binding Mode,UpdateSourceTrigger=PropertyChanged}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTextColumn Header="Code(Hex)" Binding="{Binding CodeHex}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                
+                            </WrapPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="BootUp" Header="BootUp">
+                            <StackPanel Orientation="Horizontal">
+                                <twc:FilletHeaderControl Header="Map No" 
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Width="150" >
+                                    <ComboBox ItemsSource="{Binding BootUpMaps}"  SelectedValue="{Binding SelectedBootUpMap}"/>
+                                </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource CommandReadButton}" CommandParameter="BootUp"/>
+                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="BootUp"/>
+                                <DataGrid ItemsSource="{Binding SelectedBootUpMap.MapDatas}"
+                                        BorderBrush="{StaticResource MahApps.Brushes.Accent}"
+                                        BorderThickness="1" Margin="0 10 20 10"
+                                        AutoGenerateColumns="False" 
+                                        CanUserAddRows="False"
+                                        CanUserDeleteRows="False" 
+                                        VerticalScrollBarVisibility="Disabled">
+                                    <DataGrid.ColumnHeaderStyle >
+                                        <Style TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}">
+                                            <Setter Property="mah:ControlsHelper.ContentCharacterCasing" Value="Normal" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource MahApps.Brushes.Accent}" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                        </Style>
+                                    </DataGrid.ColumnHeaderStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Data No." Binding="{Binding NumberStr}" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="KeyIndex(Hex)" Binding="{Binding KeyIndexHex}" />
+                                        <DataGridTextColumn Header="R Color(Hex)" Binding="{Binding ColorRHex}" />
                                         <DataGridTextColumn Header="B Color(Hex)" Binding="{Binding ColorBHex}"/>
                                         <DataGridTextColumn Header="G Color(Hex)" Binding="{Binding ColorGHex}"/>
                                         <DataGridTextColumn Header="Brightness(Hex)" Binding="{Binding ColorAHex}"/>
+                                        <DataGridTextColumn Header="Times" Binding="{Binding Times}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
+                              
                             </StackPanel>
-                        </TabItem>
-                        <TabItem x:Name="Language_Index7">
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <twc:FilletHeaderControl Header="Language" 
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Top"
-                                        Width="150" Margin="0,10,0,0">
-                                    <ComboBox ItemsSource="{Binding LanguageList}"  SelectedValue="{Binding SelectedLanguage}"/>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Flash_Data" Header="Flash_Data">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <twc:FilletHeaderControl Header="Adderss(Hex)" Width="180" >
+                                            <TextBox Text="{Binding CmdFlashModel.AdderssHex}" />
+                                        </twc:FilletHeaderControl>
+                                        <twc:FilletHeaderControl Header="Size(Hex)" Width="180" >
+                                            <TextBox Text="{Binding CmdFlashModel.CountHex}" />
+                                        </twc:FilletHeaderControl>
+
+                                        <Button Style="{StaticResource CommandReadButton}" CommandParameter="Flash_Data"/>
+                                        <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Flash_Data"/>
+                                    </StackPanel>
+                                    <twc:FilletHeaderControl Header="Data(Hex)" Height="80"
+                                                         Margin="0 10 15 0">
+                                        <TextBox Text="{Binding CmdFlashModel.DataHex}" 
+                                             TextWrapping="Wrap" 
+                                             HorizontalContentAlignment="Left"
+                                             VerticalContentAlignment="Top"/>
+                                    </twc:FilletHeaderControl>
+                                </StackPanel>
+                               
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Reset_Default" Header="Reset_Default">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Reset_Default"/>
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="BootLoader" Margin="0 -2 0 2 " >
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type twc:FilletHeaderControl}" BasedOn="{StaticResource FilletHeaderControlBase}">
+                                <Setter Property="Margin" Value="0 10 20 10"/>
+                                <Setter Property="Height" Value="32"/>
+                            </Style>
+                            <Style TargetType="twc:FilletHeaderTextbox" BasedOn="{StaticResource FilletHeaderTextboxBase}">
+                                <Setter Property="Margin" Value="0 0 20 0"/>
+                                <Setter Property="Height" Value="34"/>
+                            </Style>
+                            <Style TargetType="twc:GroupPanel" BasedOn="{StaticResource GroupPanelBase}">
+                                <Setter Property="Padding" Value="10"/>
+                                <Setter Property="Margin" Value="10"/>
+                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                            </Style>
+                            <Style x:Key="BootLoaderWriteButton" TargetType="Button" BasedOn="{StaticResource WriteButtonBase}">
+                                <Setter Property="Command" Value="{Binding BootLoaderWriteCommand}"/>
+                            </Style>
+                            <Style x:Key="BootLoaderReadButton" TargetType="Button" BasedOn="{StaticResource ReadButtonBase}">
+                                <Setter Property="Command" Value="{Binding BootLoaderReadCommand}"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <twc:GroupPanel x:Name="Config" Header="Config" >
+                            <StackPanel Orientation="Horizontal">
+                                <twc:FilletHeaderControl Header="Address(Hex)" 
+                                                         Width="180" >
+                                    <TextBox Text="{Binding ConfigModel.AdderssHex}" IsReadOnly="true" />
                                 </twc:FilletHeaderControl>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
+                                <twc:FilletHeaderControl Header="Version(Hex)" Width="180" >
+                                    <TextBox Text="{Binding ConfigModel.VersionHex}" IsReadOnly="true" />
+                                </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource BootLoaderReadButton}" CommandParameter="Config"/>
+                                <twc:FilletHeaderControl Header="Response" MinWidth="150"  Margin="15,0">
+                                    <TextBox Text="{Binding ConfigModel.ResponseCode}" IsReadOnly="true" />
+                                </twc:FilletHeaderControl>
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Range" Header="Range" >
+                            <StackPanel Orientation="Horizontal">
+                                <twc:FilletHeaderControl Header="Address(Hex)" Width="180" >
+                                    <TextBox Text="{Binding RangeModel.AdderssHex}" />
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Size(Hex)" Width="180" >
+                                    <TextBox Text="{Binding RangeModel.SizeHex}" />
+                                </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource BootLoaderReadButton}" CommandParameter="Range"/>
+                                <Button Style="{StaticResource BootLoaderWriteButton}" CommandParameter="Range"/>
+                                <twc:FilletHeaderControl Header="Response" MinWidth="150" Margin="15,0">
+                                    <TextBox Text="{Binding RangeModel.ResponseCode}" IsReadOnly="True"/>
+                                </twc:FilletHeaderControl>
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Flash" Header="Flash" >
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <twc:FilletHeaderControl Header="Adderss(Hex)" Width="180" >
+                                        <TextBox Text="{Binding FlashModel.AdderssHex}" />
+                                    </twc:FilletHeaderControl>
+                                    <twc:FilletHeaderControl Header="Size(Hex)" Width="180" >
+                                        <TextBox Text="{Binding FlashModel.CountHex}" />
+                                    </twc:FilletHeaderControl>
+                                    <Button Style="{StaticResource BootLoaderReadButton}" CommandParameter="Flash" />
+                                    <Button Style="{StaticResource BootLoaderWriteButton}" CommandParameter="Flash" />
+                                    <twc:FilletHeaderControl Header="Response" MinWidth="150" Margin="15,0">
+                                        <TextBox Text="{Binding FlashModel.ResponseCode}" IsReadOnly="True"/>
+                                    </twc:FilletHeaderControl>
+                                </StackPanel>
+                                <twc:FilletHeaderControl Header="Data(Hex)" Height="80"
+                                                         Margin="0 10 15 0">
+                                    <TextBox Text="{Binding FlashModel.DataHex}" 
+                                             TextWrapping="Wrap" 
+                                             HorizontalContentAlignment="Left"
+                                             VerticalContentAlignment="Top"/>
+                                </twc:FilletHeaderControl>
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Checksum" Header="Checksum" >
+                            <StackPanel Orientation="Horizontal">
+                                <twc:FilletHeaderControl Header="Address(Hex)" Width="180" >
+                                    <TextBox Text="{Binding CheckSumModel.AdderssHex}" />
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Size(Hex)" Width="180" >
+                                    <TextBox Text="{Binding CheckSumModel.SizeHex}" />
+                                </twc:FilletHeaderControl>
+                                <twc:FilletHeaderControl Header="Checksum(Hex)" Width="210" >
+                                    <TextBox Text="{Binding CheckSumModel.CheckSumHex}" IsReadOnly="True"/>
+                                </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource BootLoaderReadButton}" CommandParameter="CheckSum"/>
+                                <twc:FilletHeaderControl Header="Response" MinWidth="150" Margin="15,0">
+                                    <TextBox Text="{Binding CheckSumModel.ResponseCode}" IsReadOnly="True"/>
+                                </twc:FilletHeaderControl>
+                            </StackPanel>
+                        </twc:GroupPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Wave Peak">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <twc:FilletHeaderControl Header="File Name" Height="32" Margin="5" >
+                                <TextBox Text="{Binding SelectedFileName}" IsReadOnly="True" HorizontalContentAlignment="Left"/>
+                            </twc:FilletHeaderControl>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Button Content="Load Music" Command="{Binding LoadMusicCommand}" Height="32" Width="80"/>
+                                <Button Content="Play" Command="{Binding PlayMusicCommand}" Height="32" Width="80"/>
+                                <Button Content="Stop" Command="{Binding StopMusicCommand}" Height="32" Width="80"/>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Start Recording" Width="auto" Command="{Binding StartRecordingCommand}"/>
+                            <Button Content="Stop Recording" Width="auto" Command="{Binding StopRecordingCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding FFTBars}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="models:FFTBar">
+                                <Rectangle VerticalAlignment="Bottom" Fill="{Binding Fill}" Width="50" Height="{Binding Height}" Margin="3,0"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -5,15 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
 
-namespace KDA.Models;
+namespace KDA.Models.Commands;
 
-
-public enum KeyModes
-{
-    NormalKey = 0x01,
-    UserKey,
-    MacroKey,
-}
 
 
 [AddINotifyPropertyChangedInterface]

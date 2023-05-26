@@ -333,7 +333,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" >
                         <ctrls:KeyControl KeyCode="Ctrl" Width="80" IsKeyPressed="{Binding KeyLeftCtrl.IsPressed}"/>
-                        <ctrls:KeyControl KeyCode="Fn" />
+                        <ctrls:KeyControl KeyCode="Fn" IsKeyPressed="{Binding KeyFn.IsPressed}"/>
                         <ctrls:KeyControl KeyCode="Win" IsKeyPressed="{Binding KeyLWin.IsPressed}"/>
                         <ctrls:KeyControl KeyCode="Alt" IsKeyPressed="{Binding KeyLeftAlt.IsPressed}"/>
                         <ctrls:KeyControl KeyCode="Space" Width="356" IsKeyPressed="{Binding KeySpace.IsPressed}"/>

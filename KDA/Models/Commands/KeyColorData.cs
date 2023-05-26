@@ -5,18 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
 
-namespace KDA.Models;
+namespace KDA.Models.Commands;
 
 [AddINotifyPropertyChangedInterface]
-public class KeyColorModel
+public class KeyColorData
 {
-    public byte KeyIndex { get; set; }
+    public byte Number { get; set; }
 
-    public string KeyName
-    {
-        get => KeyIndex.ToHex();
-        set => KeyIndex = value.HexToByte();
-    }
+    public string NumberStr => $"#{Number}";
 
     public byte ColorR { get; set; }
 
@@ -51,17 +47,21 @@ public class KeyColorModel
         set => ColorA = value.HexToByte();
     }
 
-    public KeyColorModel()
+    public KeyColorData()
     {
 
     }
 
-    public KeyColorModel(byte index, byte colorR, byte colorG, byte colorB, byte colorA)
+    public KeyColorData(byte no)
     {
-        KeyIndex = index;
-        ColorR = colorR;
-        ColorG = colorG;
-        ColorB = colorB;
-        ColorA = colorA;
+        Number = no;
+    }
+
+    public KeyColorData(byte r, byte b, byte g, byte a)
+    {
+        ColorR = r;
+        ColorB = b;
+        ColorG = g;
+        ColorA = a;
     }
 }

@@ -1,11 +1,9 @@
 ﻿using HidLibrary;
 using KDA.Models;
+using KDA.Models.Commands;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Animation;
 
 namespace KDA.Services;
 
@@ -230,7 +228,7 @@ public class KBCH
         GCH.WriteReport(report);
         var inReport = GCH.ReadReport(50);
         if (inReport == null || report.ReportId != InReportId ||
-            report.Data == null || report.Data.Length < 2||
+            report.Data == null || report.Data.Length < 2 ||
             report.Data[1] != 0x85)
         {
             return null;
@@ -238,6 +236,58 @@ public class KBCH
         ProfileModel model = new(report.Data[2]);
         return model;
     }
+
+    #endregion
+
+    #region Color Map
+
+    /// <summary>Set active profile </summary>
+    public static bool SetColorMap(KeyColorMap map)
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x06;
+        report.Data[2] = map.Number;
+        report.Data[3] = 0x00;
+        for (byte i = 0; i < 11; i++)
+        {
+            report.Data[(4 * i) + 4] = map.MapDatas[i].ColorR;
+            report.Data[(4 * i) + 5] = map.MapDatas[i].ColorG;
+            report.Data[(4 * i) + 6] = map.MapDatas[i].ColorB;
+            report.Data[(4 * i) + 7] = map.MapDatas[i].ColorA;
+        }
+        return GCH.WriteReport(report);
+    }
+
+    /// <summary> Get active profile </summary>
+    public static KeyColorMap GetColorMap()
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x86;
+        GCH.WriteReport(report);
+        var inReport = GCH.ReadReport(50);
+        if (inReport == null || report.ReportId != InReportId ||
+            report.Data == null || report.Data.Length < 48 ||
+            report.Data[1] != 0x86)
+        {
+            return null;
+        }
+        KeyColorMap map = new(report.Data[2]);
+        for (byte i = 0; i < 11; i++)
+        {
+            map.MapDatas[i].ColorR = report.Data[(4 * i) + 4];
+            map.MapDatas[i].ColorG = report.Data[(4 * i) + 5];
+            map.MapDatas[i].ColorB = report.Data[(4 * i) + 6];
+            map.MapDatas[i].ColorA = report.Data[(4 * i) + 7];
+        }
+        return map;
+    }
+
 
     #endregion
 
@@ -276,4 +326,225 @@ public class KBCH
     }
 
     #endregion
+
+    #region Marco Map
+
+
+
+    /// <summary>Set active profile </summary>
+    public static bool SetMarcoMap(MarcoMap map)
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x10;
+        report.Data[2] = map.Number;
+        report.Data[3] = map.Index;
+        for (byte i = 0; i < 11; i++)
+        {
+            report.Data[(4 * i) + 4] = map.MapDatas[i].Code;
+            report.Data[(4 * i) + 5] = (byte)map.MapDatas[i].Mode;
+            report.Data[(4 * i) + 6] = map.MapDatas[i].Times;
+        }
+        return GCH.WriteReport(report);
+    }
+
+    /// <summary> Get active profile </summary>
+    public static MarcoMap GetMarcoMap(byte mapNo)
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x90;
+        report.Data[2] = mapNo;
+        GCH.WriteReport(report);
+        var inReport = GCH.ReadReport(50);
+        if (inReport == null || report.ReportId != InReportId ||
+            report.Data == null || report.Data.Length < 48 ||
+            report.Data[1] != 0x90)
+        {
+            return null;
+        }
+        MarcoMap map = new(report.Data[2])
+        {
+            Index = report.Data[3]
+        };
+        for (byte i = 0; i < 11; i++)
+        {
+            map.MapDatas[i].Code = report.Data[(4 * i) + 4];
+            map.MapDatas[i].Mode = (KeyMarcoModes)report.Data[(4 * i) + 5];
+            map.MapDatas[i].Times = report.Data[(4 * i) + 6];
+        }
+        return map;
+    }
+
+
+    #endregion
+
+    #region Profile Map
+
+    /// <summary> Set whole key profile configuration, based on keyboard model to define key numbers </summary>
+    public static bool SetProfileMap(ProfileMap map)
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x11;
+        report.Data[2] = map.Number;
+        report.Data[3] = 0x01;
+        report.Data[4] = (byte)map.AnimationId;
+        report.Data[5] = map.ColorR;
+        report.Data[6] = map.ColorG;
+        report.Data[7] = map.ColorB;
+        report.Data[8] = map.ColorA;
+        report.Data[9] = map.Speed;
+        report.Data[10] = (byte)map.Display;
+        report.Data[11] = (byte)map.Direction;
+
+        bool isWrite = GCH.WriteReport(report);
+
+        if (!isWrite && !GCH.SetUp())
+        {
+            return false;
+        }
+
+        report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x11;
+        report.Data[2] = map.Number;
+        report.Data[3] = map.Index;
+        for (byte i = 0; i < map.MapDatas.Count; i++)
+        {
+            report.Data[(4 * i) + 4] = map.MapDatas[i].KeyIndex;
+            report.Data[(4 * i) + 5] = (byte)map.MapDatas[i].Mode;
+            report.Data[(4 * i) + 6] = map.MapDatas[i].Code;
+        }
+        isWrite = GCH.WriteReport(report);
+        return isWrite;
+    }
+
+    /// <summary> Get whole key profile configuration, based on keyboard model to define key numbers</summary>
+    public static ProfileMap GetProfileMap(byte mapNo)
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x91;
+        report.Data[1] = mapNo;
+        GCH.WriteReport(report);
+        var inReport = GCH.ReadReport(50);
+
+        var inReport02 = GCH.ReadReport(50);
+        if (inReport == null
+            || report.ReportId != InReportId
+            || report.Data == null
+            || report.Data.Length < 12
+            || report.Data[1] != 0x91
+            || inReport02 == null
+            || inReport02.ReportId != InReportId
+            || inReport02.Data == null
+            || inReport02.Data.Length < 48
+            || inReport02.Data[1] != 0x91)
+        {
+            return null;
+        }
+
+        ProfileMap map = new()
+        {
+            AnimationId = (AnimationIds)report.Data[4],
+            ColorR = report.Data[5],
+            ColorG = report.Data[6],
+            ColorB = report.Data[7],
+            ColorA = report.Data[8],
+            Speed = report.Data[9],
+            Display = (AnimationDisplays)report.Data[10],
+            Direction = (AnimationDirections)report.Data[11],
+        };
+
+        for (byte i = 0; i < map.MapDatas.Count; i++)
+        {
+            map.MapDatas[i].KeyIndex = report.Data[(4 * i) + 4];
+            map.MapDatas[i].Mode = (KeyMarcoModes)report.Data[(4 * i) + 5];
+            map.MapDatas[i].Code = report.Data[(4 * i) + 6]; ;
+        }
+
+        return map;
+    }
+
+    #endregion
+
+    #region BootUp Map
+
+    /// <summary> Set whole key profile configuration, based on keyboard model to define key numbers </summary>
+    public static bool SetBootUpMap(BootUpMap map)
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x11;
+        report.Data[2] = map.Number;
+        report.Data[3] = 0x00;
+
+        for (byte i = 0; i < map.MapDatas.Count; i++)
+        {
+            report.Data[(6 * i) + 4] = map.MapDatas[i].KeyIndex;
+            report.Data[(6 * i) + 5] = map.MapDatas[i].ColorR;
+            report.Data[(6 * i) + 6] = map.MapDatas[i].ColorG;
+            report.Data[(6 * i) + 7] = map.MapDatas[i].ColorB;
+            report.Data[(6 * i) + 8] = map.MapDatas[i].ColorA;
+            report.Data[(6 * i) + 8] = map.MapDatas[i].Times;
+        }
+
+        bool isWrite = GCH.WriteReport(report);
+        return isWrite;
+    }
+
+    /// <summary> Get whole key profile configuration, based on keyboard model to define key numbers</summary>
+    public static BootUpMap GetBootUpMap(byte mapNo)
+    {
+        HidReport report = new(64)
+        {
+            ReportId = OutReportId,
+        };
+        report.Data[1] = 0x92;
+        report.Data[1] = mapNo;
+        GCH.WriteReport(report);
+        var inReport = GCH.ReadReport(50);
+
+        if (inReport == null
+            || report.ReportId != InReportId
+            || report.Data == null
+            || report.Data.Length < 46
+            || report.Data[1] != 0x91)
+        {
+            return null;
+        }
+
+        BootUpMap map = new()
+        {
+            Number = report.Data[2],
+        };
+
+        for (byte i = 0; i < map.MapDatas.Count; i++)
+        {
+            map.MapDatas[i].KeyIndex = report.Data[(6 * i) + 4];
+            map.MapDatas[i].ColorR = report.Data[(6 * i) + 5];
+            map.MapDatas[i].ColorG = report.Data[(6 * i) + 6];
+            map.MapDatas[i].ColorB = report.Data[(6 * i) + 7];
+            map.MapDatas[i].ColorA = report.Data[(6 * i) + 8];
+            map.MapDatas[i].Times = report.Data[(6 * i) + 9];
+        }
+
+        return map;
+    }
+
+    #endregion
+
 }

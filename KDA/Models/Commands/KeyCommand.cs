@@ -4,29 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models;
+namespace KDA.Models.Commands;
 
-public enum KeyCommandNames
-{
-    Model,
-    Sleep,
-    Key_Macro,
-    Key_RBG,
-    Animation,
-    Profile,
-    RBG_Map,
-    Language,
-    Macro_Data,
-    Profile_Data,
-    BootUp,
-    Flash_Data,
-    Reset_Default,
-}
 
-public enum KeyCommandAcceess
-{
-    ReadWrite, WriteOnly, ReadOnly
-}
 
 public class KeyCommand
 {

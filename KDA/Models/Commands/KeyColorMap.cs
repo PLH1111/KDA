@@ -5,17 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
 
-namespace KDA.Models;
+namespace KDA.Models.Commands;
 
 [AddINotifyPropertyChangedInterface]
 public class KeyColorMap
 {
     public byte Number { get; set; }
 
-    public ColorModelList ColorModelList { get; set; }=new ColorModelList(10);
+    public KeyColorDataList MapDatas { get; set; } = new(11);
 
     public KeyColorMap()
-    { 
+    {
 
     }
 

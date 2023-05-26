@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
 
-namespace KDA.Models;
+namespace KDA.Models.Commands;
 
 [AddINotifyPropertyChangedInterface]
 public class ProfileModel

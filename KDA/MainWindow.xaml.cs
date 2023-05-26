@@ -1,11 +1,14 @@
 ﻿
+using KDA.Controls;
 using KDA.Hooks;
 using KDA.Models;
+using KDA.Models.Commands;
 using MahApps.Metro.Controls;
 using Prism.Commands;
 using System;
 using System.Windows;
 using System.Windows.Input;
+using TianWeiToolsPro.Events;
 
 namespace KDA;
 
@@ -13,13 +16,13 @@ namespace KDA;
 [AddINotifyPropertyChangedInterface]
 public partial class MainWindow : MetroWindow
 {
-
     #region 字段
 
     KeyboardHook hook;
 
-    #endregion
+    private KeyBarList keyBars;
 
+    #endregion
 
     #region 属性
 
@@ -215,6 +218,8 @@ public partial class MainWindow : MetroWindow
 
     public KeyModel KeyLeftCtrl { get; set; } = new KeyModel(Key.LeftCtrl);
 
+    public KeyModel KeyFn { get; set; } = new KeyModel(Key.FinalMode);
+
     public KeyModel KeyLWin { get; set; } = new KeyModel(Key.LWin);
 
     public KeyModel KeyLeftAlt { get; set; } = new KeyModel(Key.LeftAlt);
@@ -251,7 +256,7 @@ public partial class MainWindow : MetroWindow
 
     public DelegateCommand ShowSettingViewCommand { get; private set; }
 
-    
+
     #endregion
 
     #region 初始化
@@ -269,6 +274,174 @@ public partial class MainWindow : MetroWindow
 
     private void InitFields()
     {
+
+        InitKeyBars();
+
+
+    }
+
+    private void InitKeyBars()
+    {
+        keyBars = new KeyBarList();
+
+        KeyBar bar01 = new();
+        bar01.Keys01.Add(KeyLeftCtrl);
+        bar01.Keys01.Add(KeyFn);
+        bar01.Keys02.Add(KeyLeftShift);
+        bar01.Keys03.Add(KeyCapsLock);
+        bar01.Keys04.Add(KeyTab);
+        bar01.Keys05.Add(KeyOem3);
+        keyBars.Add(bar01);
+
+        KeyBar bar02 = new();
+        bar02.Keys01.Add(KeyLWin);
+        bar02.Keys02.Add(KeyZ);
+        bar02.Keys03.Add(KeyA);
+        bar02.Keys04.Add(KeyQ);
+        bar02.Keys05.Add(KeyD1);
+        keyBars.Add(bar02);
+
+        KeyBar bar03 = new();
+        bar03.Keys01.Add(KeyLeftAlt);
+        bar03.Keys02.Add(KeyX);
+        bar03.Keys03.Add(KeyS);
+        bar03.Keys04.Add(KeyW);
+        bar03.Keys05.Add(KeyD2);
+        keyBars.Add(bar03);
+
+        KeyBar bar04 = new();
+        bar04.Keys01.Add(KeySpace);
+        bar04.Keys02.Add(KeyC);
+        bar04.Keys03.Add(KeyD);
+        bar04.Keys04.Add(KeyE);
+        bar04.Keys05.Add(KeyD3);
+        keyBars.Add(bar04);
+
+        KeyBar bar05 = new();
+        bar05.Keys01.Add(KeySpace);
+        bar05.Keys02.Add(KeyV);
+        bar05.Keys03.Add(KeyF);
+        bar05.Keys04.Add(KeyR);
+        bar05.Keys05.Add(KeyD4);
+        keyBars.Add(bar05);
+
+        KeyBar bar06 = new();
+        bar06.Keys01.Add(KeySpace);
+        bar06.Keys02.Add(KeyB);
+        bar06.Keys03.Add(KeyG);
+        bar06.Keys04.Add(KeyT);
+        bar06.Keys05.Add(KeyD5);
+        keyBars.Add(bar06);
+
+        KeyBar bar07 = new();
+        bar07.Keys01.Add(KeySpace);
+        bar07.Keys02.Add(KeyN);
+        bar07.Keys03.Add(KeyH);
+        bar07.Keys04.Add(KeyY);
+        bar07.Keys05.Add(KeyD6);
+        keyBars.Add(bar07);
+
+        KeyBar bar08 = new();
+        bar08.Keys01.Add(KeySpace);
+        bar08.Keys02.Add(KeyM);
+        bar08.Keys03.Add(KeyJ);
+        bar08.Keys04.Add(KeyU);
+        bar08.Keys05.Add(KeyD7);
+        keyBars.Add(bar08);
+
+        KeyBar bar09 = new();
+        bar09.Keys01.Add(KeySpace);
+        bar09.Keys02.Add(KeyOemComma);
+        bar09.Keys03.Add(KeyK);
+        bar09.Keys04.Add(KeyI);
+        bar09.Keys05.Add(KeyD8);
+        keyBars.Add(bar09);
+
+        KeyBar bar10 = new();
+        bar10.Keys01.Add(KeyRightAlt);
+        bar10.Keys02.Add(KeyOemPeriod);
+        bar10.Keys03.Add(KeyL);
+        bar10.Keys04.Add(KeyO);
+        bar10.Keys05.Add(KeyD9);
+        keyBars.Add(bar10);
+
+        KeyBar bar11 = new();
+        bar11.Keys01.Add(KeyApps);
+        bar11.Keys02.Add(KeyOemQuestion);
+        bar11.Keys03.Add(KeyOemSemicolon);
+        bar11.Keys04.Add(KeyP);
+        bar11.Keys05.Add(KeyD0);
+        keyBars.Add(bar11);
+
+        KeyBar bar12 = new();
+        bar12.Keys01.Add(KeyRightCtrl);
+        bar12.Keys02.Add(KeyRightShift);
+        bar12.Keys03.Add(KeyOemQuotes);
+        bar12.Keys03.Add(KeyEnter);
+        bar12.Keys04.Add(KeyOem4);
+        bar12.Keys05.Add(KeyOemMinus);
+        keyBars.Add(bar12);
+
+        KeyBar bar13 = new();
+        bar13.Keys01.Add(KeyRightCtrl);
+        bar13.Keys02.Add(KeyRightShift);
+        bar13.Keys03.Add(KeyOemQuotes);
+        bar13.Keys03.Add(KeyEnter);
+        bar13.Keys04.Add(KeyOem4);
+        bar13.Keys05.Add(KeyOemMinus);
+        keyBars.Add(bar13);
+
+        KeyBar bar14 = new();
+        bar14.Keys01.Add(KeyRightCtrl);
+        bar14.Keys02.Add(KeyRightShift);
+        bar14.Keys03.Add(KeyOemQuotes);
+        bar14.Keys03.Add(KeyEnter);
+        bar14.Keys04.Add(KeyOem5);
+        bar14.Keys05.Add(KeyBack);
+        keyBars.Add(bar14);
+
+        KeyBar bar15 = new();
+        bar15.Keys01.Add(KeyModelLeft);
+        bar15.Keys04.Add(KeyDelete);
+        bar15.Keys05.Add(KeyInsert);
+        keyBars.Add(bar15);
+
+        KeyBar bar16 = new();
+        bar16.Keys01.Add(KeyModelDown);
+        bar16.Keys02.Add(KeyModelUp);
+        bar16.Keys04.Add(KeyEnd);
+        bar16.Keys05.Add(KeyHome);
+        keyBars.Add(bar16);
+
+        KeyBar bar17 = new();
+        bar17.Keys01.Add(KeyModelRight);
+        bar17.Keys04.Add(KeyPageDown);
+        bar17.Keys05.Add(KeyPageUp);
+        keyBars.Add(bar17);
+
+        KeyBar bar18 = new();
+        bar18.Keys01.Add(KeyNumPad0);
+        bar18.Keys02.Add(KeyNumPad1);
+        bar18.Keys03.Add(KeyNumPad4);
+        bar18.Keys04.Add(KeyNumPad7);
+        bar18.Keys05.Add(KeyNumLock);
+        keyBars.Add(bar18);
+
+        KeyBar bar19 = new();
+        bar19.Keys01.Add(KeyNumPad0);
+        bar19.Keys02.Add(KeyNumPad2);
+        bar19.Keys03.Add(KeyNumPad5);
+        bar19.Keys04.Add(KeyNumPad8);
+        bar19.Keys05.Add(KeyDivide);
+        keyBars.Add(bar19);
+
+        KeyBar bar20 = new();
+        bar20.Keys01.Add(KeyDecimal);
+        bar20.Keys02.Add(KeyNumPad3);
+        bar20.Keys03.Add(KeyNumPad6);
+        bar20.Keys04.Add(KeyNumPad9);
+        bar20.Keys05.Add(KeyMultiply);
+        keyBars.Add(bar20);
 
     }
 
@@ -390,7 +563,10 @@ public partial class MainWindow : MetroWindow
         KeyModelList.Add(KeyModelRight);
         KeyModelList.Add(KeyNumPad0);
         KeyModelList.Add(KeyDecimal);
+
+
     }
+
 
 
     private void InitCommands()
@@ -404,8 +580,19 @@ public partial class MainWindow : MetroWindow
 
     private void InitEvents()
     {
+        TianWeiToolsPro.Events.EaHelper.Subscribe<double[]>(OnBarDataArrive);
 
+    }
 
+    private void OnBarDataArrive(TEventArgs<double[]> obj)
+    {
+        if (obj != null && obj.Value != null)
+        {
+            for (int i = 0; i < keyBars.Count; i++)
+            {
+                keyBars[i].SetValue(obj.Value[i]);
+            }
+        }
     }
 
     #endregion
@@ -426,7 +613,7 @@ public partial class MainWindow : MetroWindow
         System.Diagnostics.Trace.WriteLine(e.Key.ToString());
         if (models != null || models.Count > 0)
         {
-             foreach (var m in models)
+            foreach (var m in models)
             {
                 m.IsPressed = true;
             }
@@ -467,7 +654,7 @@ public partial class MainWindow : MetroWindow
 
     private void ShowSettingView()
     {
-       new SettingView().ShowDialog();
+        new SettingView().ShowDialog();
     }
 
 
@@ -476,7 +663,7 @@ public partial class MainWindow : MetroWindow
     private void CloseApplication()
     {
         Close();
-        
+
     }
 
 

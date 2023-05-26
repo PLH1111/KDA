@@ -1,18 +1,29 @@
-﻿using System;
+﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
 
-namespace KDA.Models;
+namespace KDA.Models.Commands;
 
 [AddINotifyPropertyChangedInterface]
-public class ColorModel
+public class BootUpData
 {
+
     public byte Number { get; set; }
 
     public string NumberStr => $"#{Number}";
+
+
+    public byte KeyIndex { get; set; }
+
+    public string KeyIndexHex
+    {
+        get => KeyIndex.ToHex();
+        set => KeyIndex = value.HexToByte();
+    }
 
     public byte ColorR { get; set; }
 
@@ -47,18 +58,21 @@ public class ColorModel
         set => ColorA = value.HexToByte();
     }
 
-    public ColorModel() 
-    { 
+    public byte Times { get; set; }
 
+
+    public BootUpData()
+    {
     }
 
-    public ColorModel(byte no)
+    public BootUpData(byte no)
     {
         Number = no;
     }
 
-    public ColorModel(byte r, byte b, byte g, byte a)
+    public BootUpData(byte keyIndex, byte r, byte b, byte g, byte a)
     {
+        KeyIndex = keyIndex;
         ColorR = r;
         ColorB = b;
         ColorG = g;

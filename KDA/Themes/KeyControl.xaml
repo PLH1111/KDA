@@ -9,7 +9,15 @@
         <Setter Property="Margin" Value="3"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Background" Value="{StaticResource MahApps.Brushes.Accent4}"/>
-        <Setter Property="KeyPressedBrush" Value="Cyan"/>
+        <Setter Property="KeyPressedBrush" >
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF8080FF"/>
+                    <GradientStop Color="Cyan" Offset="0.5"/>
+                    <GradientStop Color="{StaticResource MahApps.Colors.Accent}" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
         <Setter Property="MouseOverBrush" Value="{StaticResource MahApps.Brushes.Accent2}"/>
         <Setter Property="MousePressedBrush" Value="Cyan"/>
         <Setter Property="BorderBrush" Value="{StaticResource MahApps.Brushes.Accent}"/>
@@ -41,13 +49,6 @@
                             <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MousePressedBrush}"/>
                             <Setter  Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
                         </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsKeyPressed" Value="true"/>
-                                <Condition Property="IsPressedZoomIn" Value="true"/>
-                            </MultiTrigger.Conditions>
-                            <Setter  Property="FontSize" Value="21"/>
-                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
