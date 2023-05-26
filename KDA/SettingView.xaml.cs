@@ -28,7 +28,7 @@ public partial class SettingView : MetroWindow
 
     private IEnumerable<HidDevice> hidDevices;
 
-    private readonly Audio.VisualizerDataHelper visualizerDataHelper = new(256);
+    private readonly Audio.VisualizerDataHelper visualizerDataHelper = new(128);
 
     #endregion
 
@@ -848,8 +848,8 @@ public partial class SettingView : MetroWindow
 
 
     double[] spectrumData;
-    readonly double scale = 200000;
     double[] barDatas = new double[FFTBars.Count];
+    readonly TEventArgs<double[]> events = new(nameof(SettingView), "BarData", null);
     private void GetSpectrumData()
     {
         DateTime time = DateTime.Now;
@@ -859,25 +859,24 @@ public partial class SettingView : MetroWindow
             {
                 break;
             }
-            if (DateTime.Now.Subtract(time).TotalMilliseconds >= 32)
+            if (DateTime.Now.Subtract(time).TotalMilliseconds >= 25)
             {
                 time = DateTime.Now;
                 double[] newSpectrumData = visualizerDataHelper.GetSpectrumData();         // 从可视化器中获取频谱数据
-                newSpectrumData = VisualizerDataHelper.MakeSmooth(newSpectrumData, 2);                // 平滑频谱数据
+                //newSpectrumData = VisualizerDataHelper.MakeSmooth(newSpectrumData, 2);                // 平滑频谱数据
                 spectrumData = newSpectrumData;
                 if (spectrumData.All(x => x >= 0))
                 {
                     for (int i = 0; i < FFTBars.Count; i++)
                     {
-                        barDatas[i] = spectrumData.ToList().GetRange(6 * i, 6).Average() * scale;
+                        barDatas[i] = spectrumData.ToList().GetRange(3 * i, 3).Max() * 50000;
                         FFTBars[i].Height = barDatas[i];
                     }
-                    var events = new TEventArgs<double[]>("", "BarData", barDatas);
+                    events.Value = barDatas;
                     EaHelper.Publish(events);
                 }
 
             }
-
             Thread.Sleep(1);
         }
     }
