@@ -79,8 +79,10 @@ public class VisualizerDataHelper
         int halfLen = len / 2;
         double[] spectrum = new double[halfLen];           // 傅里叶变换结果左右对称, 只需要取一半
         for (int i = 0; i < halfLen; i++)
+        {
             spectrum[i] = data[i].Magnitude / len;
-
+        }
+            
         var window = new FftSharp.Windows.Bartlett();
         window.Create(halfLen);
         window.ApplyInPlace(spectrum, false);

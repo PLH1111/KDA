@@ -28,7 +28,7 @@ public partial class SettingView : MetroWindow
 
     private IEnumerable<HidDevice> hidDevices;
 
-    private readonly Audio.VisualizerDataHelper visualizerDataHelper = new(128);
+    private readonly Audio.VisualizerDataHelper visualizerDataHelper = new(256);
 
     #endregion
 
@@ -159,7 +159,7 @@ public partial class SettingView : MetroWindow
     public bool CanStartRecording { get; set; } = true;
 
 
-    public static FFTBarList FFTBars { get; set; } = new(20);
+    public static FFTBarList FFTBars { get; set; } = new(21);
 
     #endregion
 
@@ -869,7 +869,7 @@ public partial class SettingView : MetroWindow
                 {
                     for (int i = 0; i < FFTBars.Count; i++)
                     {
-                        barDatas[i] = spectrumData.ToList().GetRange(3 * i, 3).Max() * 50000;
+                        barDatas[i] = spectrumData.ToList().GetRange(6 * i, 6).Max() * 50000;
                         FFTBars[i].Height = barDatas[i];
                     }
                     events.Value = barDatas;

@@ -20,7 +20,7 @@ namespace KDA.Models
 
         public void SetValue(double value)
         {
-            if (value > 20)
+            if (value > 15)
             {
                 foreach (var key in Keys01)
                 {

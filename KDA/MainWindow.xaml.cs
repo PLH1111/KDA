@@ -443,6 +443,14 @@ public partial class MainWindow : MetroWindow
         bar20.Keys05.Add(KeyMultiply);
         keyBars.Add(bar20);
 
+        KeyBar bar21 = new();
+        bar21.Keys01.Add(KeyReturn);
+        bar21.Keys02.Add(KeyReturn);
+        bar21.Keys03.Add(KeyAdd);
+        bar21.Keys04.Add(KeyAdd);
+        bar21.Keys05.Add(KeySubtract);
+        keyBars.Add(bar21);
+
     }
 
 
