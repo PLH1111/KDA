@@ -10,7 +10,7 @@
                   TitleBarBackground="Transparent"
                   WindowStartupLocation="CenterScreen"
                   MenuBorderThickness="0"
-                  CornerRadius="10">
+                  CornerRadius="6">
     <twc:FilletWindow.Background>
         <ImageBrush ImageSource="/Sky03.jpg"/>
     </twc:FilletWindow.Background>
