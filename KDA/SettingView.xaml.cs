@@ -1,34 +1,27 @@
 ﻿using HidLibrary;
-using KDA.Audio;
 using KDA.Models;
 using KDA.Models.Bootloader;
 using KDA.Models.Commands;
 using KDA.Services;
-using Microsoft.Win32;
-using NAudio.Wave;
-using NAudio.WaveFormRenderer;
 using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using TianWeiToolsPro.Events;
+using TianWeiToolsPro.Controls;
 using TianWeiToolsPro.Extensions;
 
 namespace KDA;
 
 [AddINotifyPropertyChangedInterface]
-public partial class SettingView : MetroWindow
+public partial class SettingView : FilletWindow
 {
 
     #region 字段
 
     private IEnumerable<HidDevice> hidDevices;
 
-    private readonly Audio.VisualizerDataHelper visualizerDataHelper = new(256);
 
     #endregion
 
@@ -150,18 +143,6 @@ public partial class SettingView : MetroWindow
 
     #endregion
 
-    #region Wave Peak
-
-    public string SelectedFileName { get; set; }
-
-    public bool CanPlayAudio { get; set; } = true;
-
-    public bool CanStartRecording { get; set; } = true;
-
-
-    public static FFTBarList FFTBars { get; set; } = new(21);
-
-    #endregion
 
 
 
@@ -268,21 +249,6 @@ public partial class SettingView : MetroWindow
         BootLoaderReadCommand = new DelegateCommand<string>(BootLoaderRead, CanExcuteBootLoaderRead)
             .ObservesProperty(() => IsDeviceConnect);
 
-        LoadMusicCommand = new DelegateCommand(LoadMusic);
-
-        PlayMusicCommand = new DelegateCommand(StartPlayMusic, CanExcuteStartPlayMusic)
-            .ObservesProperty(() => CanPlayAudio)
-            .ObservesProperty(() => SelectedFileName);
-        StopMusicCommand = new DelegateCommand(StopPlayMusic, CanExcuteStopPlayMusic)
-            .ObservesProperty(() => CanPlayAudio);
-
-        LoadMusicCommand = new DelegateCommand(LoadMusic);
-
-
-        StartRecordingCommand = new DelegateCommand(StartRecording, CanExcuteStartRecording)
-            .ObservesProperty(() => CanStartRecording);
-        StopRecordingCommand = new DelegateCommand(StopRecording, CanExcuteStopRecording)
-            .ObservesProperty(() => CanStartRecording);
     }
 
 
@@ -346,26 +312,7 @@ public partial class SettingView : MetroWindow
         return Device != null && Device.InputReportByteLength > 0 && IsDeviceConnect;
     }
 
-    private bool CanExcuteStartPlayMusic()
-    {
-        return CanPlayAudio && !string.IsNullOrEmpty(SelectedFileName);
-    }
 
-    private bool CanExcuteStopPlayMusic()
-    {
-        return !CanPlayAudio;
-    }
-
-
-    private bool CanExcuteStartRecording()
-    {
-        return CanStartRecording;
-    }
-
-    private bool CanExcuteStopRecording()
-    {
-        return !CanStartRecording;
-    }
 
     #endregion
 
@@ -761,139 +708,6 @@ public partial class SettingView : MetroWindow
 
 
     #endregion
-
-    private void LoadMusic()
-    {
-        var ofd = new OpenFileDialog
-        {
-            Filter = "MP3 Files|*.mp3|WAV files|*.wav"
-        };
-        if (ofd.ShowDialog(this) == true)
-        {
-            SelectedFileName = ofd.FileName;
-        }
-    }
-
-    WaveOutEvent outputDevice;
-
-    private void StartPlayMusic()
-    {
-        try
-        {
-            using var audioFile = new AudioFileReader(SelectedFileName);
-            outputDevice = new WaveOutEvent();
-            outputDevice.Init(audioFile);
-            outputDevice.Play(); // 异步执行
-            CanPlayAudio = !(outputDevice.PlaybackState == PlaybackState.Playing);
-        }
-        catch (Exception ex)
-        {
-            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
-        }
-
-    }
-
-    private void StopPlayMusic()
-    {
-        if (outputDevice == null)
-        {
-            return;
-        }
-        try
-        {
-            outputDevice.Stop();
-            CanPlayAudio = true;
-            outputDevice.Dispose();
-        }
-        catch (Exception ex)
-        {
-            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
-        }
-
-    }
-
-
-
-    WasapiLoopbackCapture capture;
-    private void StartRecording()
-    {
-        try
-        {
-            capture = new WasapiLoopbackCapture();
-            capture.DataAvailable += Cap_DataAvailable;
-            capture.StartRecording();
-            CanStartRecording = false;
-            Task.Run(GetSpectrumData);
-        }
-        catch (Exception ex)
-        {
-            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
-        }
-
-    }
-
-
-    private void Cap_DataAvailable(object sender, WaveInEventArgs e)
-    {
-        int length = e.BytesRecorded / 4;           // 采样的数量 (每一个采样是 4 字节)
-        double[] result = new double[length];       // 声明结果
-
-        for (int i = 0; i < length; i++)
-        {
-            result[i] = BitConverter.ToSingle(e.Buffer, i * 4);      // 取出采样值
-        }
-        visualizerDataHelper.PushSampleData(result);          // 将新的采样存储到 可视化器 中
-    }
-
-
-
-    double[] spectrumData;
-    double[] barDatas = new double[FFTBars.Count];
-    readonly TEventArgs<double[]> events = new(nameof(SettingView), "BarData", null);
-    private void GetSpectrumData()
-    {
-        DateTime time = DateTime.Now;
-        while (true)
-        {
-            if (CanStartRecording)
-            {
-                break;
-            }
-            if (DateTime.Now.Subtract(time).TotalMilliseconds >= 25)
-            {
-                time = DateTime.Now;
-                double[] newSpectrumData = visualizerDataHelper.GetSpectrumData();         // 从可视化器中获取频谱数据
-                //newSpectrumData = VisualizerDataHelper.MakeSmooth(newSpectrumData, 2);                // 平滑频谱数据
-                spectrumData = newSpectrumData;
-                if (spectrumData.All(x => x >= 0))
-                {
-                    for (int i = 0; i < FFTBars.Count; i++)
-                    {
-                        barDatas[i] = spectrumData.ToList().GetRange(6 * i, 6).Max() * 50000;
-                        FFTBars[i].Height = barDatas[i];
-                    }
-                    events.Value = barDatas;
-                    EaHelper.Publish(events);
-                }
-
-            }
-            Thread.Sleep(1);
-        }
-    }
-
-    private void StopRecording()
-    {
-        try
-        {
-            capture.StopRecording();
-            CanStartRecording = true;
-        }
-        catch (Exception ex)
-        {
-            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
-        }
-
-    }
 
     #endregion
 

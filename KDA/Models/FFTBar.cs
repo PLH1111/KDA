@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using TianWeiToolsPro.Extensions;
 
 namespace KDA.Models
 {
@@ -13,17 +14,21 @@ namespace KDA.Models
             set
             {
                 heigth = value;
-                if (heigth < 90)
+                if (heigth.InRange(0, 50))
                 {
                     Fill = Brushes.Green;
                 }
-                else if (heigth > 90 && heigth < 150)
+                else if (heigth.InRange(50, 150))
                 {
                     Fill = Brushes.Lime;
                 }
-                else if (heigth >150 && heigth < 240)
+                else if (heigth.InRange(150, 250))
                 {
                     Fill = Brushes.Yellow;
+                }
+                else if (heigth.InRange(250, 400))
+                {
+                    Fill = Brushes.Gold;
                 }
                 else
                 {

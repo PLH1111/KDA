@@ -254,6 +254,8 @@ public partial class MainWindow : MetroWindow
 
     public DelegateCommand MinimizeWindowCommand { get; private set; }
 
+    public DelegateCommand ShowAudioListenerViewCommand { get;private set; }
+
     public DelegateCommand ShowSettingViewCommand { get; private set; }
 
 
@@ -581,6 +583,7 @@ public partial class MainWindow : MetroWindow
     {
         CloseApplicationCommand = new DelegateCommand(CloseApplication);
         MinimizeWindowCommand = new DelegateCommand(MinimizeWindow);
+        ShowAudioListenerViewCommand = new DelegateCommand(ShowAudioListenerView);
         ShowSettingViewCommand = new DelegateCommand(ShowSettingView);
     }
 
@@ -588,20 +591,9 @@ public partial class MainWindow : MetroWindow
 
     private void InitEvents()
     {
-        TianWeiToolsPro.Events.EaHelper.Subscribe<double[]>(OnBarDataArrive);
 
     }
 
-    private void OnBarDataArrive(TEventArgs<double[]> obj)
-    {
-        if (obj != null && obj.Value != null)
-        {
-            for (int i = 0; i < keyBars.Count; i++)
-            {
-                keyBars[i].SetValue(obj.Value[i]);
-            }
-        }
-    }
 
     #endregion
 
@@ -645,12 +637,13 @@ public partial class MainWindow : MetroWindow
     {
         base.OnClosed(e);
         hook?.Stop();
+        Environment.Exit(0);
     }
 
 
     private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
+        if (e.ButtonState == MouseButtonState.Pressed)
         {
             DragMove();
         }
@@ -660,9 +653,14 @@ public partial class MainWindow : MetroWindow
 
     #region 方法
 
+    private void ShowAudioListenerView()
+    {
+        new AudioListener().Show();
+    }
+
     private void ShowSettingView()
     {
-        new SettingView().ShowDialog();
+        new SettingView().Show();
     }
 
 

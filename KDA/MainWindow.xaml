@@ -26,6 +26,11 @@
                         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
                     </Style>
                 </StackPanel.Resources>
+                <twc:FilletButton x:Name="AudioListener" 
+                        Command="{Binding ShowAudioListenerViewCommand}" 
+                        ToolTip="设置">
+                    <iconPacks:Modern Kind="AdobeAudition" />
+                </twc:FilletButton>
                 <twc:FilletButton x:Name="SettingButton" 
                         Command="{Binding ShowSettingViewCommand}" 
                         ToolTip="设置">
