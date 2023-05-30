@@ -60,22 +60,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="Sky01.jpg" />
-	  <Resource Include="Sky02.jpg" />
-	  <Resource Include="Sky03.jpg" />
-	  <Resource Include="Sky04.jpg" />
-	  <Resource Include="Sky05.jpg" />
-	  <Resource Include="Sky06.jpg" />
-	  <Resource Include="Sky07.jpg" />
-	  <Resource Include="Sky08.jpg" />
-	  <Resource Include="Sky09.jpg" />
-	  <Resource Include="Sky10.jpg" />
-	  <Resource Include="Sky11.jpg" />
-	  <Resource Include="Sky12.jpg" />
-	  <Resource Include="Sky13.jpg" />
-	  <Resource Include="Sky14.jpg" />
-	  <Resource Include="Sky15.jpg" />
-	  <Resource Include="Sky16.jpg" />
+	  <Resource Include="Background\Sky01.jpg" />
+	  <Resource Include="Background\Sky02.jpg" />
+	  <Resource Include="Background\Sky03.jpg" />
+	  <Resource Include="Background\Sky04.jpg" />
+	  <Resource Include="Background\Sky05.jpg" />
+	  <Resource Include="Background\Sky06.jpg" />
+	  <Resource Include="Background\Sky07.jpg" />
+	  <Resource Include="Background\Sky08.jpg" />
+	  <Resource Include="Background\Sky09.jpg" />
+	  <Resource Include="Background\Sky10.jpg" />
+	  <Resource Include="Background\Sky11.jpg" />
+	  <Resource Include="Background\Sky12.jpg" />
+	  <Resource Include="Background\Sky13.jpg" />
+	  <Resource Include="Background\Sky14.jpg" />
+	  <Resource Include="Background\Sky15.jpg" />
+	  <Resource Include="Background\Sky16.jpg" />
 	</ItemGroup>
 
 </Project>

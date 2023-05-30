@@ -1,20 +1,28 @@
-﻿
-using KDA.Controls;
+﻿using HidLibrary;
+using KDA.Audio;
 using KDA.Hooks;
 using KDA.Models;
 using KDA.Models.Commands;
-using MahApps.Metro.Controls;
-using Prism.Commands;
+using KDA.Services;
+using Microsoft.VisualBasic.Devices;
+using Microsoft.Win32;
+using NAudio.Wave;
 using System;
-using System.Windows;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using TianWeiToolsPro.Commands;
+using TianWeiToolsPro.Controls;
 using TianWeiToolsPro.Events;
 
 namespace KDA;
 
-
 [AddINotifyPropertyChangedInterface]
-public partial class MainWindow : MetroWindow
+public partial class MainWindow : FilletWindow
 {
     #region 字段
 
@@ -22,9 +30,15 @@ public partial class MainWindow : MetroWindow
 
     private KeyBarList keyBars;
 
+    private IEnumerable<HidDevice> hidDevices;
+
+    private readonly VisualizerDataHelper visualizerDataHelper = new(256);
+
     #endregion
 
     #region 属性
+
+    #region Key - 按键相关
 
     #region 第一行按键
 
@@ -248,15 +262,157 @@ public partial class MainWindow : MetroWindow
 
     #endregion
 
+
+    public ObservableCollection<HidDeviceModel> HidDeviceList { get; set; } = new();
+    public HidDeviceModel Device { get; set; }
+
+    public string InputMessage { get; set; }
+    public string OutputMessage { get; set; }
+
+    public bool IsDeviceConnect { get; set; }
+
+    #region Commands
+
+    #region KeyModelName
+
+    public string KeyModelName { get; set; }
+
+    #endregion
+
+    #region Sleep
+
+    public static SleepModel SleepModel { get; set; } = new SleepModel();
+
+    public static List<SleepTimes> SleepTimeList => EnumHelper.ToList<SleepTimes>();
+
+    public static List<LightingModes> LightingModeList => EnumHelper.ToList<LightingModes>();
+
+    #endregion
+
+    #region Key Marco
+
+    public static KeyMacroModel KeyMacroModel { get; set; } = new KeyMacroModel();
+
+    public static List<KeyModes> KeyModeList => EnumHelper.ToList<KeyModes>();
+
+
+    #endregion
+
+    #region Key Color
+
+    public static KeyColorModel KeyColorModel => new();
+
+    #endregion
+
+    #region Animation
+
+    public static AnimationModel AnimationModel { get; set; } = new AnimationModel();
+
+    public static List<AnimationIds> AnimationIdList => EnumHelper.ToList<AnimationIds>();
+
+    public static List<AnimationDisplays> DisplayList => EnumHelper.ToList<AnimationDisplays>();
+
+    public static List<AnimationDirections> DirectionList => EnumHelper.ToList<AnimationDirections>();
+
+
+    #endregion
+
+    #region Profile
+
+    public static ProfileModel ProfileModel => new();
+
+    #endregion
+
+    #region Language
+
+    public List<KeyBoardLanguages> LanguageList { get; set; } = EnumHelper.ToList<KeyBoardLanguages>();
+
+    public KeyBoardLanguages SelectedLanguage { get; set; } = KeyBoardLanguages.US;
+
+
+    #endregion
+
+    #region RBG_Map
+
+    public static KeyColorMapList KeyColorMaps { get; set; } = new(12);
+
+    public KeyColorMap SelectedKeyColorMap { get; set; } = KeyColorMaps[0];
+
+    #endregion
+
+    #region MarcoMap
+
+    public static MarcoMapList MarcoMaps { get; set; } = new(0x40);
+
+    public MarcoMap SelectedMarcoMap { get; set; } = MarcoMaps[0];
+
+    #endregion
+
+    #region ProfileMaps
+
+    public static ProfileMapList ProfileMaps { get; set; } = new(0x04);
+
+    public ProfileMap SelectedProfileMap { get; set; } = ProfileMaps[0];
+
+    #endregion
+
+    #region BootupMap
+
+    public static BootUpMapList BootUpMaps { get; set; } = new(0x04);
+
+    public BootUpMap SelectedBootUpMap { get; set; } = BootUpMaps[0];
+
+    #endregion
+
+    #endregion
+
+
+    #region Wave Peak
+
+    public string SelectedFileName { get; set; }
+
+    public bool CanPlayAudio { get; set; } = true;
+
+    public bool CanStartRecording { get; set; } = true;
+
+
+    public static FFTBarList FFTBars { get; set; } = new(21);
+
+    #endregion
+
+
+
+    #region CmdFlashModel
+
+    public static CmdFlashModel CmdFlashModel { get; set; } = new();
+
+    #endregion
+
+    #endregion
+
     #region 命令
 
-    public DelegateCommand CloseApplicationCommand { get; private set; }
+    public DelegateCommand ConnectDeviceCommand { get; private set; }
 
-    public DelegateCommand MinimizeWindowCommand { get; private set; }
+    public DelegateCommand DisconnectDeviceCommand { get; private set; }
 
-    public DelegateCommand ShowAudioListenerViewCommand { get;private set; }
+    public DelegateCommand RefreshCommand { get; private set; }
 
-    public DelegateCommand ShowSettingViewCommand { get; private set; }
+
+    public DelegateCommand<string> CommandReadCommand { get; private set; }
+
+    public DelegateCommand<string> CommandWriteCommand { get; private set; }
+
+
+    public DelegateCommand LoadMusicCommand { get; private set; }
+
+    public DelegateCommand PlayMusicCommand { get; private set; }
+
+    public DelegateCommand StopMusicCommand { get; private set; }
+
+    public DelegateCommand StartRecordingCommand { get; private set; }
+
+    public DelegateCommand StopRecordingCommand { get; private set; }
 
 
     #endregion
@@ -270,7 +426,6 @@ public partial class MainWindow : MetroWindow
         InitProperties();
         InitCommands();
         InitEvents();
-        Loaded += MainWindow_Loaded;
         DataContext = this;
     }
 
@@ -278,8 +433,6 @@ public partial class MainWindow : MetroWindow
     {
 
         InitKeyBars();
-
-
     }
 
     private void InitKeyBars()
@@ -455,7 +608,6 @@ public partial class MainWindow : MetroWindow
 
     }
 
-
     private void InitProperties()
     {
         //第一行按键
@@ -577,34 +729,64 @@ public partial class MainWindow : MetroWindow
 
     }
 
-
-
     private void InitCommands()
     {
-        CloseApplicationCommand = new DelegateCommand(CloseApplication);
-        MinimizeWindowCommand = new DelegateCommand(MinimizeWindow);
-        ShowAudioListenerViewCommand = new DelegateCommand(ShowAudioListenerView);
-        ShowSettingViewCommand = new DelegateCommand(ShowSettingView);
-    }
+        ConnectDeviceCommand = new DelegateCommand(ConncetDevice, CanConnectDevice)
+            .ObservesProperty(() => Device)
+            .ObservesProperty(() => IsDeviceConnect);
+        DisconnectDeviceCommand = new DelegateCommand(DisconnectDevice, CanDisconnectDevice)
+            .ObservesProperty(() => Device)
+            .ObservesProperty(() => IsDeviceConnect);
 
+        RefreshCommand = new DelegateCommand(RefreshDevices);
+
+
+        CommandWriteCommand = new DelegateCommand<string>(CommandWrite, CanExcuteBootLoaderWrite)
+          .ObservesProperty(() => IsDeviceConnect);
+        CommandReadCommand = new DelegateCommand<string>(CommandRead, CanExcuteBootLoaderRead)
+            .ObservesProperty(() => IsDeviceConnect);
+
+
+        LoadMusicCommand = new DelegateCommand(LoadMusic);
+
+        PlayMusicCommand = new DelegateCommand(StartPlayMusic, CanExcuteStartPlayMusic)
+            .ObservesProperty(() => CanPlayAudio)
+            .ObservesProperty(() => SelectedFileName);
+        StopMusicCommand = new DelegateCommand(StopPlayMusic, CanExcuteStopPlayMusic)
+            .ObservesProperty(() => CanPlayAudio);
+
+        LoadMusicCommand = new DelegateCommand(LoadMusic);
+
+
+        StartRecordingCommand = new DelegateCommand(StartRecording, CanExcuteStartRecording)
+            .ObservesProperty(() => CanStartRecording);
+        StopRecordingCommand = new DelegateCommand(StopRecording, CanExcuteStopRecording)
+            .ObservesProperty(() => CanStartRecording);
+    }
 
 
     private void InitEvents()
     {
-
+        Loaded += MainWindow_Loaded;
     }
-
 
     #endregion
 
     #region 事件
 
-    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
     {
+
         hook = new KeyboardHook();
         hook.OnKeyDown += Hook_OnKeyDown;
         hook.OnKeyUp += Hook_OnKeyUp;
         hook.Start();
+        RefreshDevices();
+        if (HidDeviceList != null && GCH.Device != null)
+        {
+            Device = HidDeviceList.FirstOrDefault(x => x.DevicePath == GCH.Device.DevicePath);
+        }
+        IsDeviceConnect = GCH.IsDeviceConnect;
     }
 
     private void Hook_OnKeyDown(object sender, KeyEventArgs e)
@@ -640,46 +822,521 @@ public partial class MainWindow : MetroWindow
         Environment.Exit(0);
     }
 
+    #endregion
 
-    private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    #region 方法
+
+    #region Can Excute
+
+    private bool CanExcuteBootLoaderWrite(string arg)
     {
-        if (e.ButtonState == MouseButtonState.Pressed)
+        return IsDeviceConnect && Device != null;
+    }
+
+    private bool CanExcuteBootLoaderRead(string arg)
+    {
+        return IsDeviceConnect && Device != null;
+    }
+
+    private bool CanConnectDevice()
+    {
+        return !IsDeviceConnect && Device != null;
+    }
+
+
+    private bool CanDisconnectDevice()
+    {
+        return IsDeviceConnect && Device != null;
+    }
+
+
+    private bool CanExcuteStartPlayMusic()
+    {
+        return CanPlayAudio && !string.IsNullOrEmpty(SelectedFileName);
+    }
+
+    private bool CanExcuteStopPlayMusic()
+    {
+        return !CanPlayAudio;
+    }
+
+
+    private bool CanExcuteStartRecording()
+    {
+        return CanStartRecording;
+    }
+
+    private bool CanExcuteStopRecording()
+    {
+        return !CanStartRecording;
+    }
+
+    #endregion
+
+    #region Excute
+
+
+    private void ConncetDevice()
+    {
+        if (hidDevices != null && Device != null)
         {
-            DragMove();
+            GCH.Device = hidDevices.FirstOrDefault(x => x.DevicePath == Device.DevicePath);
+        }
+        if (GCH.Device == null)
+        {
+            return;
+        }
+
+        try
+        {
+            GCH.Device.OpenDevice();
+            IsDeviceConnect = true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+        }
+    }
+
+    private void DisconnectDevice()
+    {
+        if (!GCH.IsDeviceConnect)
+        {
+            return;
+        }
+        try
+        {
+            GCH.Device.CloseDevice();
+            IsDeviceConnect = false;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+        }
+    }
+
+    private void RefreshDevices()
+    {
+        hidDevices = HidDevices.Enumerate();
+        if (hidDevices != null && hidDevices.Any())
+        {
+            HidDeviceList.Clear();
+            foreach (var hidDevice in hidDevices)
+            {
+                if (hidDevice.Description.Contains("符合"))
+                {
+                    continue;
+                }
+                string mc = string.Empty;
+                string pd = string.Empty;
+                string sn = string.Empty;
+                if (hidDevice.ReadManufacturer(out byte[] mcBy))
+                {
+                    mc = Encoding.UTF8.GetString(mcBy).TrimEnd('\0');
+                }
+
+                if (hidDevice.ReadProduct(out byte[] pdBy))
+                {
+                    pd = Encoding.UTF8.GetString(pdBy).TrimEnd('\0');
+                }
+
+                if (hidDevice.ReadSerialNumber(out byte[] snBy))
+                {
+                    sn = Encoding.UTF8.GetString(snBy).TrimEnd('\0');
+                }
+
+                HidDeviceModel model = new(mc, pd, hidDevice.Description, hidDevice.Attributes.Version, sn,
+                                           hidDevice.Attributes.VendorHexId, hidDevice.Attributes.ProductHexId,
+                                           hidDevice.Capabilities.InputReportByteLength,
+                                           hidDevice.Capabilities.OutputReportByteLength,
+                                           hidDevice.Capabilities.FeatureReportByteLength, hidDevice.DevicePath);
+
+                HidDeviceList.Add(model);
+
+            }
+        }
+    }
+
+
+
+    private void ClearInputMessage()
+    {
+        InputMessage = null;
+    }
+
+    private void ClearOutputMessage()
+    {
+        OutputMessage = null;
+    }
+
+    private void CommandWrite(string obj)
+    {
+        if (Enum.TryParse(obj, out KeyCommandNames cmd) == false)
+        {
+            return;
+        }
+        switch (cmd)
+        {
+            case KeyCommandNames.Sleep:
+                KBCH.SetSleep(SleepModel);
+                break;
+
+            case KeyCommandNames.Key_Macro:
+                KBCH.SetKeyMacro(KeyMacroModel);
+                break;
+
+            case KeyCommandNames.Key_RBG:
+                KBCH.SetKeyColor(KeyColorModel);
+                break;
+
+            case KeyCommandNames.Animation:
+                KBCH.SetAnimation(AnimationModel);
+                break;
+
+            case KeyCommandNames.Profile:
+                KBCH.SetProfile(ProfileModel);
+                break;
+
+            case KeyCommandNames.RBG_Map:
+                KBCH.SetColorMap(SelectedKeyColorMap);
+                break;
+
+            case KeyCommandNames.Language:
+                KBCH.SetLanguage(SelectedLanguage);
+                break;
+
+            case KeyCommandNames.Macro_Data:
+                KBCH.SetMarcoMap(SelectedMarcoMap);
+                break;
+
+            case KeyCommandNames.Profile_Data:
+                KBCH.SetProfileMap(SelectedProfileMap);
+                break;
+
+            case KeyCommandNames.BootUp:
+                KBCH.SetBootUpMap(SelectedBootUpMap);
+                break;
+
+            case KeyCommandNames.Flash_Data:
+                break;
+
+            case KeyCommandNames.Reset_Default:
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void CommandRead(string obj)
+    {
+        if (Enum.TryParse(obj, out KeyCommandNames cmd) == false)
+        {
+            return;
+        }
+        switch (cmd)
+        {
+            case KeyCommandNames.Model:
+                KeyModelName = KBCH.GetModel();
+                break;
+            case KeyCommandNames.Sleep:
+                GetSleepModel();
+
+                break;
+            case KeyCommandNames.Key_Macro:
+                GetMacroModel();
+
+                break;
+            case KeyCommandNames.Key_RBG:
+                GetRGBModel();
+
+                break;
+            case KeyCommandNames.Animation:
+                GetAnimationModel();
+                break;
+
+            case KeyCommandNames.Profile:
+                GetProfileModel();
+                break;
+            case KeyCommandNames.RBG_Map:
+                GegRGBMap();
+                break;
+
+            case KeyCommandNames.Language:
+                SelectedLanguage = KBCH.GetLanguage();
+                break;
+
+            case KeyCommandNames.Macro_Data:
+                GetMarcoMap();
+                break;
+
+            case KeyCommandNames.Profile_Data:
+                GetProfileMap();
+                break;
+
+            case KeyCommandNames.BootUp:
+                GetBootUpMap();
+                break;
+
+            case KeyCommandNames.Flash_Data:
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    #region Get Model
+
+    private static void GetSleepModel()
+    {
+        var sleep = KBCH.GetSleep();
+        if (sleep != null)
+        {
+            SleepModel.SleepTime = sleep.SleepTime;
+            SleepModel.SleepMode = sleep.SleepMode;
+        }
+    }
+
+    private static void GetMacroModel()
+    {
+        var marco = KBCH.GetKeyMacro();
+        if (marco != null)
+        {
+            KeyMacroModel.KeyName = marco.KeyName;
+            KeyMacroModel.KeyMode = marco.KeyMode;
+            KeyMacroModel.KeyCodeHex = marco.KeyCodeHex;
+        }
+    }
+
+    private static void GetRGBModel()
+    {
+        var colorModel = KBCH.GetKeyColor(KeyMacroModel.KeyIndex);
+        if (colorModel != null)
+        {
+            KeyColorModel.ColorRHex = colorModel.ColorRHex;
+            KeyColorModel.ColorBHex = colorModel.ColorBHex;
+            KeyColorModel.ColorGHex = colorModel.ColorGHex;
+            KeyColorModel.ColorAHex = colorModel.ColorAHex;
+        }
+    }
+
+    private static void GetAnimationModel()
+    {
+        var animation = KBCH.GetAnimation();
+        if (animation != null)
+        {
+            AnimationModel.AnimationId = animation.AnimationId;
+            AnimationModel.ColorRHex = animation.ColorRHex;
+            AnimationModel.ColorBHex = animation.ColorBHex;
+            AnimationModel.ColorGHex = animation.ColorGHex;
+            AnimationModel.ColorAHex = animation.ColorAHex;
+            AnimationModel.SpeedHex = animation.SpeedHex;
+            AnimationModel.Display = animation.Display;
+            AnimationModel.Direction = animation.Direction;
+        }
+    }
+
+    private static void GetProfileModel()
+    {
+        var profileModel = KBCH.GetProfile();
+        if (profileModel != null)
+        {
+            ProfileModel.NumberHex = profileModel.NumberHex;
+        }
+    }
+
+    private void GegRGBMap()
+    {
+        var colorMap = KBCH.GetColorMap();
+        if (colorMap != null)
+        {
+            SelectedKeyColorMap.MapDatas = colorMap.MapDatas;
+        }
+    }
+
+    private void GetMarcoMap()
+    {
+        var macroMap = KBCH.GetMarcoMap(SelectedMarcoMap.Number);
+        if (macroMap != null)
+        {
+            SelectedMarcoMap.MapDatas = macroMap.MapDatas;
+        }
+    }
+
+    private void GetProfileMap()
+    {
+        var profileMap = KBCH.GetProfileMap(SelectedProfileMap.Number);
+        if (profileMap != null)
+        {
+            SelectedProfileMap.AnimationId = profileMap.AnimationId;
+            SelectedProfileMap.ColorRHex = profileMap.ColorRHex;
+            SelectedProfileMap.ColorBHex = profileMap.ColorBHex;
+            SelectedProfileMap.ColorGHex = profileMap.ColorGHex;
+            SelectedProfileMap.ColorAHex = profileMap.ColorAHex;
+            SelectedProfileMap.SpeedHex = profileMap.SpeedHex;
+            SelectedProfileMap.Display = profileMap.Display;
+            SelectedProfileMap.Direction = profileMap.Direction;
+            SelectedProfileMap.MapDatas = profileMap.MapDatas;
+        }
+    }
+
+    private void GetBootUpMap()
+    {
+        var map = KBCH.GetBootUpMap(SelectedBootUpMap.Number);
+        if (map != null)
+        {
+            SelectedBootUpMap.MapDatas = map.MapDatas;
         }
     }
 
     #endregion
 
-    #region 方法
 
-    private void ShowAudioListenerView()
+
+    #endregion
+
+    private void LoadMusic()
     {
-        new AudioListener().Show();
+        var ofd = new OpenFileDialog
+        {
+            Filter = "MP3 Files|*.mp3|WAV files|*.wav"
+        };
+        if (ofd.ShowDialog(this) == true)
+        {
+            SelectedFileName = ofd.FileName;
+        }
     }
 
-    private void ShowSettingView()
+    WaveOutEvent outputDevice;
+
+    private void StartPlayMusic()
     {
-        new SettingView().Show();
+        try
+        {
+            using var audioFile = new AudioFileReader(SelectedFileName);
+            outputDevice = new WaveOutEvent();
+            outputDevice.Init(audioFile);
+            outputDevice.Play(); // 异步执行
+            CanPlayAudio = !(outputDevice.PlaybackState == PlaybackState.Playing);
+        }
+        catch (Exception ex)
+        {
+            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
+        }
+
+    }
+
+    private void StopPlayMusic()
+    {
+        if (outputDevice == null)
+        {
+            return;
+        }
+        try
+        {
+            outputDevice.Stop();
+            CanPlayAudio = true;
+            outputDevice.Dispose();
+        }
+        catch (Exception ex)
+        {
+            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
+        }
+
     }
 
 
 
-
-    private void CloseApplication()
+    WasapiLoopbackCapture capture;
+    private void StartRecording()
     {
-        Close();
+        try
+        {
+            capture = new WasapiLoopbackCapture();
+            capture.DataAvailable += Cap_DataAvailable;
+            capture.StartRecording();
+            CanStartRecording = false;
+            Task.Run(GetSpectrumData);
+        }
+        catch (Exception ex)
+        {
+            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
+        }
 
     }
 
 
-    private void MinimizeWindow()
+    private void Cap_DataAvailable(object sender, WaveInEventArgs e)
     {
-        SetCurrentValue(WindowStateProperty, WindowState.Minimized);
+        int length = e.BytesRecorded / 4;           // 采样的数量 (每一个采样是 4 字节)
+        double[] result = new double[length];       // 声明结果
+
+        for (int i = 0; i < length; i++)
+        {
+            result[i] = BitConverter.ToSingle(e.Buffer, i * 4);      // 取出采样值
+        }
+        visualizerDataHelper.PushSampleData(result);          // 将新的采样存储到 可视化器 中
+    }
+
+
+
+    double[] spectrumData;
+    private void GetSpectrumData()
+    {
+        DateTime time = DateTime.Now;
+        while (true)
+        {
+            if (CanStartRecording)
+            {
+                break;
+            }
+            if (DateTime.Now.Subtract(time).TotalMilliseconds >= 25)
+            {
+                time = DateTime.Now;
+                double[] newSpectrumData = visualizerDataHelper.GetSpectrumData();         // 从可视化器中获取频谱数据
+                newSpectrumData = VisualizerDataHelper.MakeSmooth(newSpectrumData, 2);                // 平滑频谱数据
+                spectrumData = newSpectrumData;
+                if (spectrumData.Any(x => x != 0))
+                {
+                    List<double> data = spectrumData.ToList();
+                    for (int i = 0; i < FFTBars.Count; i++)
+                    {
+                        var hight = data.GetRange(6 * i, 6).Max() * 60000;
+                        hight = hight < 0 ? 0 : hight;
+                        keyBars[i].SetValue(hight);
+                        FFTBars[i].Height = hight;
+                    }
+                }
+
+            }
+            Thread.Sleep(1);
+        }
+    }
+
+    private void StopRecording()
+    {
+        try
+        {
+            capture.StopRecording();
+            CanStartRecording = true;
+        }
+        catch (Exception ex)
+        {
+            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
+        }
+
     }
 
 
 
     #endregion
 
+    private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if(e.ButtonState == MouseButtonState.Pressed)
+        {
+            DragMove();
+        }
+    }
 }
