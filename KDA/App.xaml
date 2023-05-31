@@ -112,6 +112,140 @@
                 </twc:CylindricalProgressBar.Style>
             </twc:CylindricalProgressBar>
 
+            <Grid x:Key="WaveBar02" Margin="1,0" Width="56">
+                <StackPanel  VerticalAlignment="Bottom" Height="{Binding Height}" >
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type Rectangle}">
+                            <Setter Property="RadiusX" Value="1"/>
+                            <Setter Property="RadiusY" Value="1"/>
+                            <Setter Property="Height" Value="5"/>
+                            <Setter Property="Margin" Value="0 1 0 0"/>
+                            <Setter Property="Fill" Value="{Binding Fill}"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                    <Rectangle />
+                </StackPanel>
+            </Grid>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

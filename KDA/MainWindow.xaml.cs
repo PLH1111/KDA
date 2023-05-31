@@ -32,7 +32,7 @@ public partial class MainWindow : FilletWindow
 
     private IEnumerable<HidDevice> hidDevices;
 
-    private readonly VisualizerDataHelper visualizerDataHelper = new(256);
+    private readonly VisualizerDataHelper visualizerDataHelper = new(128);
 
     #endregion
 
@@ -1297,13 +1297,16 @@ public partial class MainWindow : FilletWindow
                 double[] newSpectrumData = visualizerDataHelper.GetSpectrumData();         // 从可视化器中获取频谱数据
                 newSpectrumData = VisualizerDataHelper.MakeSmooth(newSpectrumData, 2);                // 平滑频谱数据
                 spectrumData = newSpectrumData;
-                if (spectrumData.Any(x => x != 0))
+                if (spectrumData.Any())
                 {
                     List<double> data = spectrumData.ToList();
+                    List<double> range = null;
                     for (int i = 0; i < FFTBars.Count; i++)
                     {
-                        var hight = data.GetRange(6 * i, 6).Max() * 60000;
+                        range = data.GetRange(3 * i, 3);
+                        var hight = range.Max() * 50000;
                         hight = hight < 0 ? 0 : hight;
+                        hight = hight > 500 ? 500 : hight;
                         keyBars[i].SetValue(hight);
                         FFTBars[i].Height = hight;
                     }
@@ -1334,7 +1337,7 @@ public partial class MainWindow : FilletWindow
 
     private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if(e.ButtonState == MouseButtonState.Pressed)
+        if (e.ButtonState == MouseButtonState.Pressed)
         {
             DragMove();
         }
