@@ -24,14 +24,15 @@ namespace KDA.Models
             {
                 foreach (var key in Keys01)
                 {
-                    key.IsPressed = true;
+                    key.IsKeyPressed = true;
+                    
                 }
             }
             else
             {
                 foreach (var key in Keys01)
                 {
-                    key.IsPressed = false;
+                    key.IsKeyPressed = false;
                 }
             }
 
@@ -39,14 +40,14 @@ namespace KDA.Models
             {
                 foreach (var key in Keys02)
                 {
-                    key.IsPressed = true;
+                    key.IsKeyPressed = true;
                 }
             }
             else
             {
                 foreach (var key in Keys02)
                 {
-                    key.IsPressed = false;
+                    key.IsKeyPressed = false;
                 }
             }
 
@@ -54,14 +55,14 @@ namespace KDA.Models
             {
                 foreach (var key in Keys03)
                 {
-                    key.IsPressed = true;
+                    key.IsKeyPressed = true;
                 }
             }
             else
             {
                 foreach (var key in Keys03)
                 {
-                    key.IsPressed = false;
+                    key.IsKeyPressed = false;
                 }
             }
 
@@ -69,14 +70,14 @@ namespace KDA.Models
             {
                 foreach (var key in Keys04)
                 {
-                    key.IsPressed = true;
+                    key.IsKeyPressed = true;
                 }
             }
             else
             {
                 foreach (var key in Keys04)
                 {
-                    key.IsPressed = false;
+                    key.IsKeyPressed = false;
                 }
             }
 
@@ -84,14 +85,14 @@ namespace KDA.Models
             {
                 foreach (var key in Keys05)
                 {
-                    key.IsPressed = true;
+                    key.IsKeyPressed = true;
                 }
             }
             else
             {
                 foreach (var key in Keys05)
                 {
-                    key.IsPressed = false;
+                    key.IsKeyPressed = false;
                 }
             }
         }

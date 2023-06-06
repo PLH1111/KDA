@@ -6,15 +6,12 @@
                   xmlns:twc="clr-namespace:TianWeiToolsPro.Controls;assembly=TianWeiToolsPro"
                   xmlns:ctrls="clr-namespace:KDA.Controls"
                   mc:Ignorable="d" Title="AudioListener" Height="800" Width="1280"
-                  Style="{StaticResource FilletWindowBase}"
                   TitleBarBackground="Transparent"
-                  WindowStartupLocation="CenterScreen"
-                  MenuBorderThickness="0"
-                  CornerRadius="6">
+                  WindowStartupLocation="CenterScreen">
     <twc:FilletWindow.Background>
         <ImageBrush ImageSource="/Background/Sky03.jpg"/>
     </twc:FilletWindow.Background>
-    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" Background="Transparent">
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -24,28 +21,28 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Height="330" Width="1250">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,10">
-                    <ctrls:KeyControl KeyCode="Esc" IsKeyPressed="{Binding KeyEscape.IsPressed}" />
+                    <ctrls:KeyControl KeyCode="Esc" KeyModel="{Binding KeyEscape}"  />
                     <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
-                        <ctrls:KeyControl KeyCode="F1" IsKeyPressed="{Binding KeyF1.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F2" IsKeyPressed="{Binding KeyF2.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F3" IsKeyPressed="{Binding KeyF3.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F4" IsKeyPressed="{Binding KeyF4.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="F1" KeyModel="{Binding KeyF1}" />
+                        <ctrls:KeyControl KeyCode="F2" KeyModel="{Binding KeyF2}" />
+                        <ctrls:KeyControl KeyCode="F3" KeyModel="{Binding KeyF3}" />
+                        <ctrls:KeyControl KeyCode="F4" KeyModel="{Binding KeyF4}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="30,0,0,0">
-                        <ctrls:KeyControl KeyCode="F5" IsKeyPressed="{Binding KeyF5.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F6" IsKeyPressed="{Binding KeyF6.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F7" IsKeyPressed="{Binding KeyF7.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F8" IsKeyPressed="{Binding KeyF8.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="F5" KeyModel="{Binding KeyF5}" />
+                        <ctrls:KeyControl KeyCode="F6" KeyModel="{Binding KeyF6}" />
+                        <ctrls:KeyControl KeyCode="F7" KeyModel="{Binding KeyF7}" />
+                        <ctrls:KeyControl KeyCode="F8" KeyModel="{Binding KeyF8}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
-                        <ctrls:KeyControl KeyCode="F9" IsKeyPressed="{Binding KeyF9.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F10" IsKeyPressed="{Binding KeyF10.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F11" IsKeyPressed="{Binding KeyF11.IsPressed}" />
-                        <ctrls:KeyControl KeyCode="F12" IsKeyPressed="{Binding KeyF12.IsPressed}" />
+                        <ctrls:KeyControl KeyCode="F9" KeyModel="{Binding KeyF9}" />
+                        <ctrls:KeyControl KeyCode="F10" KeyModel="{Binding KeyF10}" />
+                        <ctrls:KeyControl KeyCode="F11" KeyModel="{Binding KeyF11}" />
+                        <ctrls:KeyControl KeyCode="F12" KeyModel="{Binding KeyF12}" />
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyPrintScreen.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyPrintScreen}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="Print" HorizontalAlignment="Center"/>
@@ -53,7 +50,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyScroll.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyScroll}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel>
                                     <TextBlock Text="Scroll" HorizontalAlignment="Center"/>
@@ -62,7 +59,7 @@
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
 
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyPause.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyPause}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel>
                                     <TextBlock Text="Pause" HorizontalAlignment="Center"/>
@@ -74,20 +71,20 @@
 
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="`" IsKeyPressed="{Binding KeyOem3.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="1" IsKeyPressed="{Binding KeyD1.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="2" IsKeyPressed="{Binding KeyD2.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="3" IsKeyPressed="{Binding KeyD3.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="4" IsKeyPressed="{Binding KeyD4.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="5" IsKeyPressed="{Binding KeyD5.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="6" IsKeyPressed="{Binding KeyD6.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="7" IsKeyPressed="{Binding KeyD7.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="8" IsKeyPressed="{Binding KeyD8.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="9" IsKeyPressed="{Binding KeyD9.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="0" IsKeyPressed="{Binding KeyD0.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="-" IsKeyPressed="{Binding KeyOemMinus.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="=" IsKeyPressed="{Binding KeyOemPlus.IsPressed}"/>
-                    <ctrls:KeyControl Width="80" IsKeyPressed="{Binding KeyBack.IsPressed}" IsPressedZoomIn="False">
+                    <ctrls:KeyControl KeyCode="`" KeyModel="{Binding KeyOem3}" />
+                    <ctrls:KeyControl KeyCode="1" KeyModel="{Binding KeyD1}"/>
+                    <ctrls:KeyControl KeyCode="2" KeyModel="{Binding KeyD2}"/>
+                    <ctrls:KeyControl KeyCode="3" KeyModel="{Binding KeyD3}"/>
+                    <ctrls:KeyControl KeyCode="4" KeyModel="{Binding KeyD4}"/>
+                    <ctrls:KeyControl KeyCode="5" KeyModel="{Binding KeyD5}"/>
+                    <ctrls:KeyControl KeyCode="6" KeyModel="{Binding KeyD6}"/>
+                    <ctrls:KeyControl KeyCode="7" KeyModel="{Binding KeyD7}"/>
+                    <ctrls:KeyControl KeyCode="8" KeyModel="{Binding KeyD8}"/>
+                    <ctrls:KeyControl KeyCode="9" KeyModel="{Binding KeyD9}"/>
+                    <ctrls:KeyControl KeyCode="0" KeyModel="{Binding KeyD0}"/>
+                    <ctrls:KeyControl KeyCode="-" KeyModel="{Binding KeyOemMinus}"/>
+                    <ctrls:KeyControl KeyCode="=" KeyModel="{Binding KeyOemPlus}"/>
+                    <ctrls:KeyControl Width="80" KeyModel="{Binding KeyBack}" IsPressedZoomIn="False">
                         <ctrls:KeyControl.KeyCode>
                             <StackPanel >
                                 <TextBlock Text="Backspace" HorizontalAlignment="Center"/>
@@ -96,7 +93,7 @@
                         </ctrls:KeyControl.KeyCode>
                     </ctrls:KeyControl>
                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyInsert.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyInsert}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="插入" HorizontalAlignment="Center"/>
@@ -104,7 +101,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyHome.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyHome}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel>
                                     <TextBlock Text="起始" HorizontalAlignment="Center"/>
@@ -113,7 +110,7 @@
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
 
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyPageUp.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyPageUp}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel>
                                     <TextBlock Text="上页" HorizontalAlignment="Center"/>
@@ -123,7 +120,7 @@
                         </ctrls:KeyControl>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumLock.IsPressed}">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumLock}">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="Num" HorizontalAlignment="Center"/>
@@ -131,7 +128,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyDivide.IsPressed}">
+                        <ctrls:KeyControl KeyModel="{Binding KeyDivide}">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel>
                                     <TextBlock Text="/" HorizontalAlignment="Center"/>
@@ -139,7 +136,7 @@
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
 
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyMultiply.IsPressed}">
+                        <ctrls:KeyControl KeyModel="{Binding KeyMultiply}">
                             <ctrls:KeyControl.KeyCode>
                                 <TextBlock Text="*" HorizontalAlignment="Center"/>
                             </ctrls:KeyControl.KeyCode>
@@ -147,22 +144,22 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="Tab" IsKeyPressed="{Binding KeyTab.IsPressed}" Width="80"/>
-                    <ctrls:KeyControl KeyCode="Q" IsKeyPressed="{Binding KeyQ.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="W" IsKeyPressed="{Binding KeyW.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="E" IsKeyPressed="{Binding KeyE.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="R" IsKeyPressed="{Binding KeyR.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="T" IsKeyPressed="{Binding KeyT.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Y" IsKeyPressed="{Binding KeyY.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="U" IsKeyPressed="{Binding KeyU.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="I" IsKeyPressed="{Binding KeyI.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="O" IsKeyPressed="{Binding KeyO.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="P" IsKeyPressed="{Binding KeyP.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="[" IsKeyPressed="{Binding KeyOem4.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="]" IsKeyPressed="{Binding KeyOem6.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="\" IsKeyPressed="{Binding KeyOem5.IsPressed}"/>
+                    <ctrls:KeyControl KeyCode="Tab" KeyModel="{Binding KeyTab}" Width="80"/>
+                    <ctrls:KeyControl KeyCode="Q" KeyModel="{Binding KeyQ}"/>
+                    <ctrls:KeyControl KeyCode="W" KeyModel="{Binding KeyW}"/>
+                    <ctrls:KeyControl KeyCode="E" KeyModel="{Binding KeyE}"/>
+                    <ctrls:KeyControl KeyCode="R" KeyModel="{Binding KeyR}"/>
+                    <ctrls:KeyControl KeyCode="T" KeyModel="{Binding KeyT}"/>
+                    <ctrls:KeyControl KeyCode="Y" KeyModel="{Binding KeyY}"/>
+                    <ctrls:KeyControl KeyCode="U" KeyModel="{Binding KeyU}"/>
+                    <ctrls:KeyControl KeyCode="I" KeyModel="{Binding KeyI}"/>
+                    <ctrls:KeyControl KeyCode="O" KeyModel="{Binding KeyO}"/>
+                    <ctrls:KeyControl KeyCode="P" KeyModel="{Binding KeyP}"/>
+                    <ctrls:KeyControl KeyCode="[" KeyModel="{Binding KeyOem4}"/>
+                    <ctrls:KeyControl KeyCode="]" KeyModel="{Binding KeyOem6}"/>
+                    <ctrls:KeyControl KeyCode="\" KeyModel="{Binding KeyOem5}"/>
                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyDelete.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyDelete}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="删除" HorizontalAlignment="Center"/>
@@ -170,7 +167,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyEnd.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyEnd}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel>
                                     <TextBlock Text="结束" HorizontalAlignment="Center"/>
@@ -178,7 +175,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyPageDown.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyPageDown}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel>
                                     <TextBlock Text="上页" HorizontalAlignment="Center"/>
@@ -188,7 +185,7 @@
                         </ctrls:KeyControl>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad7.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad7}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="7" HorizontalAlignment="Center"/>
@@ -196,7 +193,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad8.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad8}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="8" HorizontalAlignment="Center"/>
@@ -205,7 +202,7 @@
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
 
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad9.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad9}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="9" HorizontalAlignment="Center"/>
@@ -216,21 +213,21 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="CapsLock" IsKeyPressed="{Binding KeyCapsLock.IsPressed}" Width="92"/>
-                    <ctrls:KeyControl KeyCode="A" IsKeyPressed="{Binding KeyA.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="S" IsKeyPressed="{Binding KeyS.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="D" IsKeyPressed="{Binding KeyD.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="F" IsKeyPressed="{Binding KeyF.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="G" IsKeyPressed="{Binding KeyG.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="H" IsKeyPressed="{Binding KeyH.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="J" IsKeyPressed="{Binding KeyJ.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="K" IsKeyPressed="{Binding KeyK.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="L" IsKeyPressed="{Binding KeyL.IsPressed}" />
-                    <ctrls:KeyControl KeyCode=";" IsKeyPressed="{Binding KeyOemSemicolon.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="'" IsKeyPressed="{Binding KeyOemQuotes.IsPressed}" />
-                    <ctrls:KeyControl KeyCode="Enter" IsKeyPressed="{Binding KeyEnter.IsPressed}"  Width="94" />
+                    <ctrls:KeyControl KeyCode="CapsLock" KeyModel="{Binding KeyCapsLock}" Width="92"/>
+                    <ctrls:KeyControl KeyCode="A" KeyModel="{Binding KeyA}" />
+                    <ctrls:KeyControl KeyCode="S" KeyModel="{Binding KeyS}" />
+                    <ctrls:KeyControl KeyCode="D" KeyModel="{Binding KeyD}" />
+                    <ctrls:KeyControl KeyCode="F" KeyModel="{Binding KeyF}" />
+                    <ctrls:KeyControl KeyCode="G" KeyModel="{Binding KeyG}" />
+                    <ctrls:KeyControl KeyCode="H" KeyModel="{Binding KeyH}" />
+                    <ctrls:KeyControl KeyCode="J" KeyModel="{Binding KeyJ}" />
+                    <ctrls:KeyControl KeyCode="K" KeyModel="{Binding KeyK}" />
+                    <ctrls:KeyControl KeyCode="L" KeyModel="{Binding KeyL}" />
+                    <ctrls:KeyControl KeyCode=";" KeyModel="{Binding KeyOemSemicolon}" />
+                    <ctrls:KeyControl KeyCode="'" KeyModel="{Binding KeyOemQuotes}" />
+                    <ctrls:KeyControl KeyCode="Enter" KeyModel="{Binding KeyEnter}"  Width="94" />
                     <StackPanel Orientation="Horizontal" Margin="208,0,0,0">
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad4.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad4}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="4" HorizontalAlignment="Center"/>
@@ -238,7 +235,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad5.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad5}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="5" HorizontalAlignment="Center"/>
@@ -247,7 +244,7 @@
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
 
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad6.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad6}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="6" HorizontalAlignment="Center"/>
@@ -258,21 +255,21 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="Shift" Width="121" IsKeyPressed="{Binding KeyLeftShift.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Z" IsKeyPressed="{Binding KeyZ.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="X" IsKeyPressed="{Binding KeyX.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="C" IsKeyPressed="{Binding KeyC.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="V" IsKeyPressed="{Binding KeyV.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="B" IsKeyPressed="{Binding KeyB.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="N" IsKeyPressed="{Binding KeyN.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="M" IsKeyPressed="{Binding KeyM.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="," IsKeyPressed="{Binding KeyOemComma.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="." IsKeyPressed="{Binding KeyOemPeriod.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="/" IsKeyPressed="{Binding KeyOemQuestion.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Shift" Width="121" IsKeyPressed="{Binding KeyRightShift.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="↑"  Margin="80,0,0,0" IsKeyPressed="{Binding KeyModelUp.IsPressed}"/>
+                    <ctrls:KeyControl KeyCode="Shift" Width="121" KeyModel="{Binding KeyLeftShift}"/>
+                    <ctrls:KeyControl KeyCode="Z" KeyModel="{Binding KeyZ}"/>
+                    <ctrls:KeyControl KeyCode="X" KeyModel="{Binding KeyX}"/>
+                    <ctrls:KeyControl KeyCode="C" KeyModel="{Binding KeyC}"/>
+                    <ctrls:KeyControl KeyCode="V" KeyModel="{Binding KeyV}"/>
+                    <ctrls:KeyControl KeyCode="B" KeyModel="{Binding KeyB}"/>
+                    <ctrls:KeyControl KeyCode="N" KeyModel="{Binding KeyN}"/>
+                    <ctrls:KeyControl KeyCode="M" KeyModel="{Binding KeyM}"/>
+                    <ctrls:KeyControl KeyCode="," KeyModel="{Binding KeyOemComma}"/>
+                    <ctrls:KeyControl KeyCode="." KeyModel="{Binding KeyOemPeriod}"/>
+                    <ctrls:KeyControl KeyCode="/" KeyModel="{Binding KeyOemQuestion}"/>
+                    <ctrls:KeyControl KeyCode="Shift" Width="121" KeyModel="{Binding KeyRightShift}"/>
+                    <ctrls:KeyControl KeyCode="↑"  Margin="80,0,0,0" KeyModel="{Binding KeyModelUp}"/>
                     <StackPanel Orientation="Horizontal" Margin="78,0,0,0">
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad1.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad1}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="1" HorizontalAlignment="Center"/>
@@ -280,7 +277,7 @@
                                 </StackPanel>
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad2.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad2}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="2" HorizontalAlignment="Center"/>
@@ -289,7 +286,7 @@
                             </ctrls:KeyControl.KeyCode>
                         </ctrls:KeyControl>
 
-                        <ctrls:KeyControl IsKeyPressed="{Binding KeyNumPad3.IsPressed}" IsPressedZoomIn="False">
+                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad3}" IsPressedZoomIn="False">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="3" HorizontalAlignment="Center"/>
@@ -300,20 +297,20 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" IsKeyPressed="{Binding KeyLeftCtrl.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Win" IsKeyPressed="{Binding KeyLWin.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Alt" IsKeyPressed="{Binding KeyLeftAlt.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Space" Width="412" IsKeyPressed="{Binding KeySpace.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Alt" IsKeyPressed="{Binding KeyRightAlt.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Apps" IsKeyPressed="{Binding KeyApps.IsPressed}"/>
-                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" IsKeyPressed="{Binding KeyRightCtrl.IsPressed}"/>
+                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" KeyModel="{Binding KeyLeftCtrl}"/>
+                    <ctrls:KeyControl KeyCode="Win" KeyModel="{Binding KeyLWin}"/>
+                    <ctrls:KeyControl KeyCode="Alt" KeyModel="{Binding KeyLeftAlt}"/>
+                    <ctrls:KeyControl KeyCode="Space" Width="412" KeyModel="{Binding KeySpace}"/>
+                    <ctrls:KeyControl KeyCode="Alt" KeyModel="{Binding KeyRightAlt}"/>
+                    <ctrls:KeyControl KeyCode="Apps" KeyModel="{Binding KeyApps}"/>
+                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" KeyModel="{Binding KeyRightCtrl}"/>
                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0" >
-                        <ctrls:KeyControl KeyCode="←" IsKeyPressed="{Binding KeyModelLeft.IsPressed}"/>
-                        <ctrls:KeyControl KeyCode="↓" IsKeyPressed="{Binding KeyModelDown.IsPressed}"/>
-                        <ctrls:KeyControl KeyCode="→" IsKeyPressed="{Binding KeyModelRight.IsPressed}"/>
+                        <ctrls:KeyControl KeyCode="←" KeyModel="{Binding KeyModelLeft}"/>
+                        <ctrls:KeyControl KeyCode="↓" KeyModel="{Binding KeyModelDown}"/>
+                        <ctrls:KeyControl KeyCode="→" KeyModel="{Binding KeyModelRight}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl Width="106" IsPressedZoomIn="False" IsKeyPressed="{Binding KeyNumPad0.IsPressed}">
+                        <ctrls:KeyControl Width="106" IsPressedZoomIn="False" KeyModel="{Binding KeyNumPad0}">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="0" HorizontalAlignment="Center"/>
@@ -323,7 +320,7 @@
                         </ctrls:KeyControl>
 
 
-                        <ctrls:KeyControl IsPressedZoomIn="False" IsKeyPressed="{Binding KeyDecimal.IsPressed}">
+                        <ctrls:KeyControl IsPressedZoomIn="False" KeyModel="{Binding KeyDecimal}">
                             <ctrls:KeyControl.KeyCode>
                                 <StackPanel >
                                     <TextBlock Text="." HorizontalAlignment="Center"/>
@@ -335,17 +332,17 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel  VerticalAlignment="Bottom" Margin="0 0 0 4">
-                <ctrls:KeyControl IsKeyPressed="{Binding KeySubtract.IsPressed}" >
+                <ctrls:KeyControl KeyModel="{Binding KeySubtract}" >
                     <ctrls:KeyControl.KeyCode>
                         <StackPanel >
                             <TextBlock Text="-" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </ctrls:KeyControl.KeyCode>
                 </ctrls:KeyControl>
-                <ctrls:KeyControl Height="96" IsKeyPressed="{Binding KeyAdd.IsPressed}" KeyCode="+"/>
+                <ctrls:KeyControl Height="96" KeyModel="{Binding KeyAdd}" KeyCode="+"/>
 
 
-                <ctrls:KeyControl IsKeyPressed="{Binding KeyReturn.IsPressed}" Height="96" IsPressedZoomIn="False">
+                <ctrls:KeyControl KeyModel="{Binding KeyReturn}" Height="96" IsPressedZoomIn="False">
                     <ctrls:KeyControl.KeyCode>
                         <StackPanel >
                             <TextBlock Text="回车" HorizontalAlignment="Center"/>
@@ -361,6 +358,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,5" >
+                <Button Content="Start Simulating" Width="auto" Command="{Binding StartSimulatingCommand}"/>
+                <Button Content="Stop Simulating" Width="auto" Command="{Binding StopSimulatingCommand}"/>
                 <Button Content="Start Recording" Width="auto" Command="{Binding StartRecordingCommand}"/>
                 <Button Content="Stop Recording" Width="auto" Command="{Binding StopRecordingCommand}"/>
             </StackPanel>
@@ -374,7 +373,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="models:FFTBar">
-                            <Rectangle Width="40" Margin="0 0 1 0"
+                            <Rectangle Width="30" Margin="0 0 1 0"
                                 Height="{Binding Height}" 
                                 VerticalAlignment="Bottom"  >
                                 <Rectangle.Fill>

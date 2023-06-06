@@ -15,9 +15,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media;
 using TianWeiToolsPro.Commands;
 using TianWeiToolsPro.Controls;
 using TianWeiToolsPro.Events;
+using TianWeiToolsPro.Service;
 
 namespace KDA;
 
@@ -27,6 +29,8 @@ public partial class MainWindow : FilletWindow
     #region 字段
 
     KeyboardHook hook;
+
+    private AnimationKeyModel animationKeyModel;
 
     private KeyBarList keyBars;
 
@@ -380,7 +384,11 @@ public partial class MainWindow : FilletWindow
 
     #endregion
 
+    #region Anition Simulating
 
+    public bool CanStartSimulating { get; set; } = true;
+
+    #endregion
 
     #region CmdFlashModel
 
@@ -415,6 +423,12 @@ public partial class MainWindow : FilletWindow
     public DelegateCommand StopRecordingCommand { get; private set; }
 
 
+    public DelegateCommand StartSimulatingCommand { get; private set; }
+
+    public DelegateCommand StopSimulatingCommand { get; private set; }
+
+
+
     #endregion
 
     #region 初始化
@@ -429,10 +443,141 @@ public partial class MainWindow : FilletWindow
         DataContext = this;
     }
 
-    private void InitFields()
+    protected override void InitFields()
+    {
+        InitAnimationKeyGroups();
+        InitKeyBars();
+    }
+
+    private void InitAnimationKeyGroups()
     {
 
-        InitKeyBars();
+        animationKeyModel = new AnimationKeyModel()
+        {
+            KeyOem3,
+            KeyTab,
+
+            KeyD1,
+            KeyQ,
+
+            KeyD2,
+            KeyW,
+
+            KeyD3,
+            KeyE,
+
+            KeyD4,
+            KeyR,
+
+            KeyD5,
+            KeyT,
+
+            KeyD6,
+            KeyY,
+
+            KeyD7,
+            KeyU,
+
+            KeyD8,
+            KeyI,
+
+            KeyD9,
+            KeyO,
+
+            KeyD0,
+            KeyP,
+
+            KeyOemMinus,
+            KeyOem4,
+
+            KeyOemPlus,
+            KeyOem6,
+
+            KeyBack,
+            KeyOem5,
+
+            KeyInsert,
+            KeyDelete,
+
+            KeyHome,
+            KeyEnd,
+
+            KeyPageUp,
+            KeyPageDown,
+
+            KeyNumLock,
+            KeyNumPad7,
+
+            KeyDivide,
+            KeyNumPad8,
+
+            KeyMultiply,
+            KeyNumPad9,
+
+            KeySubtract,
+            KeyAdd,
+
+            KeyReturn,
+            KeyNumPad6,
+
+            KeyNumPad3,
+            KeyDecimal,
+
+            KeyNumPad2,
+            KeyNumPad0,
+
+            KeyNumPad1,
+            KeyNumPad0,
+
+            KeyModelRight,
+            KeyModelRight,
+
+            KeyModelUp,
+            KeyModelDown,
+
+            KeyModelLeft,
+            KeyModelLeft,
+
+            KeyRightShift,
+            KeyRightCtrl,
+
+            KeyOemQuestion,
+            KeyApps,
+
+            KeyOemPeriod,
+            KeyRightAlt,
+
+            KeyOemComma,
+            KeySpace,
+
+            KeyM,
+            KeySpace,
+
+            KeyN,
+            KeySpace,
+
+            KeyB,
+            KeySpace,
+
+            KeyV,
+            KeySpace,
+
+            KeyC,
+            KeySpace,
+
+            KeyX,
+            KeyLeftAlt,
+
+            KeyZ,
+            KeyLWin,
+
+            KeyLeftShift,
+            KeyLeftCtrl,
+
+            KeyCapsLock,
+            KeyA,
+
+        };
     }
 
     private void InitKeyBars()
@@ -608,7 +753,7 @@ public partial class MainWindow : FilletWindow
 
     }
 
-    private void InitProperties()
+    protected override void InitProperties()
     {
         //第一行按键
         KeyModelList.Add(KeyEscape);
@@ -729,7 +874,7 @@ public partial class MainWindow : FilletWindow
 
     }
 
-    private void InitCommands()
+    protected override void InitCommands()
     {
         ConnectDeviceCommand = new DelegateCommand(ConncetDevice, CanConnectDevice)
             .ObservesProperty(() => Device)
@@ -762,10 +907,16 @@ public partial class MainWindow : FilletWindow
             .ObservesProperty(() => CanStartRecording);
         StopRecordingCommand = new DelegateCommand(StopRecording, CanExcuteStopRecording)
             .ObservesProperty(() => CanStartRecording);
+
+        StartSimulatingCommand = new DelegateCommand(StartSimulating, CanExcuteStartSimulating)
+           .ObservesProperty(() => CanStartSimulating);
+        StopSimulatingCommand = new DelegateCommand(StopSimulating, CanExcuteStopSimulating)
+            .ObservesProperty(() => CanStartSimulating);
     }
 
 
-    private void InitEvents()
+
+    protected override void InitEvents()
     {
         Loaded += MainWindow_Loaded;
     }
@@ -797,7 +948,7 @@ public partial class MainWindow : FilletWindow
         {
             foreach (var m in models)
             {
-                m.IsPressed = true;
+                m.IsKeyPressed = true;
             }
         }
     }
@@ -810,7 +961,7 @@ public partial class MainWindow : FilletWindow
         {
             foreach (var m in models)
             {
-                m.IsPressed = false;
+                m.IsKeyPressed = false;
             }
         }
     }
@@ -869,6 +1020,16 @@ public partial class MainWindow : FilletWindow
     private bool CanExcuteStopRecording()
     {
         return !CanStartRecording;
+    }
+
+    private bool CanExcuteStartSimulating()
+    {
+        return CanStartSimulating;
+    }
+
+    private bool CanExcuteStopSimulating()
+    {
+        return !CanStartSimulating;
     }
 
     #endregion
@@ -1331,15 +1492,58 @@ public partial class MainWindow : FilletWindow
 
     }
 
+    Random random = new();
+    private async void StartSimulating()
+    {
+        CanStartSimulating = false;
 
+        var view = new CyclicRunningLightSettingsView();
+        var settings = TianWeiToolsPro.Extensions.SerializerExtension.DeepCopyByBin(view.ShowView());
+
+        List<Brush> brushes = new();
+
+        byte[] rbg = new byte[3];
+        for (int i = 0; i < settings.ColorCount; i++)
+        {
+            random.NextBytes(rbg);
+            Color color = Color.FromRgb(rbg[0], rbg[1], rbg[2]);
+            //构建 SolidColorBrush 需要UI 线程！！
+            Brush brush = new SolidColorBrush(color);
+            brushes.Add(brush);
+        }
+
+        var colors = brushes.ToArray();
+
+        await Task.Run(() =>
+        {
+
+            var groupsList = animationKeyModel.GetSetAnimationGroupsList(settings.Columns, colors);
+
+            while (true)
+            {
+                if (CanStartSimulating)
+                {
+                    break;
+                }
+                foreach (var group in groupsList)
+                {
+                    group.SetAnimation();
+                    TimeHelper.Delay(settings.AnimationDuration);
+                    group.ClearAnimation();
+                    if (CanStartSimulating)
+                    {
+                        break;
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void StopSimulating()
+    {
+        CanStartSimulating = true;
+    }
 
     #endregion
-
-    private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ButtonState == MouseButtonState.Pressed)
-        {
-            DragMove();
-        }
-    }
 }

@@ -210,17 +210,17 @@ public partial class SettingView : FilletWindow
         DataContext = this;
     }
 
-    private void InitFields()
+    protected override void InitFields()
     {
 
     }
 
-    private void InitProperties()
+    protected override void InitProperties()
     {
 
     }
 
-    private void InitCommands()
+    protected override void InitCommands()
     {
         ConnectDeviceCommand = new DelegateCommand(ConncetDevice, CanConnectDevice)
             .ObservesProperty(() => Device)
@@ -252,7 +252,7 @@ public partial class SettingView : FilletWindow
     }
 
 
-    private void InitEvents()
+    protected override void InitEvents()
     {
         Loaded += MainWindow_Loaded;
     }

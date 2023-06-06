@@ -24,6 +24,9 @@
         <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.ThemeForeground}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="IsPressedZoomIn" Value="True"/>
+        <Setter Property="IsKeyPressed" Value="{Binding RelativeSource={RelativeSource Self},Path=KeyModel.IsKeyPressed}"/>
+        <Setter Property="IsAnimationing" Value="{Binding RelativeSource={RelativeSource Self},Path=KeyModel.IsAnimation}"/>
+        <Setter Property="AnimationBrush" Value="{Binding RelativeSource={RelativeSource Self},Path=KeyModel.AnimationBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ctrl:KeyControl">
@@ -48,6 +51,9 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MousePressedBrush}"/>
                             <Setter  Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                        </Trigger>
+                        <Trigger Property="IsAnimationing" Value="True">
+                            <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

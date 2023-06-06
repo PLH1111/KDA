@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using KDA.Models;
 
 namespace KDA.Controls;
 
@@ -18,6 +19,21 @@ public class KeyControl : ButtonBase
     /// <summary>Identifies the <see cref="KeyCode"/> dependency property.</summary>
     public static readonly DependencyProperty KeyCodeProperty =
         DependencyProperty.Register(nameof(KeyCode), typeof(object), typeof(KeyControl));
+
+
+
+
+    public KeyModel KeyModel
+    {
+        get { return (KeyModel)GetValue(KeyModelProperty); }
+        set { SetValue(KeyModelProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for KeyModel.  This enables animation, styling, binding, etc...
+    /// <summary>Identifies the <see cref="KeyModel"/> dependency property.</summary>
+    public static readonly DependencyProperty KeyModelProperty =
+        DependencyProperty.Register(nameof(KeyModel), typeof(KeyModel), typeof(KeyControl));
+
 
 
 
@@ -85,9 +101,6 @@ public class KeyControl : ButtonBase
         DependencyProperty.Register(nameof(MousePressedBrush), typeof(Brush), typeof(KeyControl));
 
 
-
-
-
     public CornerRadius CornerRadius
     {
         get { return (CornerRadius)GetValue(CornerRadiusProperty); }
@@ -98,6 +111,33 @@ public class KeyControl : ButtonBase
     /// <summary>Identifies the <see cref="CornerRadius"/> dependency property.</summary>
     public static readonly DependencyProperty CornerRadiusProperty =
         DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(KeyControl));
+
+
+
+    public bool IsAnimationing
+    {
+        get { return (bool)GetValue(IsAnimationingProperty); }
+        set { SetValue(IsAnimationingProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for IsAnimationing.  This enables animation, styling, binding, etc...
+    /// <summary>Identifies the <see cref="IsAnimationing"/> dependency property.</summary>
+    public static readonly DependencyProperty IsAnimationingProperty =
+        DependencyProperty.Register(nameof(IsAnimationing), typeof(bool), typeof(KeyControl));
+
+
+
+
+    public Brush AnimationBrush
+    {
+        get { return (Brush)GetValue(AnimationBrushProperty); }
+        set { SetValue(AnimationBrushProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for AnimationBrush.  This enables animation, styling, binding, etc...
+    /// <summary>Identifies the <see cref="AnimationBrush"/> dependency property.</summary>
+    public static readonly DependencyProperty AnimationBrushProperty =
+        DependencyProperty.Register(nameof(AnimationBrush), typeof(Brush), typeof(KeyControl));
 
 
 

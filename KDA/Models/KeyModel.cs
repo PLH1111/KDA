@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using System.Windows.Media;
 
 namespace KDA.Models;
 
@@ -10,7 +11,15 @@ public class KeyModel
 
     public string KeyStr { get; set; }
 
-    public bool IsPressed { get; set; }
+    public bool IsKeyPressed 
+    {
+        get; 
+        set; 
+    }
+
+    public bool IsAnimation { get; set; }
+
+    public Brush AnimationBrush { get; set; }
 
     public KeyModel()
     {
