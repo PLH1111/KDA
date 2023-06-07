@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace KDA.Models
 {
@@ -24,15 +25,16 @@ namespace KDA.Models
             {
                 foreach (var key in Keys01)
                 {
-                    key.IsKeyPressed = true;
-                    
+                    key.AnimationBrush = Brushes.Lime;
+                    key.IsAnimation = true;
                 }
             }
             else
             {
                 foreach (var key in Keys01)
                 {
-                    key.IsKeyPressed = false;
+                    key.AnimationBrush = null;
+                    key.IsAnimation = false;
                 }
             }
 
@@ -40,14 +42,16 @@ namespace KDA.Models
             {
                 foreach (var key in Keys02)
                 {
-                    key.IsKeyPressed = true;
+                    key.AnimationBrush = Brushes.Cyan;
+                    key.IsAnimation = true;
                 }
             }
             else
             {
                 foreach (var key in Keys02)
                 {
-                    key.IsKeyPressed = false;
+                    key.AnimationBrush = null;
+                    key.IsAnimation = false;
                 }
             }
 
@@ -55,14 +59,16 @@ namespace KDA.Models
             {
                 foreach (var key in Keys03)
                 {
-                    key.IsKeyPressed = true;
+                    key.AnimationBrush = Brushes.Yellow;
+                    key.IsAnimation = true;
                 }
             }
             else
             {
                 foreach (var key in Keys03)
                 {
-                    key.IsKeyPressed = false;
+                    key.AnimationBrush = null;
+                    key.IsAnimation = false;
                 }
             }
 
@@ -70,14 +76,16 @@ namespace KDA.Models
             {
                 foreach (var key in Keys04)
                 {
-                    key.IsKeyPressed = true;
+                    key.AnimationBrush = Brushes.Orange;
+                    key.IsAnimation = true;
                 }
             }
             else
             {
                 foreach (var key in Keys04)
                 {
-                    key.IsKeyPressed = false;
+                    key.AnimationBrush = null;
+                    key.IsAnimation = false;
                 }
             }
 
@@ -85,14 +93,16 @@ namespace KDA.Models
             {
                 foreach (var key in Keys05)
                 {
-                    key.IsKeyPressed = true;
+                    key.AnimationBrush = Brushes.OrangeRed;
+                    key.IsAnimation = true;
                 }
             }
             else
             {
                 foreach (var key in Keys05)
                 {
-                    key.IsKeyPressed = false;
+                    key.AnimationBrush = null;
+                    key.IsAnimation = false;
                 }
             }
         }

@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:twc="clr-namespace:TianWeiToolsPro.Controls;assembly=TianWeiToolsPro"
+                  xmlns:ctrls="clr-namespace:KDA.Controls"
         xmlns:local="clr-namespace:KDA"
+                  xmlns:proc="http://propertytools.org/wpf"
         mc:Ignorable="d" ResizeMode="CanMinimize"
-        Title="循环灯效设置" Height="200" Width="250">
+        Title="循环灯效设置" Height="360" Width="400">
     <twc:FilletWindow.Background>
         <ImageBrush ImageSource="/Background/Sky02.jpg"/>
     </twc:FilletWindow.Background>
@@ -17,8 +19,43 @@
                 <Setter Property="Margin" Value="5"/>
             </Style>
         </StackPanel.Resources>
-        <twc:FilletHeaderTextbox Header="列数" Text="{Binding Settings.Columns}"  />
-        <twc:FilletHeaderTextbox Header="颜色数" Text="{Binding Settings.ColorCount}"  />
-        <twc:FilletHeaderTextbox Header="动画周期" Text="{Binding Settings.AnimationDuration}"  />
+        <StackPanel Orientation="Horizontal">
+            <twc:FilletHeaderTextbox Header="列数" Text="{Binding Settings.Columns}"  />
+            <twc:FilletHeaderTextbox Header="动画周期" Text="{Binding Settings.AnimationDuration}"  />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <twc:FilletHeaderTextbox Header="颜色数" Text="{Binding Settings.ColorCount}" />
+            <CheckBox Content="颜色随机" IsChecked="{Binding Settings.IsAutoColor}"/>
+        </StackPanel>
+        <twc:GroupPanel Header="自选颜色" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="添加颜色" Command="{Binding AddCustomColorCommand}"/>
+                    <Button Content="删除颜色" Command="{Binding RemoveCustomColorCommand}"/>
+                </StackPanel>
+
+                <ListView Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ItemsSource="{Binding Settings.CustomColors}" 
+                          SelectedItem="{Binding SelectedColor}" Height="120"
+                          Background="Transparent" Margin="5">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ctrls:ColorPicker SelectedColor="{Binding Color}" Margin="5" Width="30" Height="30"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListView>
+            </Grid>
+        </twc:GroupPanel>
+
     </StackPanel>
 </twc:FilletWindow>

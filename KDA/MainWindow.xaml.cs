@@ -30,7 +30,7 @@ public partial class MainWindow : FilletWindow
 
     KeyboardHook hook;
 
-    private AnimationKeyModel animationKeyModel;
+    private CycleAnimationKeyModel animationKeyModel;
 
     private KeyBarList keyBars;
 
@@ -452,13 +452,13 @@ public partial class MainWindow : FilletWindow
     private void InitAnimationKeyGroups()
     {
 
-        animationKeyModel = new AnimationKeyModel()
+        animationKeyModel = new CycleAnimationKeyModel()
         {
-            KeyOem3,
-            KeyTab,
+            //KeyOem3,
+            //KeyTab,
 
-            KeyD1,
-            KeyQ,
+            //KeyD1,
+            //KeyQ,
 
             KeyD2,
             KeyW,
@@ -576,6 +576,12 @@ public partial class MainWindow : FilletWindow
 
             KeyCapsLock,
             KeyA,
+
+            KeyTab,
+            KeyQ,
+
+            KeyOem3,
+            KeyD1,
 
         };
     }
@@ -1450,6 +1456,11 @@ public partial class MainWindow : FilletWindow
         {
             if (CanStartRecording)
             {
+                for (int i = 0; i < FFTBars.Count; i++)
+                {
+                    keyBars[i].SetValue(0);
+                    FFTBars[i].Height = 0;
+                }
                 break;
             }
             if (DateTime.Now.Subtract(time).TotalMilliseconds >= 25)
@@ -1487,37 +1498,51 @@ public partial class MainWindow : FilletWindow
         }
         catch (Exception ex)
         {
-            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
+            NoticeBoxService.ShowError(ex.Message);
         }
 
     }
 
-    Random random = new();
+    readonly Random random = new();
     private async void StartSimulating()
     {
         CanStartSimulating = false;
 
         var view = new CyclicRunningLightSettingsView();
-        var settings = TianWeiToolsPro.Extensions.SerializerExtension.DeepCopyByBin(view.ShowView());
+        var settings = view.ShowView();
 
         List<Brush> brushes = new();
 
-        byte[] rbg = new byte[3];
-        for (int i = 0; i < settings.ColorCount; i++)
+        Brush[] colors;
+        if (settings.IsAutoColor)
         {
-            random.NextBytes(rbg);
-            Color color = Color.FromRgb(rbg[0], rbg[1], rbg[2]);
-            //构建 SolidColorBrush 需要UI 线程！！
-            Brush brush = new SolidColorBrush(color);
-            brushes.Add(brush);
+            byte[] rbg = new byte[3];
+            for (int i = 0; i < settings.ColorCount; i++)
+            {
+                random.NextBytes(rbg);
+                Color color = Color.FromRgb(rbg[0], rbg[1], rbg[2]);
+                //构建 SolidColorBrush 需要UI 线程！！
+                Brush brush = new SolidColorBrush(color);
+                brushes.Add(brush);
+            }
+
+            colors = brushes.ToArray();
+        }
+        else
+        {
+            colors = settings.CustomColors.GetBrushes();
         }
 
-        var colors = brushes.ToArray();
 
         await Task.Run(() =>
         {
 
             var groupsList = animationKeyModel.GetSetAnimationGroupsList(settings.Columns, colors);
+
+            if (groupsList == null)
+            {
+                return;
+            }
 
             while (true)
             {

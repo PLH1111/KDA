@@ -1,5 +1,6 @@
 ﻿global using PropertyChanged;
-global using MahApps.Metro.Controls; 
+global using MahApps.Metro.Controls;
+global using TianWeiToolsPro.Service;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
