@@ -4,20 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models
-{
-    public class KeyBarList : List<KeyBar>
-    {
-        public KeyBarList()
-        {
-        }
+namespace KDA.Models;
 
-        public KeyBarList(int count)
+public class KeyBarList : List<KeyBar>
+{
+    public KeyBarList()
+    {
+    }
+
+    public KeyBarList(int count)
+    {
+        for (int i = 0; i < count; i++)
         {
-            for (int i = 0; i < count; i++)
-            {
-                Add(new KeyBar());
-            }
+            Add(new KeyBar());
         }
     }
 }

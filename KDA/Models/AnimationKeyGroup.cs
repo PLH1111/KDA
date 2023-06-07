@@ -5,34 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace KDA.Models
+namespace KDA.Models;
+
+public class AnimationKeyGroup : List<KeyModel>
 {
-    public class AnimationKeyGroup : List<KeyModel>
+
+    public Brush AnimationBrush { get; set; }
+
+    public AnimationKeyGroup(Brush brush)
     {
+        AnimationBrush = brush;
+    }
 
-        public Brush AnimationBrush { get; set; }
-
-        public AnimationKeyGroup(Brush brush)
+    public void SetAnimation()
+    {
+        foreach (var item in this)
         {
-            AnimationBrush = brush;
+            item.AnimationBrush = AnimationBrush;
+            item.IsAnimation = true;
         }
+    }
 
-        public void SetAnimation()
+    public void ClearAnimation()
+    {
+        foreach (var item in this)
         {
-            foreach (var item in this)
-            {
-                item.AnimationBrush = AnimationBrush;
-                item.IsAnimation = true;
-            }
-        }
-
-        public void ClearAnimation()
-        {
-            foreach (var item in this)
-            {
-                item.IsAnimation = false;
-                item.AnimationBrush = null;
-            }
+            item.IsAnimation = false;
+            item.AnimationBrush = null;
         }
     }
 }

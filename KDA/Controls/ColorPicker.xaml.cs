@@ -13,46 +13,45 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace KDA.Controls
+namespace KDA.Controls;
+
+/// <summary>
+/// ColorPicker.xaml 的交互逻辑
+/// </summary>
+public partial class ColorPicker : UserControl
 {
-    /// <summary>
-    /// ColorPicker.xaml 的交互逻辑
-    /// </summary>
-    public partial class ColorPicker : UserControl
+
+    public SolidColorBrush SelectedColor
     {
+        get { return (SolidColorBrush)GetValue(SelectedColorProperty); }
+        set { SetValue(SelectedColorProperty, value); }
+    }
 
-        public SolidColorBrush SelectedColor
+    // Using a DependencyProperty as the backing store for SelectedColor.  This enables animation, styling, binding, etc...
+    /// <summary>Identifies the <see cref="SelectedColor"/> dependency property.</summary>
+    public static readonly DependencyProperty SelectedColorProperty =
+        DependencyProperty.Register(nameof(SelectedColor), typeof(SolidColorBrush), typeof(ColorPicker));
+
+
+
+    public ColorPicker()
+    {
+        InitializeComponent();
+    }
+
+    protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+    {
+        base.OnMouseDoubleClick(e);
+        ColorPickView view=new();
+        var color = view.ShowView(SelectedColor.Color);
+        if(SelectedColor==null)
         {
-            get { return (SolidColorBrush)GetValue(SelectedColorProperty); }
-            set { SetValue(SelectedColorProperty, value); }
+            SetCurrentValue(SelectedColorProperty, new SolidColorBrush(color));
         }
-
-        // Using a DependencyProperty as the backing store for SelectedColor.  This enables animation, styling, binding, etc...
-        /// <summary>Identifies the <see cref="SelectedColor"/> dependency property.</summary>
-        public static readonly DependencyProperty SelectedColorProperty =
-            DependencyProperty.Register(nameof(SelectedColor), typeof(SolidColorBrush), typeof(ColorPicker));
-
-
-
-        public ColorPicker()
+        else
         {
-            InitializeComponent();
+            SelectedColor.Color = color;
         }
-
-        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
-        {
-            base.OnMouseDoubleClick(e);
-            ColorPickView view=new();
-            var color = view.ShowView(SelectedColor.Color);
-            if(SelectedColor==null)
-            {
-                SetCurrentValue(SelectedColorProperty, new SolidColorBrush(color));
-            }
-            else
-            {
-                SelectedColor.Color = color;
-            }
-            
-        }
+        
     }
 }

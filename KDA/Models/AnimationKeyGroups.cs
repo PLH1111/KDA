@@ -4,24 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models
-{
-    public class AnimationKeyGroups : List<AnimationKeyGroup>
-    {
-        public void SetAnimation()
-        {
-            foreach (var item in this)
-            {
-                item.SetAnimation();
-            }
-        }
+namespace KDA.Models;
 
-        public void ClearAnimation()
+public class AnimationKeyGroups : List<AnimationKeyGroup>
+{
+    public void SetAnimation()
+    {
+        foreach (var item in this)
         {
-            foreach (var item in this)
-            {
-                item.ClearAnimation();
-            }
+            item.SetAnimation();
+        }
+    }
+
+    public void ClearAnimation()
+    {
+        foreach (var item in this)
+        {
+            item.ClearAnimation();
         }
     }
 }
