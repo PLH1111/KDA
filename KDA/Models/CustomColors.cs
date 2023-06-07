@@ -13,8 +13,10 @@ public class CustomColors : ObservableCollection<CustomColor>
 {
     public CustomColors()
     {
+        Add(new CustomColor(Brushes.OrangeRed));
         Add(new CustomColor(Brushes.Lime));
         Add(new CustomColor(Brushes.Yellow));
+        Add(new CustomColor(Brushes.Orange));
         Add(new CustomColor(Brushes.Cyan));
     }
 

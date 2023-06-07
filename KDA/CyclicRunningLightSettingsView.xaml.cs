@@ -66,9 +66,14 @@ public partial class CyclicRunningLightSettingsView : FilletWindow
     readonly Random random = new();
     private void AddCustomColor()
     {
+        if (Settings.Columns * (Settings.CustomColors.Count + 1) > 41)
+        {
+            MsgBoxService.ShowError("列数与颜色相乘不能大于41!");
+            return;
+        }
         byte[] rbg = new byte[3];
         random.NextBytes(rbg);
-        Brush brush =new SolidColorBrush( Color.FromRgb(rbg[0], rbg[1], rbg[2]));
+        Brush brush = new SolidColorBrush(Color.FromRgb(rbg[0], rbg[1], rbg[2]));
         Settings.CustomColors.Add(new CustomColor(brush));
     }
 

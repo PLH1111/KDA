@@ -5,7 +5,7 @@ namespace KDA.Models;
 [Serializable]
 public class CyclicRunningLightSettings
 {
-    private int col = 7;
+    private int col = 8;
     public int Columns
     {
         get => col;
@@ -14,6 +14,11 @@ public class CyclicRunningLightSettings
             if (value < 1)
             {
                 MsgBoxService.ShowError("键的列数数目不能小于1！");
+                return;
+            }
+            if (colorCount * value > 41 || CustomColors.Count * value > 41)
+            {
+                MsgBoxService.ShowError("列数与颜色相乘不能大于41!");
                 return;
             }
             col = value;
@@ -29,6 +34,11 @@ public class CyclicRunningLightSettings
             if (value < 1)
             {
                 MsgBoxService.ShowError("自动生成随机颜色的数目不能小于1！");
+                return;
+            }
+            if (value * col > 41)
+            {
+                MsgBoxService.ShowError("列数与颜色相乘不能大于41!");
                 return;
             }
             colorCount = value;
@@ -52,5 +62,5 @@ public class CyclicRunningLightSettings
 
     public CustomColors CustomColors { get; set; } = new CustomColors();
 
-    public bool IsAutoColor { get; set; } = true;
+    public bool IsAutoColor { get; set; }
 }
