@@ -42,16 +42,16 @@ public partial class ColorPicker : UserControl
     protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
     {
         base.OnMouseDoubleClick(e);
-        ColorPickView view=new();
+        ColorPickView view = new();
         var color = view.ShowView(SelectedColor.Color);
-        if(SelectedColor==null)
+        if (SelectedColor == null)
         {
             SetCurrentValue(SelectedColorProperty, new SolidColorBrush(color));
         }
         else
         {
-            SelectedColor.Color = color;
+            SelectedColor.SetCurrentValue(SolidColorBrush.ColorProperty, color);
         }
-        
+
     }
 }

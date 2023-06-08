@@ -55,9 +55,9 @@
                             <Setter  Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
                         </Trigger>
                         <Trigger Property="IsAnimationing" Value="True">
-                            <Setter TargetName="PART_Border" Property="BorderThickness" Value="2"/>
-                            <Setter TargetName="PART_Content" Property="Foreground" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationBrush}"/>
-                            <Setter TargetName="PART_Border" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationBrush}"/>
+                            <!--<Setter TargetName="PART_Border" Property="BorderThickness" Value="2"/>
+                            <Setter TargetName="PART_Content" Property="Foreground" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationBrush}"/>-->
+                            <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
