@@ -85,6 +85,10 @@ public partial class CyclicRunningLightSettingsView : FilletWindow
     public CyclicRunningLightSettings ShowView()
     {
         ShowDialog();
+        if (Settings.IsAutoColor == false && Settings.CustomColors.Count == 0)
+        {
+            MsgBoxService.ShowError("选用手动颜色时，颜色数量不应该小于1!");
+        }
         return Settings;
     }
 }
