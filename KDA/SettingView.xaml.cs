@@ -143,9 +143,6 @@ public partial class SettingView : FilletWindow
 
     #endregion
 
-
-
-
     #region CmdFlashModel
 
     public static CmdFlashModel CmdFlashModel { get; set; } = new();

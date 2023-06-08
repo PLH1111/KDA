@@ -10,7 +10,7 @@ namespace KDA.Models.Commands;
 [AddINotifyPropertyChangedInterface]
 public class KeyColorMap
 {
-    public byte Number { get; set; }
+    public byte Index { get; set; }
 
     public KeyColorDataList MapDatas { get; set; } = new(11);
 
@@ -21,11 +21,11 @@ public class KeyColorMap
 
     public KeyColorMap(byte no)
     {
-        Number = no;
+        Index = no;
     }
 
     public override string ToString()
     {
-        return $"#{Number:X2}";
+        return $"#{Index:X2}";
     }
 }

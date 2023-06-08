@@ -30,7 +30,7 @@ public class CycleAnimationKeyModel : List<KeyModel>
 
         var list = new List<AnimationKeyGroups>();
 
-        for (int i = 0; i < Count / 2; i++)
+        for (int i = 0; i < Count / 2; i += 1)
         {
             AnimationKeyGroups groups = new();
             for (int j = 0; j < brushes.Length; j++)

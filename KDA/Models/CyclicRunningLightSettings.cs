@@ -16,9 +16,9 @@ public class CyclicRunningLightSettings
                 MsgBoxService.ShowError("键的列数数目不能小于1！");
                 return;
             }
-            if (colorCount * value > 41 || CustomColors.Count * value > 41)
+            if ((IsAutoColor && colorCount * value > 42) || (IsAutoColor == false && CustomColors.Count * value > 42))
             {
-                MsgBoxService.ShowError("列数与颜色相乘不能大于41!");
+                MsgBoxService.ShowError("列数与颜色相乘不能大于42!");
                 return;
             }
             col = value;
@@ -36,9 +36,9 @@ public class CyclicRunningLightSettings
                 MsgBoxService.ShowError("自动生成随机颜色的数目不能小于1！");
                 return;
             }
-            if (value * col > 41)
+            if (value * col > 42)
             {
-                MsgBoxService.ShowError("列数与颜色相乘不能大于41!");
+                MsgBoxService.ShowError("列数与颜色相乘不能大于42!");
                 return;
             }
             colorCount = value;
@@ -51,7 +51,7 @@ public class CyclicRunningLightSettings
         get => animationDuration;
         set
         {
-            if (value < 1)
+            if (value < 0)
             {
                 MsgBoxService.ShowError("动画周期不能小于1！");
                 return;

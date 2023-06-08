@@ -11,6 +11,13 @@
     <twc:FilletWindow.Background>
         <ImageBrush ImageSource="/Background/Sky03.jpg"/>
     </twc:FilletWindow.Background>
+    <twc:FilletWindow.MenuBar>
+        <StackPanel Height="40" Orientation="Horizontal" Margin="15,0">
+            <twc:FilletButton Content="Debug"
+                              Command="{Binding ShowDebugViewCommand}" 
+                              Style="{StaticResource FilletButtonStyle}"/>
+        </StackPanel>
+    </twc:FilletWindow.MenuBar>
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -358,14 +365,13 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,5" >
-                <Button Content="Start Simulating" Width="auto" Command="{Binding StartSimulatingCommand}"/>
-                <Button Content="Stop Simulating" Width="auto" Command="{Binding StopSimulatingCommand}"/>
-                <Button Content="Start Recording" Width="auto" Command="{Binding StartRecordingCommand}"/>
-                <Button Content="Stop Recording" Width="auto" Command="{Binding StopRecordingCommand}"/>
+                <twc:FilletButton Content="Start Simu"  Command="{Binding StartSimulatingCommand}" Style="{StaticResource FilletButtonStyle}"/>
+                <twc:FilletButton Content="Stop Simu"  Command="{Binding StopSimulatingCommand}" Style="{StaticResource FilletButtonStyle}"/>
+                <twc:FilletButton Content="Start Rec"  Command="{Binding StartRecordingCommand}" Style="{StaticResource FilletButtonStyle}"/>
+                <twc:FilletButton Content="Stop Rec"  Command="{Binding StopRecordingCommand}" Style="{StaticResource FilletButtonStyle}"/>
             </StackPanel>
-            <Border Grid.Row="1"  Margin="20" HorizontalAlignment="Center"
-                    BorderThickness="0 0 0 1" BorderBrush="OrangeRed">
-                <ItemsControl ItemsSource="{Binding FFTBars}" Margin="50,0" >
+            <Border Grid.Row="1"  HorizontalAlignment="Right" Margin="25">
+                <ItemsControl ItemsSource="{Binding FFTBars}"  >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"/>
@@ -373,16 +379,16 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="models:FFTBar">
-                            <Rectangle Width="30" Margin="0 0 1 0"
-                                Height="{Binding Height}" 
-                                VerticalAlignment="Bottom"  >
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" >
-                                        <GradientStop Color="#FFFF4000"/>
-                                        <GradientStop Color="Cyan" Offset="1"/>
+                            <Border Width="8" Margin="0 0 0 0"
+                                    Height="{Binding Height}" 
+                                    VerticalAlignment="Bottom" >
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5" >
+                                        <GradientStop Color="OrangeRed" Offset="0"/>
+                                        <GradientStop Color="Lime" Offset="1"/>
                                     </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                                </Border.Background>
+                            </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

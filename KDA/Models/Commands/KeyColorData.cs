@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TianWeiToolsPro.Extensions;
 
 namespace KDA.Models.Commands;
@@ -13,6 +14,8 @@ public class KeyColorData
     public byte Number { get; set; }
 
     public string NumberStr => $"#{Number}";
+
+    public Key Key { get; set; }
 
     public byte ColorR { get; set; }
 
@@ -55,6 +58,12 @@ public class KeyColorData
     public KeyColorData(byte no)
     {
         Number = no;
+    }
+
+    public KeyColorData(byte no, Key key)
+    {
+        Number = no;
+        Key = key;
     }
 
     public KeyColorData(byte r, byte b, byte g, byte a)

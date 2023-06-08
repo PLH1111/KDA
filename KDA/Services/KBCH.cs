@@ -249,7 +249,7 @@ public class KBCH
             ReportId = OutReportId,
         };
         report.Data[1] = 0x06;
-        report.Data[2] = map.Number;
+        report.Data[2] = map.Index;
         report.Data[3] = 0x00;
         for (byte i = 0; i < 11; i++)
         {

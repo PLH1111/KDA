@@ -28,15 +28,19 @@ public partial class MainWindow : FilletWindow
 {
     #region 字段
 
+    double[] spectrumData;
+
     KeyboardHook hook;
+
+    WasapiLoopbackCapture capture;
 
     private CycleAnimationKeyModel animationKeyModel;
 
     private KeyBarList keyBars;
 
-    private IEnumerable<HidDevice> hidDevices;
+    private readonly VisualizerDataHelper visualizerDataHelper = new(256);
 
-    private readonly VisualizerDataHelper visualizerDataHelper = new(128);
+    readonly Random random = new();
 
     #endregion
 
@@ -266,121 +270,13 @@ public partial class MainWindow : FilletWindow
 
     #endregion
 
-
-    public ObservableCollection<HidDeviceModel> HidDeviceList { get; set; } = new();
-    public HidDeviceModel Device { get; set; }
-
-    public string InputMessage { get; set; }
-    public string OutputMessage { get; set; }
-
-    public bool IsDeviceConnect { get; set; }
-
-    #region Commands
-
-    #region KeyModelName
-
-    public string KeyModelName { get; set; }
-
-    #endregion
-
-    #region Sleep
-
-    public static SleepModel SleepModel { get; set; } = new SleepModel();
-
-    public static List<SleepTimes> SleepTimeList => EnumHelper.ToList<SleepTimes>();
-
-    public static List<LightingModes> LightingModeList => EnumHelper.ToList<LightingModes>();
-
-    #endregion
-
-    #region Key Marco
-
-    public static KeyMacroModel KeyMacroModel { get; set; } = new KeyMacroModel();
-
-    public static List<KeyModes> KeyModeList => EnumHelper.ToList<KeyModes>();
-
-
-    #endregion
-
-    #region Key Color
-
-    public static KeyColorModel KeyColorModel => new();
-
-    #endregion
-
-    #region Animation
-
-    public static AnimationModel AnimationModel { get; set; } = new AnimationModel();
-
-    public static List<AnimationIds> AnimationIdList => EnumHelper.ToList<AnimationIds>();
-
-    public static List<AnimationDisplays> DisplayList => EnumHelper.ToList<AnimationDisplays>();
-
-    public static List<AnimationDirections> DirectionList => EnumHelper.ToList<AnimationDirections>();
-
-
-    #endregion
-
-    #region Profile
-
-    public static ProfileModel ProfileModel => new();
-
-    #endregion
-
-    #region Language
-
-    public List<KeyBoardLanguages> LanguageList { get; set; } = EnumHelper.ToList<KeyBoardLanguages>();
-
-    public KeyBoardLanguages SelectedLanguage { get; set; } = KeyBoardLanguages.US;
-
-
-    #endregion
-
-    #region RBG_Map
-
-    public static KeyColorMapList KeyColorMaps { get; set; } = new(12);
-
-    public KeyColorMap SelectedKeyColorMap { get; set; } = KeyColorMaps[0];
-
-    #endregion
-
-    #region MarcoMap
-
-    public static MarcoMapList MarcoMaps { get; set; } = new(0x40);
-
-    public MarcoMap SelectedMarcoMap { get; set; } = MarcoMaps[0];
-
-    #endregion
-
-    #region ProfileMaps
-
-    public static ProfileMapList ProfileMaps { get; set; } = new(0x04);
-
-    public ProfileMap SelectedProfileMap { get; set; } = ProfileMaps[0];
-
-    #endregion
-
-    #region BootupMap
-
-    public static BootUpMapList BootUpMaps { get; set; } = new(0x04);
-
-    public BootUpMap SelectedBootUpMap { get; set; } = BootUpMaps[0];
-
-    #endregion
-
-    #endregion
-
-
     #region Wave Peak
 
-    public string SelectedFileName { get; set; }
-
-    public bool CanPlayAudio { get; set; } = true;
 
     public bool CanStartRecording { get; set; } = true;
 
 
-    public static FFTBarList FFTBars { get; set; } = new(21);
+    public static FFTBarList FFTBars { get; set; } = new(64);
 
     #endregion
 
@@ -400,23 +296,7 @@ public partial class MainWindow : FilletWindow
 
     #region 命令
 
-    public DelegateCommand ConnectDeviceCommand { get; private set; }
-
-    public DelegateCommand DisconnectDeviceCommand { get; private set; }
-
-    public DelegateCommand RefreshCommand { get; private set; }
-
-
-    public DelegateCommand<string> CommandReadCommand { get; private set; }
-
-    public DelegateCommand<string> CommandWriteCommand { get; private set; }
-
-
-    public DelegateCommand LoadMusicCommand { get; private set; }
-
-    public DelegateCommand PlayMusicCommand { get; private set; }
-
-    public DelegateCommand StopMusicCommand { get; private set; }
+    public DelegateCommand ShowDebugViewCommand { get; private set; }
 
     public DelegateCommand StartRecordingCommand { get; private set; }
 
@@ -454,11 +334,6 @@ public partial class MainWindow : FilletWindow
 
         animationKeyModel = new CycleAnimationKeyModel()
         {
-            //KeyOem3,
-            //KeyTab,
-
-            //KeyD1,
-            //KeyQ,
 
             KeyD2,
             KeyW,
@@ -882,32 +757,7 @@ public partial class MainWindow : FilletWindow
 
     protected override void InitCommands()
     {
-        ConnectDeviceCommand = new DelegateCommand(ConncetDevice, CanConnectDevice)
-            .ObservesProperty(() => Device)
-            .ObservesProperty(() => IsDeviceConnect);
-        DisconnectDeviceCommand = new DelegateCommand(DisconnectDevice, CanDisconnectDevice)
-            .ObservesProperty(() => Device)
-            .ObservesProperty(() => IsDeviceConnect);
-
-        RefreshCommand = new DelegateCommand(RefreshDevices);
-
-
-        CommandWriteCommand = new DelegateCommand<string>(CommandWrite, CanExcuteBootLoaderWrite)
-          .ObservesProperty(() => IsDeviceConnect);
-        CommandReadCommand = new DelegateCommand<string>(CommandRead, CanExcuteBootLoaderRead)
-            .ObservesProperty(() => IsDeviceConnect);
-
-
-        LoadMusicCommand = new DelegateCommand(LoadMusic);
-
-        PlayMusicCommand = new DelegateCommand(StartPlayMusic, CanExcuteStartPlayMusic)
-            .ObservesProperty(() => CanPlayAudio)
-            .ObservesProperty(() => SelectedFileName);
-        StopMusicCommand = new DelegateCommand(StopPlayMusic, CanExcuteStopPlayMusic)
-            .ObservesProperty(() => CanPlayAudio);
-
-        LoadMusicCommand = new DelegateCommand(LoadMusic);
-
+        ShowDebugViewCommand = new DelegateCommand(ShowDebugView);
 
         StartRecordingCommand = new DelegateCommand(StartRecording, CanExcuteStartRecording)
             .ObservesProperty(() => CanStartRecording);
@@ -938,12 +788,6 @@ public partial class MainWindow : FilletWindow
         hook.OnKeyDown += Hook_OnKeyDown;
         hook.OnKeyUp += Hook_OnKeyUp;
         hook.Start();
-        RefreshDevices();
-        if (HidDeviceList != null && GCH.Device != null)
-        {
-            Device = HidDeviceList.FirstOrDefault(x => x.DevicePath == GCH.Device.DevicePath);
-        }
-        IsDeviceConnect = GCH.IsDeviceConnect;
     }
 
     private void Hook_OnKeyDown(object sender, KeyEventArgs e)
@@ -985,37 +829,6 @@ public partial class MainWindow : FilletWindow
 
     #region Can Excute
 
-    private bool CanExcuteBootLoaderWrite(string arg)
-    {
-        return IsDeviceConnect && Device != null;
-    }
-
-    private bool CanExcuteBootLoaderRead(string arg)
-    {
-        return IsDeviceConnect && Device != null;
-    }
-
-    private bool CanConnectDevice()
-    {
-        return !IsDeviceConnect && Device != null;
-    }
-
-
-    private bool CanDisconnectDevice()
-    {
-        return IsDeviceConnect && Device != null;
-    }
-
-
-    private bool CanExcuteStartPlayMusic()
-    {
-        return CanPlayAudio && !string.IsNullOrEmpty(SelectedFileName);
-    }
-
-    private bool CanExcuteStopPlayMusic()
-    {
-        return !CanPlayAudio;
-    }
 
 
     private bool CanExcuteStartRecording()
@@ -1040,382 +853,14 @@ public partial class MainWindow : FilletWindow
 
     #endregion
 
-    #region Excute
 
-
-    private void ConncetDevice()
+    private void ShowDebugView()
     {
-        if (hidDevices != null && Device != null)
-        {
-            GCH.Device = hidDevices.FirstOrDefault(x => x.DevicePath == Device.DevicePath);
-        }
-        if (GCH.Device == null)
-        {
-            return;
-        }
-
-        try
-        {
-            GCH.Device.OpenDevice();
-            IsDeviceConnect = true;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-        }
-    }
-
-    private void DisconnectDevice()
-    {
-        if (!GCH.IsDeviceConnect)
-        {
-            return;
-        }
-        try
-        {
-            GCH.Device.CloseDevice();
-            IsDeviceConnect = false;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-        }
-    }
-
-    private void RefreshDevices()
-    {
-        hidDevices = HidDevices.Enumerate();
-        if (hidDevices != null && hidDevices.Any())
-        {
-            HidDeviceList.Clear();
-            foreach (var hidDevice in hidDevices)
-            {
-                if (hidDevice.Description.Contains("符合"))
-                {
-                    continue;
-                }
-                string mc = string.Empty;
-                string pd = string.Empty;
-                string sn = string.Empty;
-                if (hidDevice.ReadManufacturer(out byte[] mcBy))
-                {
-                    mc = Encoding.UTF8.GetString(mcBy).TrimEnd('\0');
-                }
-
-                if (hidDevice.ReadProduct(out byte[] pdBy))
-                {
-                    pd = Encoding.UTF8.GetString(pdBy).TrimEnd('\0');
-                }
-
-                if (hidDevice.ReadSerialNumber(out byte[] snBy))
-                {
-                    sn = Encoding.UTF8.GetString(snBy).TrimEnd('\0');
-                }
-
-                HidDeviceModel model = new(mc, pd, hidDevice.Description, hidDevice.Attributes.Version, sn,
-                                           hidDevice.Attributes.VendorHexId, hidDevice.Attributes.ProductHexId,
-                                           hidDevice.Capabilities.InputReportByteLength,
-                                           hidDevice.Capabilities.OutputReportByteLength,
-                                           hidDevice.Capabilities.FeatureReportByteLength, hidDevice.DevicePath);
-
-                HidDeviceList.Add(model);
-
-            }
-        }
+        var view = new SettingView();
+        view.ShowDialog();
     }
 
 
-
-    private void ClearInputMessage()
-    {
-        InputMessage = null;
-    }
-
-    private void ClearOutputMessage()
-    {
-        OutputMessage = null;
-    }
-
-    private void CommandWrite(string obj)
-    {
-        if (Enum.TryParse(obj, out KeyCommandNames cmd) == false)
-        {
-            return;
-        }
-        switch (cmd)
-        {
-            case KeyCommandNames.Sleep:
-                KBCH.SetSleep(SleepModel);
-                break;
-
-            case KeyCommandNames.Key_Macro:
-                KBCH.SetKeyMacro(KeyMacroModel);
-                break;
-
-            case KeyCommandNames.Key_RBG:
-                KBCH.SetKeyColor(KeyColorModel);
-                break;
-
-            case KeyCommandNames.Animation:
-                KBCH.SetAnimation(AnimationModel);
-                break;
-
-            case KeyCommandNames.Profile:
-                KBCH.SetProfile(ProfileModel);
-                break;
-
-            case KeyCommandNames.RBG_Map:
-                KBCH.SetColorMap(SelectedKeyColorMap);
-                break;
-
-            case KeyCommandNames.Language:
-                KBCH.SetLanguage(SelectedLanguage);
-                break;
-
-            case KeyCommandNames.Macro_Data:
-                KBCH.SetMarcoMap(SelectedMarcoMap);
-                break;
-
-            case KeyCommandNames.Profile_Data:
-                KBCH.SetProfileMap(SelectedProfileMap);
-                break;
-
-            case KeyCommandNames.BootUp:
-                KBCH.SetBootUpMap(SelectedBootUpMap);
-                break;
-
-            case KeyCommandNames.Flash_Data:
-                break;
-
-            case KeyCommandNames.Reset_Default:
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private void CommandRead(string obj)
-    {
-        if (Enum.TryParse(obj, out KeyCommandNames cmd) == false)
-        {
-            return;
-        }
-        switch (cmd)
-        {
-            case KeyCommandNames.Model:
-                KeyModelName = KBCH.GetModel();
-                break;
-            case KeyCommandNames.Sleep:
-                GetSleepModel();
-
-                break;
-            case KeyCommandNames.Key_Macro:
-                GetMacroModel();
-
-                break;
-            case KeyCommandNames.Key_RBG:
-                GetRGBModel();
-
-                break;
-            case KeyCommandNames.Animation:
-                GetAnimationModel();
-                break;
-
-            case KeyCommandNames.Profile:
-                GetProfileModel();
-                break;
-            case KeyCommandNames.RBG_Map:
-                GegRGBMap();
-                break;
-
-            case KeyCommandNames.Language:
-                SelectedLanguage = KBCH.GetLanguage();
-                break;
-
-            case KeyCommandNames.Macro_Data:
-                GetMarcoMap();
-                break;
-
-            case KeyCommandNames.Profile_Data:
-                GetProfileMap();
-                break;
-
-            case KeyCommandNames.BootUp:
-                GetBootUpMap();
-                break;
-
-            case KeyCommandNames.Flash_Data:
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    #region Get Model
-
-    private static void GetSleepModel()
-    {
-        var sleep = KBCH.GetSleep();
-        if (sleep != null)
-        {
-            SleepModel.SleepTime = sleep.SleepTime;
-            SleepModel.SleepMode = sleep.SleepMode;
-        }
-    }
-
-    private static void GetMacroModel()
-    {
-        var marco = KBCH.GetKeyMacro();
-        if (marco != null)
-        {
-            KeyMacroModel.KeyName = marco.KeyName;
-            KeyMacroModel.KeyMode = marco.KeyMode;
-            KeyMacroModel.KeyCodeHex = marco.KeyCodeHex;
-        }
-    }
-
-    private static void GetRGBModel()
-    {
-        var colorModel = KBCH.GetKeyColor(KeyMacroModel.KeyIndex);
-        if (colorModel != null)
-        {
-            KeyColorModel.ColorRHex = colorModel.ColorRHex;
-            KeyColorModel.ColorBHex = colorModel.ColorBHex;
-            KeyColorModel.ColorGHex = colorModel.ColorGHex;
-            KeyColorModel.ColorAHex = colorModel.ColorAHex;
-        }
-    }
-
-    private static void GetAnimationModel()
-    {
-        var animation = KBCH.GetAnimation();
-        if (animation != null)
-        {
-            AnimationModel.AnimationId = animation.AnimationId;
-            AnimationModel.ColorRHex = animation.ColorRHex;
-            AnimationModel.ColorBHex = animation.ColorBHex;
-            AnimationModel.ColorGHex = animation.ColorGHex;
-            AnimationModel.ColorAHex = animation.ColorAHex;
-            AnimationModel.SpeedHex = animation.SpeedHex;
-            AnimationModel.Display = animation.Display;
-            AnimationModel.Direction = animation.Direction;
-        }
-    }
-
-    private static void GetProfileModel()
-    {
-        var profileModel = KBCH.GetProfile();
-        if (profileModel != null)
-        {
-            ProfileModel.NumberHex = profileModel.NumberHex;
-        }
-    }
-
-    private void GegRGBMap()
-    {
-        var colorMap = KBCH.GetColorMap();
-        if (colorMap != null)
-        {
-            SelectedKeyColorMap.MapDatas = colorMap.MapDatas;
-        }
-    }
-
-    private void GetMarcoMap()
-    {
-        var macroMap = KBCH.GetMarcoMap(SelectedMarcoMap.Number);
-        if (macroMap != null)
-        {
-            SelectedMarcoMap.MapDatas = macroMap.MapDatas;
-        }
-    }
-
-    private void GetProfileMap()
-    {
-        var profileMap = KBCH.GetProfileMap(SelectedProfileMap.Number);
-        if (profileMap != null)
-        {
-            SelectedProfileMap.AnimationId = profileMap.AnimationId;
-            SelectedProfileMap.ColorRHex = profileMap.ColorRHex;
-            SelectedProfileMap.ColorBHex = profileMap.ColorBHex;
-            SelectedProfileMap.ColorGHex = profileMap.ColorGHex;
-            SelectedProfileMap.ColorAHex = profileMap.ColorAHex;
-            SelectedProfileMap.SpeedHex = profileMap.SpeedHex;
-            SelectedProfileMap.Display = profileMap.Display;
-            SelectedProfileMap.Direction = profileMap.Direction;
-            SelectedProfileMap.MapDatas = profileMap.MapDatas;
-        }
-    }
-
-    private void GetBootUpMap()
-    {
-        var map = KBCH.GetBootUpMap(SelectedBootUpMap.Number);
-        if (map != null)
-        {
-            SelectedBootUpMap.MapDatas = map.MapDatas;
-        }
-    }
-
-    #endregion
-
-
-
-    #endregion
-
-    private void LoadMusic()
-    {
-        var ofd = new OpenFileDialog
-        {
-            Filter = "MP3 Files|*.mp3|WAV files|*.wav"
-        };
-        if (ofd.ShowDialog(this) == true)
-        {
-            SelectedFileName = ofd.FileName;
-        }
-    }
-
-    WaveOutEvent outputDevice;
-
-    private void StartPlayMusic()
-    {
-        try
-        {
-            using var audioFile = new AudioFileReader(SelectedFileName);
-            outputDevice = new WaveOutEvent();
-            outputDevice.Init(audioFile);
-            outputDevice.Play(); // 异步执行
-            CanPlayAudio = !(outputDevice.PlaybackState == PlaybackState.Playing);
-        }
-        catch (Exception ex)
-        {
-            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
-        }
-
-    }
-
-    private void StopPlayMusic()
-    {
-        if (outputDevice == null)
-        {
-            return;
-        }
-        try
-        {
-            outputDevice.Stop();
-            CanPlayAudio = true;
-            outputDevice.Dispose();
-        }
-        catch (Exception ex)
-        {
-            TianWeiToolsPro.Service.NoticeBoxService.ShowError(ex.Message);
-        }
-
-    }
-
-
-
-    WasapiLoopbackCapture capture;
     private void StartRecording()
     {
         try
@@ -1448,7 +893,6 @@ public partial class MainWindow : FilletWindow
 
 
 
-    double[] spectrumData;
     private void GetSpectrumData()
     {
         DateTime time = DateTime.Now;
@@ -1456,14 +900,17 @@ public partial class MainWindow : FilletWindow
         {
             if (CanStartRecording)
             {
-                for (int i = 0; i < FFTBars.Count; i++)
+                for (int i = 0; i < keyBars.Count; i++)
                 {
                     keyBars[i].SetValue(0);
+                }
+                for (int i = 0; i < FFTBars.Count; i++)
+                {
                     FFTBars[i].Height = 0;
                 }
                 break;
             }
-            if (DateTime.Now.Subtract(time).TotalMilliseconds >= 25)
+            if (DateTime.Now.Subtract(time).TotalMilliseconds >= 20)
             {
                 time = DateTime.Now;
                 double[] newSpectrumData = visualizerDataHelper.GetSpectrumData();         // 从可视化器中获取频谱数据
@@ -1473,17 +920,24 @@ public partial class MainWindow : FilletWindow
                 {
                     List<double> data = spectrumData.ToList();
                     List<double> range = null;
+                    for (int i = 0; i < keyBars.Count; i++)
+                    {
+                        range = data.GetRange(6 * i, 6);
+                        var hight = range.Max() * 30000;
+                        hight = hight < 0 ? 0 : hight;
+                        hight = hight > 300 ? 300 : hight;
+                        keyBars[i].SetValue(hight);
+                    }
+
                     for (int i = 0; i < FFTBars.Count; i++)
                     {
-                        range = data.GetRange(3 * i, 3);
-                        var hight = range.Max() * 50000;
+                        range = data.GetRange(2 * i, 2);
+                        var hight = range.Max() * 30000;
                         hight = hight < 0 ? 0 : hight;
-                        hight = hight > 500 ? 500 : hight;
-                        keyBars[i].SetValue(hight);
+                        hight = hight > 300 ? 300 : hight;
                         FFTBars[i].Height = hight;
                     }
                 }
-
             }
             Thread.Sleep(1);
         }
@@ -1503,7 +957,7 @@ public partial class MainWindow : FilletWindow
 
     }
 
-    readonly Random random = new();
+
     private async void StartSimulating()
     {
         CanStartSimulating = false;
@@ -1560,9 +1014,9 @@ public partial class MainWindow : FilletWindow
                         break;
                     }
                 }
+                Thread.Sleep(1);
             }
         });
-
     }
 
     private void StopSimulating()
