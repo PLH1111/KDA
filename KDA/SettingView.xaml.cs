@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using TianWeiToolsPro.Controls;
 using TianWeiToolsPro.Extensions;
+using CyUSB;
+using System.Threading.Tasks;
 
 namespace KDA;
 
@@ -20,8 +22,9 @@ public partial class SettingView : FilletWindow
 
     #region 字段
 
-    private IEnumerable<HidDevice> hidDevices;
+    private IEnumerable<CyHidDevice> hidDevices;
 
+    USBDeviceList usbDevices;
 
     #endregion
 
@@ -65,7 +68,7 @@ public partial class SettingView : FilletWindow
 
     #region Key Color
 
-    public static KeyColorModel KeyColorModel => new();
+    public static KeyColorModel KeyColorModel { get; set; } = new();
 
     #endregion
 
@@ -197,20 +200,17 @@ public partial class SettingView : FilletWindow
 
     #region 初始化
 
-    public SettingView()
+    public SettingView() : base()
     {
         InitializeComponent();
-        InitFields();
-        InitProperties();
-        InitCommands();
-        InitEvents();
-        DataContext = this;
     }
 
     protected override void InitFields()
     {
 
     }
+
+
 
     protected override void InitProperties()
     {
@@ -258,14 +258,46 @@ public partial class SettingView : FilletWindow
 
     #region 事件
 
-    private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    protected override void OnClosed(EventArgs e)
     {
+        base.OnClosed(e);
+        if (usbDevices != null)
+        {
+            usbDevices.DeviceRemoved -= new EventHandler(UsbDevices_DeviceRemoved);
+            usbDevices.DeviceAttached -= new EventHandler(UsbDevices_DeviceAttached);
+            usbDevices = null;
+            GC.Collect();
+        }
+    }
+
+    private async void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        await Task.Run(ListHidDevice);
         RefreshDevices();
         if (HidDeviceList != null && GCH.Device != null)
         {
-            Device = HidDeviceList.FirstOrDefault(x => x.DevicePath == GCH.Device.DevicePath);
+            Device = HidDeviceList.FirstOrDefault(x => x.DevicePath == GCH.Device.Path);
         }
         IsDeviceConnect = GCH.IsDeviceConnect;
+    }
+
+    private void ListHidDevice()
+    {
+        usbDevices = new(CyConst.DEVICES_HID);
+        usbDevices.DeviceRemoved += new EventHandler(UsbDevices_DeviceRemoved);
+        usbDevices.DeviceAttached += new EventHandler(UsbDevices_DeviceAttached);
+    }
+
+    void UsbDevices_DeviceAttached(object sender, EventArgs e)
+    {
+        RefreshDevices();
+    }
+
+
+
+    void UsbDevices_DeviceRemoved(object sender, EventArgs e)
+    {
+        RefreshDevices();
     }
 
     #endregion
@@ -318,93 +350,121 @@ public partial class SettingView : FilletWindow
 
     private void ConncetDevice()
     {
-        if (hidDevices != null && Device != null)
+        if (usbDevices != null && Device != null)
         {
-            GCH.Device = hidDevices.FirstOrDefault(x => x.DevicePath == Device.DevicePath);
+            foreach(CyHidDevice x in usbDevices)
+            {
+                if(x.Path== Device.DevicePath)
+                {
+                    GCH.Device=x;
+                }
+            }
+            IsDeviceConnect = GCH.Device.RwAccessible;
         }
-        if (GCH.Device == null)
-        {
-            return;
-        }
-
-        try
-        {
-            GCH.Device.OpenDevice();
-            IsDeviceConnect = true;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-        }
+        //IsDeviceConnect = GCH.OpenDevice();
     }
 
     private void DisconnectDevice()
     {
-        if (!GCH.IsDeviceConnect)
-        {
-            return;
-        }
-        try
-        {
-            GCH.Device.CloseDevice();
-            IsDeviceConnect = false;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-        }
+
+        //IsDeviceConnect = GCH.CloseDevice();
+
     }
 
     private void RefreshDevices()
     {
-        hidDevices = HidDevices.Enumerate();
-        if (hidDevices != null && hidDevices.Any())
+        if (usbDevices != null && usbDevices.Count > 0)
         {
             HidDeviceList.Clear();
-            foreach (var hidDevice in hidDevices)
+            foreach (var device in usbDevices)
             {
-                if (hidDevice.Description.Contains("符合"))
+                if (device is CyHidDevice hid && hid.Outputs.RptByteLen == 64)
                 {
-                    continue;
+                    HidDeviceModel model = new(hid.Manufacturer,
+                                               hid.Product,
+                                               null,
+                                               hid.Version,
+                                               hid.SerialNumber,
+                                               hid.VendorID,
+                                               hid.ProductID,
+                                               hid.Inputs.RptByteLen,
+                                               hid.Outputs.RptByteLen,
+                                               hid.Features.RptByteLen,
+                                               hid.Path);
+
+                    HidDeviceList.Add(model);
                 }
-                string mc = string.Empty;
-                string pd = string.Empty;
-                string sn = string.Empty;
-                if (hidDevice.ReadManufacturer(out byte[] mcBy))
-                {
-                    mc = Encoding.UTF8.GetString(mcBy).TrimEnd('\0');
-                }
-
-                if (hidDevice.ReadProduct(out byte[] pdBy))
-                {
-                    pd = Encoding.UTF8.GetString(pdBy).TrimEnd('\0');
-                }
-
-                if (hidDevice.ReadSerialNumber(out byte[] snBy))
-                {
-                    sn = Encoding.UTF8.GetString(snBy).TrimEnd('\0');
-                }
-
-                HidDeviceModel model = new(mc, pd, hidDevice.Description, hidDevice.Attributes.Version, sn,
-                                           hidDevice.Attributes.VendorHexId, hidDevice.Attributes.ProductHexId,
-                                           hidDevice.Capabilities.InputReportByteLength,
-                                           hidDevice.Capabilities.OutputReportByteLength,
-                                           hidDevice.Capabilities.FeatureReportByteLength, hidDevice.DevicePath);
-
-                HidDeviceList.Add(model);
-
             }
         }
+        //if (hidDevice.Description.Contains("符合") || hidDevice.Capabilities.OutputReportByteLength != 64)
+        //{
+        //    continue;
+        //}
+        //string mc = string.Empty;
+        //string pd = string.Empty;
+        //string sn = string.Empty;
+        //if (hidDevice.ReadManufacturer(out byte[] mcBy))
+        //{
+        //    mc = Encoding.UTF8.GetString(mcBy).TrimEnd('\0');
+        //}
+
+        //if (hidDevice.ReadProduct(out byte[] pdBy))
+        //{
+        //    pd = Encoding.UTF8.GetString(pdBy).TrimEnd('\0');
+        //}
+
+        //if (hidDevice.ReadSerialNumber(out byte[] snBy))
+        //{
+        //    sn = Encoding.UTF8.GetString(snBy).TrimEnd('\0');
+        //}
+        //hidDevices = HidDevices.Enumerate();
+        //if (hidDevices != null && hidDevices.Any())
+        //{
+        //    HidDeviceList.Clear();
+        //    foreach (var hidDevice in hidDevices)
+        //    {
+        //        if (hidDevice.Description.Contains("符合") || hidDevice.Capabilities.OutputReportByteLength != 64)
+        //        {
+        //            continue;
+        //        }
+        //        string mc = string.Empty;
+        //        string pd = string.Empty;
+        //        string sn = string.Empty;
+        //        if (hidDevice.ReadManufacturer(out byte[] mcBy))
+        //        {
+        //            mc = Encoding.UTF8.GetString(mcBy).TrimEnd('\0');
+        //        }
+
+        //        if (hidDevice.ReadProduct(out byte[] pdBy))
+        //        {
+        //            pd = Encoding.UTF8.GetString(pdBy).TrimEnd('\0');
+        //        }
+
+        //        if (hidDevice.ReadSerialNumber(out byte[] snBy))
+        //        {
+        //            sn = Encoding.UTF8.GetString(snBy).TrimEnd('\0');
+        //        }
+
+        //        HidDeviceModel model = new(mc, pd, hidDevice.Description, hidDevice.Attributes.Version, sn,
+        //                                   hidDevice.Attributes.VendorHexId, hidDevice.Attributes.ProductHexId,
+        //                                   hidDevice.Capabilities.InputReportByteLength,
+        //                                   hidDevice.Capabilities.OutputReportByteLength,
+        //                                   hidDevice.Capabilities.FeatureReportByteLength, hidDevice.DevicePath);
+
+        //        HidDeviceList.Add(model);
+
+        //    }
+        //}
     }
 
 
     private void ReadData()
     {
 
-        HidDeviceData report = GCH.Device.Read(20);
-        if (report != null)
+        byte[] bytes = GCH.ReadData();
+        if (bytes != null)
         {
-            InputMessage += report.Data.ToHex(true) + "\r\n";
+            InputMessage += bytes.ToHex(true) + "\r\n";
         }
     }
 
@@ -412,7 +472,7 @@ public partial class SettingView : FilletWindow
     {
         byte[] bytes = new byte[Device.OutputReportByteLength];
         new Random().NextBytes(bytes);
-        bool isOK = GCH.Device.Write(bytes);
+        bool isOK = GCH.WriteData(bytes);
     }
 
 

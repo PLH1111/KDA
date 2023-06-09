@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TianWeiToolsPro.Extensions;
 
 namespace KDA.Models;
 
@@ -22,11 +23,11 @@ public class HidDeviceModel
 
     public string ProductHexId { get; }
 
-    public short InputReportByteLength { get; }
+    public int InputReportByteLength { get; }
 
-    public short OutputReportByteLength { get; }
+    public int OutputReportByteLength { get; }
 
-    public short FeatureReportByteLength { get; }
+    public int FeatureReportByteLength { get; }
 
     public short Usage { get; }
 
@@ -39,9 +40,26 @@ public class HidDeviceModel
 
     }
 
+    public HidDeviceModel(string manufacturer, string product, string des, int version, string serialNumber, ushort vid,
+                      ushort pid, int inputReportByteLength, int outputReportByteLength,
+                      int featureReportByteLength, string devicePath)
+    {
+        Manufacturer = manufacturer;
+        Product = product;
+        Description = des;
+        Version = version;
+        SerialNumber = serialNumber;
+        VendorHexId = vid.ToBytes().ToHex();
+        ProductHexId = pid.ToBytes().ToHex();
+        InputReportByteLength = inputReportByteLength;
+        OutputReportByteLength = outputReportByteLength;
+        FeatureReportByteLength = featureReportByteLength;
+        DevicePath = devicePath;
+    }
+
     public HidDeviceModel(string manufacturer, string product, string des, int version, string serialNumber, string vendorHexId,
-                          string productHexId, short inputReportByteLength, short outputReportByteLength,
-                          short featureReportByteLength, string devicePath)
+                          string productHexId, int inputReportByteLength, int outputReportByteLength,
+                          int featureReportByteLength, string devicePath)
     {
         Manufacturer = manufacturer;
         Product = product;

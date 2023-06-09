@@ -1,4 +1,5 @@
-﻿using HidLibrary;
+﻿using CyUSB;
+using HidLibrary;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
@@ -15,19 +16,25 @@ public class GCH
 
     public const byte InReportId = 0xE9;
 
-    private static byte[] Setup = { 0x21, 0x09, 0x00, 0x02, 0x00, 0x00, 0x40, 0x00 };
+    private static readonly byte[] setupFrame = { 0x21, 0x09, 0x00, 0x02, 0x00, 0x00, 0x40, 0x00 };
 
-    public static HidDevice Device { get; set; }
+    public static CyHidDevice Device { get; set; }
 
-    public static bool IsDeviceConnect => Device != null && Device.IsConnected;
+    public static CyHidReport Input => Device?.Inputs;
+
+    public static CyHidReport Output => Device?.Outputs;
+
+
+
+    public static bool IsDeviceConnect => Device != null && Device.RwAccessible;
 
     public static bool IsDeviceAvailable
     {
         get
         {
-            if (Device == null || Device.IsConnected == false)
+            if (Device == null || Device.RwAccessible == false)
             {
-                TianWeiToolsPro.Service.MsgBoxService.ShowError("Device is not connect!");
+                MsgBoxService.ShowError("Device is not connect!");
                 return false;
             }
             return true;
@@ -35,132 +42,63 @@ public class GCH
     }
 
 
-    public static bool SetUp()
-    {
-        if (!IsDeviceAvailable)
-        {
-            return false;
-        }
-        if (Device.Write(Setup))
-        {
-            return false;
-        }
-        return true;
-    }
 
-    public static bool WriteReport(HidReport report)
+    public static bool WriteData(byte[] data)
     {
-        if (!SetUp())
-        {
-            return false;
-        }
-        Thread.Sleep(5);
-        return Device.WriteReport(report);
+        Output.DataBuf = data;
+        return Device.WriteOutput();
     }
 
 
-    public static HidReport ReadReport(int timeout)
+    public static byte[] ReadData()
     {
-        if (!SetUp())
+        if (Device.ReadInput() == false)
         {
             return null;
         }
-        Thread.Sleep(5);
-        return Device.ReadReport(timeout);
+        return Input.DataBuf;
     }
 
     public static bool WriteCommand(byte cmd, byte[] data)
     {
-        if (!SetUp())
-        {
-            return false;
-        }
 
         if (data == null || data.Length == 0 || data.Length > 62)
         {
             return false;
         }
 
-        Thread.Sleep(5);
-
-        HidReport report = new(64)
-        {
-            ReportId = OutReportId,
-            Data = data
-        };
-        report.Data[1] = cmd;
-        Array.Copy(data, 0, report.Data, 2, data.Length);
-        return Device.WriteReport(report);
+        byte[] bytes = new byte[data.Length + 2];
+        bytes[1] = cmd;
+        Array.Copy(data, 0, bytes, 2, data.Length);
+        return WriteData(bytes);
     }
 
 
     public static byte[] ReadCommand(byte cmd, byte[] paras = null)
     {
-        if (!SetUp())
+        byte[] bytesOut = null;
+        if (paras == null)
+        {
+            bytesOut = new byte[2];
+        }
+        else
+        {
+            bytesOut = new byte[paras.Length + 2];
+            Array.Copy(paras, 0, bytesOut, 2, paras.Length);
+        }
+
+        bytesOut[1] = cmd;
+       
+        WriteData(bytesOut);
+        byte[] bytesIn = ReadData();
+        if (bytesIn == null || bytesIn.Length < 2 || bytesIn[1] != cmd)
         {
             return null;
         }
-        HidReport report = new(64)
-        {
-            ReportId = OutReportId,
-        };
-        report.Data[1] = cmd;
-        if (paras != null && paras.Length > 0)
-        {
-            Array.Copy(paras, 0, report.Data, 2, paras.Length);
-        }
-        Device.WriteReport(report);
-        var inReport = Device.ReadReport(50);
-        if (inReport == null || report.ReportId != InReportId ||
-            report.Data == null || report.Data.Length < 2 ||
-            report.Data[1] != cmd)
-        {
-            return null;
-        }
-        var data = new byte[report.Data.Length - 2];
-        Array.Copy(report.Data, 2, data, 0, data.Length);
+        var data = new byte[bytesIn.Length - 1];
+        Array.Copy(bytesIn, 1, data, 0, data.Length);
         return data;
     }
 
-
-    public static bool WriteReportSync(HidReport report)
-    {
-        if (!SetUp())
-        {
-            return false;
-        }
-        Thread.Sleep(5);
-        return Device.WriteReportSync(report);
-    }
-
-    public static HidReport ReadReportSync(byte reportId)
-    {
-        if (!SetUp())
-        {
-            return null;
-        }
-        Thread.Sleep(5);
-        return Device.ReadReportSync(reportId);
-    }
-
-    public static async Task<bool> WriteReportAsync(HidReport report)
-    {
-        if (!SetUp())
-        {
-            return false;
-        }
-        Thread.Sleep(5);
-        return await Device.WriteReportAsync(report);
-    }
-
-    public static async Task<HidReport> ReadReportSync(int timeout)
-    {
-        if (!SetUp())
-        {
-            return null;
-        }
-        Thread.Sleep(5);
-        return await Device.ReadReportAsync(timeout);
-    }
 
 }
