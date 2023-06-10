@@ -357,6 +357,8 @@ public partial class SettingView : FilletWindow
                 if(x.Path== Device.DevicePath)
                 {
                     GCH.Device=x;
+                    //读写超时，单位：毫秒
+                    GCH.Device.TimeOut = 100;
                 }
             }
             IsDeviceConnect = GCH.Device.RwAccessible;
