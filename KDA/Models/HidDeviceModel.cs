@@ -33,6 +33,8 @@ public class HidDeviceModel
 
     public short UsagePage { get; }
 
+    public string FriendlyName { get; }
+
     public string DevicePath { get; }
 
     public HidDeviceModel()
@@ -42,7 +44,7 @@ public class HidDeviceModel
 
     public HidDeviceModel(string manufacturer, string product, string des, int version, string serialNumber, ushort vid,
                       ushort pid, int inputReportByteLength, int outputReportByteLength,
-                      int featureReportByteLength, string devicePath)
+                      int featureReportByteLength, string devicePath, string frendyName)
     {
         Manufacturer = manufacturer;
         Product = product;
@@ -55,6 +57,8 @@ public class HidDeviceModel
         OutputReportByteLength = outputReportByteLength;
         FeatureReportByteLength = featureReportByteLength;
         DevicePath = devicePath;
+        FriendlyName = frendyName;
+
     }
 
     public HidDeviceModel(string manufacturer, string product, string des, int version, string serialNumber, string vendorHexId,
@@ -96,6 +100,6 @@ public class HidDeviceModel
 
     public override string ToString()
     {
-        return $"Vid_{VendorHexId}  Pid_{ProductHexId}  {Description}";
+        return $"Vid_{VendorHexId}  Pid_{ProductHexId}  {Manufacturer}";
     }
 }

@@ -8,7 +8,7 @@ using TianWeiToolsPro.Extensions;
 namespace KDA.Models.Bootloader;
 
 [AddINotifyPropertyChangedInterface]
-public class RangeModel
+public class RunModel
 {
     public ResponseCodes ResponseCode { get; set; } = ResponseCodes.TBA;
 
@@ -21,33 +21,22 @@ public class RangeModel
         set => Adderss = value.HexToBytes().ToUint();
     }
 
-    public uint Size { get; set; }
-
-    public string SizeHex
-    {
-        get => Size.ToBytes().ToHex();
-        set => Size = value.HexToBytes().ToUint();
-    }
-
-    public byte[] RangeData => Adderss.ToBytes().Concat(Size.ToBytes()).ToArray();
 
 
-    public RangeModel()
+    public RunModel()
     {
 
     }
 
-    public RangeModel(ResponseCodes responseCode, string adderssHex, string sizeHex)
+    public RunModel(ResponseCodes responseCode, string adderssHex, string versionHex)
     {
         ResponseCode = responseCode;
         AdderssHex = adderssHex;
-        SizeHex = sizeHex;
     }
 
-    public RangeModel(ResponseCodes responseCode, uint adderss, uint size)
+    public RunModel(ResponseCodes responseCode, uint adderss, uint version)
     {
         ResponseCode = responseCode;
         Adderss = adderss;
-        Size = size;
     }
 }

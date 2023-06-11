@@ -26,7 +26,7 @@ public class KeyColorModel
         set => ColorR = value.HexToByte();
     }
 
-    public byte ColorG { get; set; }
+    public byte ColorG { get; set; } = 0xFF;
 
     public string ColorGHex
     {
@@ -35,7 +35,7 @@ public class KeyColorModel
     }
 
 
-    public byte ColorB { get; set; }
+    public byte ColorB { get; set; } = 0xFF;
 
     public string ColorBHex
     {
@@ -43,7 +43,7 @@ public class KeyColorModel
         set => ColorB = value.HexToByte();
     }
 
-    public byte ColorA { get; set; }
+    public byte ColorA { get; set; } = 0x0A;
 
     public string ColorAHex
     {

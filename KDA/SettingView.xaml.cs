@@ -13,6 +13,7 @@ using TianWeiToolsPro.Controls;
 using TianWeiToolsPro.Extensions;
 using CyUSB;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace KDA;
 
@@ -25,6 +26,7 @@ public partial class SettingView : FilletWindow
     private IEnumerable<CyHidDevice> hidDevices;
 
     USBDeviceList usbDevices;
+    USBDeviceList usbMonitor;
 
     #endregion
 
@@ -144,6 +146,8 @@ public partial class SettingView : FilletWindow
 
     public static CheckSumModel CheckSumModel { get; set; } = new();
 
+    public static RunModel RunModel { get; set; } = new();
+
     #endregion
 
     #region CmdFlashModel
@@ -172,9 +176,9 @@ public partial class SettingView : FilletWindow
     public DelegateCommand ClearOutputMessageCommand { get; private set; }
 
 
-    public DelegateCommand<string> CommandReadCommand { get; private set; }
+    public DelegateCommand<string> ApplicationReadCommand { get; private set; }
 
-    public DelegateCommand<string> CommandWriteCommand { get; private set; }
+    public DelegateCommand<string> ApplicationWriteCommand { get; private set; }
 
 
 
@@ -236,14 +240,14 @@ public partial class SettingView : FilletWindow
         ClearInputMessageCommand = new DelegateCommand(ClearInputMessage);
         ClearOutputMessageCommand = new DelegateCommand(ClearOutputMessage);
 
-        CommandWriteCommand = new DelegateCommand<string>(CommandWrite, CanExcuteBootLoaderWrite)
+        ApplicationWriteCommand = new DelegateCommand<string>(ApplicationWrite, CanExcuteCommandWrite)
           .ObservesProperty(() => IsDeviceConnect);
-        CommandReadCommand = new DelegateCommand<string>(CommandRead, CanExcuteBootLoaderRead)
+        ApplicationReadCommand = new DelegateCommand<string>(ApplicationRead, CanExcuteCommandRead)
             .ObservesProperty(() => IsDeviceConnect);
 
-        BootLoaderWriteCommand = new DelegateCommand<string>(BootLoaderWrite, CanExcuteBootLoaderWrite)
+        BootLoaderWriteCommand = new DelegateCommand<string>(BootLoaderWrite, CanExcuteCommandWrite)
             .ObservesProperty(() => IsDeviceConnect);
-        BootLoaderReadCommand = new DelegateCommand<string>(BootLoaderRead, CanExcuteBootLoaderRead)
+        BootLoaderReadCommand = new DelegateCommand<string>(BootLoaderRead, CanExcuteCommandRead)
             .ObservesProperty(() => IsDeviceConnect);
 
     }
@@ -263,16 +267,17 @@ public partial class SettingView : FilletWindow
         base.OnClosed(e);
         if (usbDevices != null)
         {
-            usbDevices.DeviceRemoved -= new EventHandler(UsbDevices_DeviceRemoved);
-            usbDevices.DeviceAttached -= new EventHandler(UsbDevices_DeviceAttached);
-            usbDevices = null;
+            usbMonitor.DeviceRemoved -= UsbDevices_DeviceRemoved;
+            usbMonitor.DeviceAttached -= UsbDevices_DeviceAttached;
+            //usbMonitor.Dispose();
+            usbMonitor = null;
             GC.Collect();
         }
     }
 
-    private async void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
     {
-        await Task.Run(ListHidDevice);
+        InitUsbMonitor();
         RefreshDevices();
         if (HidDeviceList != null && GCH.Device != null)
         {
@@ -281,11 +286,12 @@ public partial class SettingView : FilletWindow
         IsDeviceConnect = GCH.IsDeviceConnect;
     }
 
-    private void ListHidDevice()
+    private void InitUsbMonitor()
     {
-        usbDevices = new(CyConst.DEVICES_HID);
-        usbDevices.DeviceRemoved += new EventHandler(UsbDevices_DeviceRemoved);
-        usbDevices.DeviceAttached += new EventHandler(UsbDevices_DeviceAttached);
+        //必须从UI线程创建该对象，与窗口挂钩，否则无法监控设备拔
+        usbMonitor = new USBDeviceList(CyConst.DEVICES_HID);
+        usbMonitor.DeviceRemoved += UsbDevices_DeviceRemoved;
+        usbMonitor.DeviceAttached += UsbDevices_DeviceAttached;
     }
 
     void UsbDevices_DeviceAttached(object sender, EventArgs e)
@@ -300,18 +306,53 @@ public partial class SettingView : FilletWindow
         RefreshDevices();
     }
 
+    private async void RefreshDevices()
+    {
+        Device = null;
+        GCH.Device = null;
+        IsDeviceConnect = false;
+        await Task.Run(() =>
+        {
+            usbDevices = new(CyConst.DEVICES_HID);
+        });
+        if (usbDevices != null && usbDevices.Count > 0)
+        {
+            HidDeviceList.Clear();
+            foreach (var device in usbDevices)
+            {
+                if (device is CyHidDevice hid && hid.Outputs.RptByteLen == 64)
+                {
+                    HidDeviceModel model = new(hid.Manufacturer,
+                                               hid.Product,
+                                               null,
+                                               hid.Version,
+                                               hid.SerialNumber,
+                                               hid.VendorID,
+                                               hid.ProductID,
+                                               hid.Inputs.RptByteLen,
+                                               hid.Outputs.RptByteLen,
+                                               hid.Features.RptByteLen,
+                                               hid.Path,
+                                               hid.FriendlyName);
+
+                    HidDeviceList.Add(model);
+                }
+            }
+        }
+    }
+
     #endregion
 
     #region 方法
 
     #region Can Excute
 
-    private bool CanExcuteBootLoaderWrite(string arg)
+    private bool CanExcuteCommandWrite(string arg)
     {
         return IsDeviceConnect && Device != null;
     }
 
-    private bool CanExcuteBootLoaderRead(string arg)
+    private bool CanExcuteCommandRead(string arg)
     {
         return IsDeviceConnect && Device != null;
     }
@@ -352,11 +393,11 @@ public partial class SettingView : FilletWindow
     {
         if (usbDevices != null && Device != null)
         {
-            foreach(CyHidDevice x in usbDevices)
+            foreach (CyHidDevice x in usbDevices)
             {
-                if(x.Path== Device.DevicePath)
+                if (x.Path == Device.DevicePath)
                 {
-                    GCH.Device=x;
+                    GCH.Device = x;
                     //读写超时，单位：毫秒
                     GCH.Device.TimeOut = 100;
                 }
@@ -368,96 +409,11 @@ public partial class SettingView : FilletWindow
 
     private void DisconnectDevice()
     {
-
-        //IsDeviceConnect = GCH.CloseDevice();
-
+        GCH.Device = null;
+        IsDeviceConnect = false;
     }
 
-    private void RefreshDevices()
-    {
-        if (usbDevices != null && usbDevices.Count > 0)
-        {
-            HidDeviceList.Clear();
-            foreach (var device in usbDevices)
-            {
-                if (device is CyHidDevice hid && hid.Outputs.RptByteLen == 64)
-                {
-                    HidDeviceModel model = new(hid.Manufacturer,
-                                               hid.Product,
-                                               null,
-                                               hid.Version,
-                                               hid.SerialNumber,
-                                               hid.VendorID,
-                                               hid.ProductID,
-                                               hid.Inputs.RptByteLen,
-                                               hid.Outputs.RptByteLen,
-                                               hid.Features.RptByteLen,
-                                               hid.Path);
 
-                    HidDeviceList.Add(model);
-                }
-            }
-        }
-        //if (hidDevice.Description.Contains("符合") || hidDevice.Capabilities.OutputReportByteLength != 64)
-        //{
-        //    continue;
-        //}
-        //string mc = string.Empty;
-        //string pd = string.Empty;
-        //string sn = string.Empty;
-        //if (hidDevice.ReadManufacturer(out byte[] mcBy))
-        //{
-        //    mc = Encoding.UTF8.GetString(mcBy).TrimEnd('\0');
-        //}
-
-        //if (hidDevice.ReadProduct(out byte[] pdBy))
-        //{
-        //    pd = Encoding.UTF8.GetString(pdBy).TrimEnd('\0');
-        //}
-
-        //if (hidDevice.ReadSerialNumber(out byte[] snBy))
-        //{
-        //    sn = Encoding.UTF8.GetString(snBy).TrimEnd('\0');
-        //}
-        //hidDevices = HidDevices.Enumerate();
-        //if (hidDevices != null && hidDevices.Any())
-        //{
-        //    HidDeviceList.Clear();
-        //    foreach (var hidDevice in hidDevices)
-        //    {
-        //        if (hidDevice.Description.Contains("符合") || hidDevice.Capabilities.OutputReportByteLength != 64)
-        //        {
-        //            continue;
-        //        }
-        //        string mc = string.Empty;
-        //        string pd = string.Empty;
-        //        string sn = string.Empty;
-        //        if (hidDevice.ReadManufacturer(out byte[] mcBy))
-        //        {
-        //            mc = Encoding.UTF8.GetString(mcBy).TrimEnd('\0');
-        //        }
-
-        //        if (hidDevice.ReadProduct(out byte[] pdBy))
-        //        {
-        //            pd = Encoding.UTF8.GetString(pdBy).TrimEnd('\0');
-        //        }
-
-        //        if (hidDevice.ReadSerialNumber(out byte[] snBy))
-        //        {
-        //            sn = Encoding.UTF8.GetString(snBy).TrimEnd('\0');
-        //        }
-
-        //        HidDeviceModel model = new(mc, pd, hidDevice.Description, hidDevice.Attributes.Version, sn,
-        //                                   hidDevice.Attributes.VendorHexId, hidDevice.Attributes.ProductHexId,
-        //                                   hidDevice.Capabilities.InputReportByteLength,
-        //                                   hidDevice.Capabilities.OutputReportByteLength,
-        //                                   hidDevice.Capabilities.FeatureReportByteLength, hidDevice.DevicePath);
-
-        //        HidDeviceList.Add(model);
-
-        //    }
-        //}
-    }
 
 
     private void ReadData()
@@ -488,7 +444,7 @@ public partial class SettingView : FilletWindow
         OutputMessage = null;
     }
 
-    private void CommandWrite(string obj)
+    private void ApplicationWrite(string obj)
     {
         if (Enum.TryParse(obj, out KeyCommandNames cmd) == false)
         {
@@ -497,43 +453,45 @@ public partial class SettingView : FilletWindow
         switch (cmd)
         {
             case KeyCommandNames.Sleep:
-                KBCH.SetSleep(SleepModel);
+                ACH.SetSleep(SleepModel);
                 break;
 
             case KeyCommandNames.Key_Macro:
-                KBCH.SetKeyMacro(KeyMacroModel);
+                ACH.SetKeyMacro(KeyMacroModel);
                 break;
 
             case KeyCommandNames.Key_RBG:
-                KBCH.SetKeyColor(KeyColorModel);
+                ACH.SetKeyColor(KeyColorModel);
                 break;
-
+            case KeyCommandNames.Key_RBG_Random:
+                SetKeysRGBRandom();
+                break;
             case KeyCommandNames.Animation:
-                KBCH.SetAnimation(AnimationModel);
+                ACH.SetAnimation(AnimationModel);
                 break;
 
             case KeyCommandNames.Profile:
-                KBCH.SetProfile(ProfileModel);
+                ACH.SetProfile(ProfileModel);
                 break;
 
             case KeyCommandNames.RBG_Map:
-                KBCH.SetColorMap(SelectedKeyColorMap);
+                ACH.SetColorMap(SelectedKeyColorMap);
                 break;
 
             case KeyCommandNames.Language:
-                KBCH.SetLanguage(SelectedLanguage);
+                ACH.SetLanguage(SelectedLanguage);
                 break;
 
             case KeyCommandNames.Macro_Data:
-                KBCH.SetMarcoMap(SelectedMarcoMap);
+                ACH.SetMarcoMap(SelectedMarcoMap);
                 break;
 
             case KeyCommandNames.Profile_Data:
-                KBCH.SetProfileMap(SelectedProfileMap);
+                ACH.SetProfileMap(SelectedProfileMap);
                 break;
 
             case KeyCommandNames.BootUp:
-                KBCH.SetBootUpMap(SelectedBootUpMap);
+                ACH.SetBootUpMap(SelectedBootUpMap);
                 break;
 
             case KeyCommandNames.Flash_Data:
@@ -547,7 +505,27 @@ public partial class SettingView : FilletWindow
         }
     }
 
-    private void CommandRead(string obj)
+    readonly Random random = new();
+    private void SetKeysRGBRandom()
+    {
+        Task.Run(() =>
+        {
+            byte[] bytes = new byte[3];
+            KeyColorModel model = new();
+            for (byte i = 0; i < 100; i++)
+            {
+                random.NextBytes(bytes);
+                model.KeyIndex = i;
+                model.ColorR = bytes[0];
+                model.ColorG = bytes[1];
+                model.ColorB = bytes[2];
+                ACH.SetKeyColor(model);
+                Thread.Sleep(1);
+            }
+        });
+    }
+
+    private void ApplicationRead(string obj)
     {
         if (Enum.TryParse(obj, out KeyCommandNames cmd) == false)
         {
@@ -556,7 +534,7 @@ public partial class SettingView : FilletWindow
         switch (cmd)
         {
             case KeyCommandNames.Model:
-                KeyModelName = KBCH.GetModel();
+                KeyModelName = ACH.GetModel();
                 break;
             case KeyCommandNames.Sleep:
                 GetSleepModel();
@@ -582,7 +560,7 @@ public partial class SettingView : FilletWindow
                 break;
 
             case KeyCommandNames.Language:
-                SelectedLanguage = KBCH.GetLanguage();
+                SelectedLanguage = ACH.GetLanguage();
                 break;
 
             case KeyCommandNames.Macro_Data:
@@ -609,7 +587,7 @@ public partial class SettingView : FilletWindow
 
     private static void GetSleepModel()
     {
-        var sleep = KBCH.GetSleep();
+        var sleep = ACH.GetSleep();
         if (sleep != null)
         {
             SleepModel.SleepTime = sleep.SleepTime;
@@ -619,7 +597,7 @@ public partial class SettingView : FilletWindow
 
     private static void GetMacroModel()
     {
-        var marco = KBCH.GetKeyMacro();
+        var marco = ACH.GetKeyMacro();
         if (marco != null)
         {
             KeyMacroModel.KeyName = marco.KeyName;
@@ -630,19 +608,19 @@ public partial class SettingView : FilletWindow
 
     private static void GetRGBModel()
     {
-        var colorModel = KBCH.GetKeyColor(KeyMacroModel.KeyIndex);
+        var colorModel = ACH.GetKeyColor(KeyColorModel.KeyIndex);
         if (colorModel != null)
         {
             KeyColorModel.ColorRHex = colorModel.ColorRHex;
-            KeyColorModel.ColorBHex = colorModel.ColorBHex;
             KeyColorModel.ColorGHex = colorModel.ColorGHex;
+            KeyColorModel.ColorBHex = colorModel.ColorBHex;
             KeyColorModel.ColorAHex = colorModel.ColorAHex;
         }
     }
 
     private static void GetAnimationModel()
     {
-        var animation = KBCH.GetAnimation();
+        var animation = ACH.GetAnimation();
         if (animation != null)
         {
             AnimationModel.AnimationId = animation.AnimationId;
@@ -658,7 +636,7 @@ public partial class SettingView : FilletWindow
 
     private static void GetProfileModel()
     {
-        var profileModel = KBCH.GetProfile();
+        var profileModel = ACH.GetProfile();
         if (profileModel != null)
         {
             ProfileModel.NumberHex = profileModel.NumberHex;
@@ -667,7 +645,7 @@ public partial class SettingView : FilletWindow
 
     private void GegRGBMap()
     {
-        var colorMap = KBCH.GetColorMap();
+        var colorMap = ACH.GetColorMap();
         if (colorMap != null)
         {
             SelectedKeyColorMap.MapDatas = colorMap.MapDatas;
@@ -676,7 +654,7 @@ public partial class SettingView : FilletWindow
 
     private void GetMarcoMap()
     {
-        var macroMap = KBCH.GetMarcoMap(SelectedMarcoMap.Number);
+        var macroMap = ACH.GetMarcoMap(SelectedMarcoMap.Number);
         if (macroMap != null)
         {
             SelectedMarcoMap.MapDatas = macroMap.MapDatas;
@@ -685,7 +663,7 @@ public partial class SettingView : FilletWindow
 
     private void GetProfileMap()
     {
-        var profileMap = KBCH.GetProfileMap(SelectedProfileMap.Number);
+        var profileMap = ACH.GetProfileMap(SelectedProfileMap.Number);
         if (profileMap != null)
         {
             SelectedProfileMap.AnimationId = profileMap.AnimationId;
@@ -702,7 +680,7 @@ public partial class SettingView : FilletWindow
 
     private void GetBootUpMap()
     {
-        var map = KBCH.GetBootUpMap(SelectedBootUpMap.Number);
+        var map = ACH.GetBootUpMap(SelectedBootUpMap.Number);
         if (map != null)
         {
             SelectedBootUpMap.MapDatas = map.MapDatas;
@@ -716,10 +694,13 @@ public partial class SettingView : FilletWindow
         switch (obj)
         {
             case "Range":
-                BLH.SetRange(RangeModel);
+                BCH.SetRange(RangeModel);
                 break;
             case "Flash":
-                BLH.WriteFlash(FlashModel);
+                BCH.WriteFlash(FlashModel);
+                break;
+            case "Run":
+                BCH.RunApp(RunModel.Adderss);
                 break;
         }
     }
@@ -729,7 +710,8 @@ public partial class SettingView : FilletWindow
         switch (obj)
         {
             case "Config":
-                var config = BLH.GetConfig();
+                ConfigModel.ResponseCode = ResponseCodes.TBA;
+                var config = BCH.GetConfig();
                 if (config != null)
                 {
                     ConfigModel.AdderssHex = config.AdderssHex;
@@ -738,7 +720,7 @@ public partial class SettingView : FilletWindow
                 }
                 break;
             case "Range":
-                var range = BLH.GetRange();
+                var range = BCH.GetRange();
                 if (range != null)
                 {
                     RangeModel.AdderssHex = range.AdderssHex;
@@ -747,7 +729,7 @@ public partial class SettingView : FilletWindow
                 }
                 break;
             case "Flash":
-                var flash = BLH.ReadFlash(FlashModel);
+                var flash = BCH.ReadFlash(FlashModel);
                 if (flash != null)
                 {
                     FlashModel.DataHex = flash.DataHex;
@@ -755,7 +737,7 @@ public partial class SettingView : FilletWindow
                 }
                 break;
             case "CheckSum":
-                var sum = BLH.GetCheckSum(CheckSumModel);
+                var sum = BCH.GetCheckSum(CheckSumModel);
                 if (sum != null)
                 {
                     CheckSumModel.CheckSumHex = sum.CheckSumHex;

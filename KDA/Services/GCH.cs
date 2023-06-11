@@ -16,7 +16,7 @@ public class GCH
 
     public const byte InReportId = 0xE9;
 
-    private static readonly byte[] setupFrame = { 0x21, 0x09, 0x00, 0x02, 0x00, 0x00, 0x40, 0x00 };
+    private static readonly byte[] setupFrame = { 0x00, 0x09, 0x00, 0x02, 0x00, 0x00, 0x40, 0x00 };
 
     public static CyHidDevice Device { get; set; }
 
@@ -41,10 +41,19 @@ public class GCH
         }
     }
 
+    public static bool SetUp()
+    {
+        Output.DataBuf = TianWeiToolsPro.Extensions.SerializerExtension.DeepCopyByBin(setupFrame);
+        return Device.SetOutput(0x21);
+    }
 
 
     public static bool WriteData(byte[] data)
     {
+        if(Device==null)
+        {
+            return false;
+        }
         Output.DataBuf = data;
         return Device.WriteOutput();
     }
@@ -52,6 +61,10 @@ public class GCH
 
     public static byte[] ReadData()
     {
+        if (Device == null)
+        {
+            return null;
+        }
         if (Device.ReadInput() == false)
         {
             return null;
@@ -61,13 +74,16 @@ public class GCH
 
     public static bool WriteCommand(byte cmd, byte[] data)
     {
-
+        if (Device == null)
+        {
+            return false;
+        }
         if (data == null || data.Length == 0 || data.Length > 62)
         {
             return false;
         }
 
-        byte[] bytes = new byte[data.Length + 2];
+        byte[] bytes = new byte[64];
         bytes[1] = cmd;
         Array.Copy(data, 0, bytes, 2, data.Length);
         return WriteData(bytes);
@@ -76,7 +92,12 @@ public class GCH
 
     public static byte[] ReadCommand(byte cmd, byte[] paras = null)
     {
-        byte[] bytesOut = null;
+        if (Device == null)
+        {
+            return null;
+        }
+        //SetUp();
+        byte[] bytesOut;
         if (paras == null)
         {
             bytesOut = new byte[2];
@@ -88,15 +109,16 @@ public class GCH
         }
 
         bytesOut[1] = cmd;
-       
+
         WriteData(bytesOut);
+        Thread.Sleep(5);
         byte[] bytesIn = ReadData();
         if (bytesIn == null || bytesIn.Length < 2 || bytesIn[1] != cmd)
         {
             return null;
         }
-        var data = new byte[bytesIn.Length - 1];
-        Array.Copy(bytesIn, 1, data, 0, data.Length);
+        var data = new byte[bytesIn.Length - 2];
+        Array.Copy(bytesIn, 2, data, 0, data.Length);
         return data;
     }
 

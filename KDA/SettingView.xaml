@@ -29,12 +29,12 @@
             <Setter Property="BorderBrush" Value="{StaticResource MahApps.Brushes.Accent}"/>
             <Setter Property="Background" Value="{StaticResource Black70}"/>
         </Style>
-        <Style x:Key="WriteButtonBase" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+        <Style x:Key="SetButtonBase" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
             <Setter Property="Background" Value="Green"/>
-            <Setter Property="Content" Value="Write"/>
+            <Setter Property="Content" Value="Set"/>
         </Style>
-        <Style x:Key="ReadButtonBase" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
-            <Setter Property="Content" Value="Read"/>
+        <Style x:Key="GetButtonBase" TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Content" Value="Get"/>
         </Style>
     </twc:FilletWindow.Resources>
     <twc:FilletWindow.Background>
@@ -139,11 +139,11 @@
                                 <Setter Property="Margin" Value="0 10 20 10"/>
                                 <Setter Property="Height" Value="32"/>
                             </Style>
-                            <Style x:Key="CommandWriteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource WriteButtonBase}">
-                                <Setter Property="Command" Value="{Binding CommandWriteCommand}"/>
+                            <Style x:Key="CommandWriteButton" TargetType="{x:Type Button}" BasedOn="{StaticResource SetButtonBase}">
+                                <Setter Property="Command" Value="{Binding ApplicationWriteCommand}"/>
                             </Style>
-                            <Style x:Key="CommandReadButton" TargetType="{x:Type Button}" BasedOn="{StaticResource ReadButtonBase}">
-                                <Setter Property="Command" Value="{Binding CommandReadCommand}"/>
+                            <Style x:Key="CommandReadButton" TargetType="{x:Type Button}" BasedOn="{StaticResource GetButtonBase}">
+                                <Setter Property="Command" Value="{Binding ApplicationReadCommand}"/>
                             </Style>
                         </StackPanel.Resources>
 
@@ -238,6 +238,7 @@
                                 </twc:FilletHeaderControl>
                                 <Button Style="{StaticResource CommandReadButton}" CommandParameter="Key_RBG"/>
                                 <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Key_RBG"/>
+                                <Button Style="{StaticResource CommandWriteButton}" Content="Random" CommandParameter="Key_RBG_Random"/>
                             </WrapPanel>
                         </twc:GroupPanel>
 
@@ -588,10 +589,10 @@
                                 <Setter Property="Margin" Value="10"/>
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
                             </Style>
-                            <Style x:Key="BootLoaderWriteButton" TargetType="Button" BasedOn="{StaticResource WriteButtonBase}">
+                            <Style x:Key="BootLoaderWriteButton" TargetType="Button" BasedOn="{StaticResource SetButtonBase}">
                                 <Setter Property="Command" Value="{Binding BootLoaderWriteCommand}"/>
                             </Style>
-                            <Style x:Key="BootLoaderReadButton" TargetType="Button" BasedOn="{StaticResource ReadButtonBase}">
+                            <Style x:Key="BootLoaderReadButton" TargetType="Button" BasedOn="{StaticResource GetButtonBase}">
                                 <Setter Property="Command" Value="{Binding BootLoaderReadCommand}"/>
                             </Style>
                         </StackPanel.Resources>
@@ -667,6 +668,15 @@
                                 <twc:FilletHeaderControl Header="Response" MinWidth="150" Margin="15,0">
                                     <TextBox Text="{Binding CheckSumModel.ResponseCode}" IsReadOnly="True"/>
                                 </twc:FilletHeaderControl>
+                            </StackPanel>
+                        </twc:GroupPanel>
+
+                        <twc:GroupPanel x:Name="Run" Header="Run" >
+                            <StackPanel Orientation="Horizontal">
+                                <twc:FilletHeaderControl Header="Address(Hex)" Width="180" >
+                                    <TextBox Text="{Binding RunModel.AdderssHex}" />
+                                </twc:FilletHeaderControl>
+                                <Button Style="{StaticResource BootLoaderWriteButton}" Content="Run" CommandParameter="Run"/>
                             </StackPanel>
                         </twc:GroupPanel>
                     </StackPanel>

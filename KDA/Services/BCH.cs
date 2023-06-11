@@ -13,9 +13,9 @@ namespace KDA.Services;
 
 
 /// <summary>
-/// BootloaderHelper
+/// Bootloader Command Helper
 /// </summary>
-public class BLH
+public class BCH
 {
 
     private const byte getConfigCommand = 0xE0;
@@ -113,7 +113,7 @@ public class BLH
 
     public static void RunApp(uint addr)
     {
-        var paras = addr.ToBytes();
+        var paras = addr.ToBytes().Reverse().ToArray();
         GCH.WriteCommand(runAppCommand, paras);
     }
 

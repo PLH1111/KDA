@@ -75,6 +75,7 @@ public enum KeyCommandNames
     Sleep,
     Key_Macro,
     Key_RBG,
+    Key_RBG_Random,
     Animation,
     Profile,
     RBG_Map,
