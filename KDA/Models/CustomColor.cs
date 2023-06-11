@@ -11,13 +11,13 @@ namespace KDA.Models;
 [Serializable]
 public class CustomColor
 {
-    public Brush Color { get; set; }
+    public Color Color { get; set; }
 
     public CustomColor()
     {
     }
 
-    public CustomColor(Brush color)
+    public CustomColor(Color color)
     {
         Color = color;
     }

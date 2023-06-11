@@ -25,16 +25,14 @@ public class KeyBar
         {
             foreach (var key in Keys01)
             {
-                key.AnimationBrush = Brushes.Lime;
-                key.IsAnimation = true;
+                key.AnimationColor = Colors.Lime;
             }
         }
         else
         {
             foreach (var key in Keys01)
             {
-                key.AnimationBrush = null;
-                key.IsAnimation = false;
+                key.AnimationColor = default;
             }
         }
 
@@ -42,16 +40,14 @@ public class KeyBar
         {
             foreach (var key in Keys02)
             {
-                key.AnimationBrush = Brushes.Cyan;
-                key.IsAnimation = true;
+                key.AnimationColor = Colors.Cyan;
             }
         }
         else
         {
             foreach (var key in Keys02)
             {
-                key.AnimationBrush = null;
-                key.IsAnimation = false;
+                key.AnimationColor = default;
             }
         }
 
@@ -59,16 +55,14 @@ public class KeyBar
         {
             foreach (var key in Keys03)
             {
-                key.AnimationBrush = Brushes.Yellow;
-                key.IsAnimation = true;
+                key.AnimationColor = Colors.Yellow;
             }
         }
         else
         {
             foreach (var key in Keys03)
             {
-                key.AnimationBrush = null;
-                key.IsAnimation = false;
+                key.AnimationColor = default;
             }
         }
 
@@ -76,16 +70,14 @@ public class KeyBar
         {
             foreach (var key in Keys04)
             {
-                key.AnimationBrush = Brushes.Orange;
-                key.IsAnimation = true;
+                key.AnimationColor = Colors.Orange;
             }
         }
         else
         {
             foreach (var key in Keys04)
             {
-                key.AnimationBrush = null;
-                key.IsAnimation = false;
+                key.AnimationColor = default;
             }
         }
 
@@ -93,16 +85,14 @@ public class KeyBar
         {
             foreach (var key in Keys05)
             {
-                key.AnimationBrush = Brushes.OrangeRed;
-                key.IsAnimation = true;
+                key.AnimationColor = Colors.OrangeRed;
             }
         }
         else
         {
             foreach (var key in Keys05)
             {
-                key.AnimationBrush = null;
-                key.IsAnimation = false;
+                key.AnimationColor = default;
             }
         }
     }

@@ -10,19 +10,18 @@ namespace KDA.Models;
 public class AnimationKeyGroup : List<KeyModel>
 {
 
-    public Brush AnimationBrush { get; set; }
+    public Color AnimationColor { get; set; }
 
-    public AnimationKeyGroup(Brush brush)
+    public AnimationKeyGroup(Color color)
     {
-        AnimationBrush = brush;
+        AnimationColor = color;
     }
 
     public void SetAnimation()
     {
         foreach (var item in this)
         {
-            item.AnimationBrush = AnimationBrush;
-            item.IsAnimation = true;
+            item.AnimationColor = AnimationColor;
         }
     }
 
@@ -30,8 +29,7 @@ public class AnimationKeyGroup : List<KeyModel>
     {
         foreach (var item in this)
         {
-            item.IsAnimation = false;
-            item.AnimationBrush = null;
+            item.AnimationColor = default;
         }
     }
 }

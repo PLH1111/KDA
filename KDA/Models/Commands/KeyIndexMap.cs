@@ -12,6 +12,7 @@ public class KeyIndexMap
     public static Dictionary<byte, Key> Keys { get; set; } = new()
     {
         { 0x00,Key.Escape},
+        { 0x01,Key.None},
         { 0x02,Key.F1},
         { 0x03,Key.F2},
         { 0x04,Key.F3},
@@ -28,7 +29,10 @@ public class KeyIndexMap
         { 0x0F,Key.Scroll},
 
         { 0x10,Key.Pause},
-   
+        { 0x11,Key.None},
+        { 0x12,Key.None},
+        { 0x13,Key.None},
+        { 0x14,Key.None},
         { 0x15,Key.Oem3},
         { 0x16,Key.D1},
         { 0x17,Key.D2},
@@ -87,6 +91,10 @@ public class KeyIndexMap
         { 0x49,Key.OemSemicolon},
         { 0x4A,Key.OemQuotes},
         { 0x4B,Key.Enter},
+        { 0x4C,Key.None},
+        { 0x4D,Key.None},
+        { 0x4E,Key.None},
+        { 0x4F,Key.None},
 
         { 0x50,Key.NumPad4},
         { 0x51,Key.NumPad5},
@@ -103,10 +111,14 @@ public class KeyIndexMap
         { 0x5C,Key.OemComma},
         { 0x5D,Key.OemPeriod},
         { 0x5E,Key.OemQuestion},
+        { 0x5F,Key.None},
 
 
+        { 0x60,Key.None},
         { 0x61,Key.RightShift},
+        { 0x62,Key.None},
         { 0x63,Key.Up},
+        { 0x64,Key.None},
         { 0x65,Key.NumPad1},
         { 0x66,Key.NumPad2},
         { 0x67,Key.NumPad3},
@@ -114,17 +126,26 @@ public class KeyIndexMap
         { 0x69,Key.LeftCtrl},
         { 0x6A,Key.LWin},
         { 0x6B,Key.LeftAlt},
+        { 0x6C,Key.None},
+        { 0x6D,Key.None},
         { 0x6E,Key.Space},
+        { 0x6F,Key.None},
 
+        { 0x70,Key.None},
+        { 0x71,Key.None},
         { 0x72,Key.RightAlt},
-        //{ 0x73,Key.LWin},
+        { 0x73,Key.None},
         { 0x74,Key.Apps},
-  
+        { 0x75,Key.None},
         { 0x76,Key.RightCtrl},
         { 0x77,Key.Left},
         { 0x78,Key.Down},
         { 0x79,Key.Right},
         { 0x7A,Key.NumPad0},
+        { 0x7B,Key.None},
         { 0x7C,Key.Decimal},
+        { 0x7D,Key.None},
+        { 0x7E,Key.Space},
+        { 0x7F,Key.None},
     };
 }

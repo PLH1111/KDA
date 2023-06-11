@@ -21,16 +21,16 @@ namespace KDA.Controls;
 public partial class ColorPicker : UserControl
 {
 
-    public SolidColorBrush SelectedColor
+    public Color SelectedColor
     {
-        get { return (SolidColorBrush)GetValue(SelectedColorProperty); }
+        get { return (Color)GetValue(SelectedColorProperty); }
         set { SetValue(SelectedColorProperty, value); }
     }
 
     // Using a DependencyProperty as the backing store for SelectedColor.  This enables animation, styling, binding, etc...
     /// <summary>Identifies the <see cref="SelectedColor"/> dependency property.</summary>
     public static readonly DependencyProperty SelectedColorProperty =
-        DependencyProperty.Register(nameof(SelectedColor), typeof(SolidColorBrush), typeof(ColorPicker));
+        DependencyProperty.Register(nameof(SelectedColor), typeof(Color), typeof(ColorPicker));
 
 
 
@@ -43,15 +43,7 @@ public partial class ColorPicker : UserControl
     {
         base.OnMouseDoubleClick(e);
         ColorPickView view = new();
-        var color = view.ShowView(SelectedColor.Color);
-        if (SelectedColor == null)
-        {
-            SetCurrentValue(SelectedColorProperty, new SolidColorBrush(color));
-        }
-        else
-        {
-            SelectedColor.SetCurrentValue(SolidColorBrush.ColorProperty, color);
-        }
-
+        var color = view.ShowView(SelectedColor);
+        SetCurrentValue(SelectedColorProperty, color);
     }
 }

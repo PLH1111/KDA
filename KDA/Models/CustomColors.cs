@@ -18,7 +18,7 @@ public class CustomColors : ObservableCollection<CustomColor>
 
     
 
-    public Brush[] GetBrushes()
+    public Color[] GetBrushes()
     {
         return this.Select(x=>x.Color).ToArray();
     }

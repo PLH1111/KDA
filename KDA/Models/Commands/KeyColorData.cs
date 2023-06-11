@@ -11,11 +11,13 @@ namespace KDA.Models.Commands;
 [AddINotifyPropertyChangedInterface]
 public class KeyColorData
 {
-    public byte Number { get; set; }
+    public byte KeyIndex { get; set; }
 
-    public string NumberStr => $"#{Number}";
+    public string KeyIndexStr => $"#{KeyIndex}";
 
     public Key Key { get; set; }
+
+    public string KeyStr => $"{Key}";
 
     public byte ColorR { get; set; }
 
@@ -57,12 +59,13 @@ public class KeyColorData
 
     public KeyColorData(byte no)
     {
-        Number = no;
+        KeyIndex = no;
+        Key = KeyIndexMap.Keys[no];
     }
 
     public KeyColorData(byte no, Key key)
     {
-        Number = no;
+        KeyIndex = no;
         Key = key;
     }
 
@@ -72,5 +75,13 @@ public class KeyColorData
         ColorB = b;
         ColorG = g;
         ColorA = a;
+    }
+
+    public void Clear()
+    {
+        ColorR = 0;
+        ColorB = 0;
+        ColorG = 0;
+        ColorA = 0;
     }
 }

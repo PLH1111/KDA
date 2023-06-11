@@ -23,4 +23,15 @@ public class AnimationKeyGroups : List<AnimationKeyGroup>
             item.ClearAnimation();
         }
     }
+
+
+    public List<KeyModel> GetKeyModels()
+    {
+        List<KeyModel> result = new();
+        foreach (var item in this)
+        {
+            result.AddRange(item);
+        }
+        return result;
+    }
 }

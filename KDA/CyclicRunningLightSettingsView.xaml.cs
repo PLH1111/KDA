@@ -73,8 +73,8 @@ public partial class CyclicRunningLightSettingsView : FilletWindow
         }
         byte[] rbg = new byte[3];
         random.NextBytes(rbg);
-        Brush brush = new SolidColorBrush(Color.FromRgb(rbg[0], rbg[1], rbg[2]));
-        Settings.CustomColors.Add(new CustomColor(brush));
+        Color color = Color.FromRgb(rbg[0], rbg[1], rbg[2]);
+        Settings.CustomColors.Add(new CustomColor(color));
     }
 
     private void RemoveCustomColor()

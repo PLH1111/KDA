@@ -12,7 +12,7 @@ public class KeyColorMap
 {
     public byte Index { get; set; }
 
-    public KeyColorDataList MapDatas { get; set; } = new(11);
+    public KeyColorDataList MapDatas { get; set; }
 
     public KeyColorMap()
     {
@@ -22,6 +22,7 @@ public class KeyColorMap
     public KeyColorMap(byte no)
     {
         Index = no;
+        MapDatas = new(no);
     }
 
     public override string ToString()

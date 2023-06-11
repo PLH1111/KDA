@@ -6,7 +6,9 @@
              xmlns:local="clr-namespace:KDA.Controls"
              mc:Ignorable="d" x:Name="ColorPickerRoot"
              d:DesignHeight="40" d:DesignWidth="40" BorderThickness="0" Background="Transparent">
-    <Border BorderThickness="1" BorderBrush="Gray" CornerRadius="3" Background="{Binding ElementName=ColorPickerRoot,Path=SelectedColor}" >
-            
+    <Border BorderThickness="1" BorderBrush="Gray" CornerRadius="3"  >
+        <Border.Background>
+            <SolidColorBrush Color="{Binding ElementName=ColorPickerRoot,Path=SelectedColor}"/>
+        </Border.Background>
     </Border>
 </UserControl>

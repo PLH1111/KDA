@@ -11,15 +11,23 @@ public class KeyModel
 
     public string KeyStr { get; set; }
 
-    public bool IsKeyPressed 
+    public bool IsKeyPressed
     {
-        get; 
-        set; 
+        get;
+        set;
     }
 
-    public bool IsAnimation { get; set; }
 
-    public Brush AnimationBrush { get; set; }
+    private Color animationColor;
+    public Color AnimationColor
+    {
+        get => animationColor;
+        set
+        {
+            animationColor = value;
+        }
+    }
+
 
     public KeyModel()
     {

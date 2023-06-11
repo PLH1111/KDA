@@ -25,8 +25,7 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="IsPressedZoomIn" Value="True"/>
         <Setter Property="IsKeyPressed" Value="{Binding RelativeSource={RelativeSource Self},Path=KeyModel.IsKeyPressed}"/>
-        <Setter Property="IsAnimationing" Value="{Binding RelativeSource={RelativeSource Self},Path=KeyModel.IsAnimation}"/>
-        <Setter Property="AnimationBrush" Value="{Binding RelativeSource={RelativeSource Self},Path=KeyModel.AnimationBrush}"/>
+        <Setter Property="AnimationColor" Value="{Binding RelativeSource={RelativeSource Self},Path=KeyModel.AnimationColor}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ctrl:KeyControl">
@@ -34,12 +33,20 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}">
-                        <ContentControl x:Name="PART_Content" 
+                        <Border x:Name="PART_Animation" 
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                            <Border.Background>
+                                <SolidColorBrush  Color="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationColor}"/>
+                            </Border.Background>
+                            <ContentControl x:Name="PART_Content" 
                                         Content="{TemplateBinding KeyCode}" 
                                         Foreground="{TemplateBinding Foreground}"
                                         VerticalAlignment="Center" 
                                         HorizontalAlignment="Center"
                                         Margin="{TemplateBinding Padding}"/>
+                        </Border>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyPressed" Value="True">
@@ -53,11 +60,6 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MousePressedBrush}"/>
                             <Setter  Property="Foreground" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
-                        </Trigger>
-                        <Trigger Property="IsAnimationing" Value="True">
-                            <!--<Setter TargetName="PART_Border" Property="BorderThickness" Value="2"/>
-                            <Setter TargetName="PART_Content" Property="Foreground" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationBrush}"/>-->
-                            <Setter TargetName="PART_Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=AnimationBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

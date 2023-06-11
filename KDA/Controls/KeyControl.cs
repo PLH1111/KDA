@@ -141,6 +141,19 @@ public class KeyControl : ButtonBase
 
 
 
+    public Color AnimationColor
+    {
+        get { return (Color)GetValue(AnimationColorProperty); }
+        set { SetValue(AnimationColorProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for AnimationColor.  This enables animation, styling, binding, etc...
+    /// <summary>Identifies the <see cref="AnimationColor"/> dependency property.</summary>
+    public static readonly DependencyProperty AnimationColorProperty =
+        DependencyProperty.Register(nameof(AnimationColor), typeof(Color), typeof(KeyControl));
+
+
+
 
     static KeyControl()
     {

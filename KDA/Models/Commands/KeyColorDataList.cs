@@ -12,11 +12,20 @@ public class KeyColorDataList : List<KeyColorData>
 
     }
 
-    public KeyColorDataList(int count)
+    public KeyColorDataList(byte mapIndex)
     {
-        for (byte i = 1; i < count + 1; i++)
+        byte startIndex = (byte)(11 * mapIndex);
+        for (byte i = startIndex; i < startIndex + 11; i++)
         {
             Add(new KeyColorData(i));
+        }
+    }
+
+    public void ClearColorDatas()
+    {
+        foreach (KeyColorData data in this)
+        {
+            data.Clear();
         }
     }
 }

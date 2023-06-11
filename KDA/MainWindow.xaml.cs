@@ -42,6 +42,8 @@ public partial class MainWindow : FilletWindow
 
     readonly Random random = new();
 
+    private KeyColorMapList KeyColorMaps { get; set; } = new(11);
+
     #endregion
 
     #region 属性
@@ -965,9 +967,9 @@ public partial class MainWindow : FilletWindow
         var view = new CyclicRunningLightSettingsView();
         var settings = view.ShowView();
 
-        List<Brush> brushes = new();
+        List<Color> brushes = new();
 
-        Brush[] colors;
+        Color[] colors= new Color[settings.ColorCount];
         if (settings.IsAutoColor)
         {
             byte[] rbg = new byte[3];
@@ -975,12 +977,8 @@ public partial class MainWindow : FilletWindow
             {
                 random.NextBytes(rbg);
                 Color color = Color.FromRgb(rbg[0], rbg[1], rbg[2]);
-                //构建 SolidColorBrush 需要UI 线程！！
-                Brush brush = new SolidColorBrush(color);
-                brushes.Add(brush);
+                colors[i] = color;
             }
-
-            colors = brushes.ToArray();
         }
         else
         {
@@ -1007,8 +1005,10 @@ public partial class MainWindow : FilletWindow
                 foreach (var group in groupsList)
                 {
                     group.SetAnimation();
+                    var datas = KeyColorMaps.SetColorDatas(group);
                     TimeHelper.Delay(settings.AnimationDuration);
                     group.ClearAnimation();
+                    datas?.Clear();
                     if (CanStartSimulating)
                     {
                         break;

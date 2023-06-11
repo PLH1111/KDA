@@ -349,7 +349,8 @@
                                         </Style>
                                     </DataGrid.ColumnHeaderStyle>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Data No." Binding="{Binding NumberStr}" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="KeyIndex" Binding="{Binding KeyIndexStr}" IsReadOnly="True"/>
+                                        <DataGridTextColumn Header="Key" Binding="{Binding KeyStr}" IsReadOnly="True"/>
                                         <DataGridTextColumn Header="R Color(Hex)" Binding="{Binding ColorRHex}" />
                                         <DataGridTextColumn Header="B Color(Hex)" Binding="{Binding ColorBHex}"/>
                                         <DataGridTextColumn Header="G Color(Hex)" Binding="{Binding ColorGHex}"/>

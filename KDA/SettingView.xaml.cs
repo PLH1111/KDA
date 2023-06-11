@@ -104,7 +104,7 @@ public partial class SettingView : FilletWindow
 
     #region RBG_Map
 
-    public static KeyColorMapList KeyColorMaps { get; set; } = new(12);
+    public static KeyColorMapList KeyColorMaps { get; set; } = new(11);
 
     public KeyColorMap SelectedKeyColorMap { get; set; } = KeyColorMaps[0];
 
