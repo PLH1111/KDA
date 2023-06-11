@@ -24,12 +24,4 @@ public class AnimationKeyGroup : List<KeyModel>
             item.AnimationColor = AnimationColor;
         }
     }
-
-    public void ClearAnimation()
-    {
-        foreach (var item in this)
-        {
-            item.AnimationColor = default;
-        }
-    }
 }

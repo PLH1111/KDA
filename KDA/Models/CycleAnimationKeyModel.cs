@@ -37,7 +37,15 @@ public class CycleAnimationKeyModel : List<KeyModel>
             {
                 AnimationKeyGroup group = new(brushes[j]);
                 int index = (2 * i) + (colums * 2 * j);
-                group.AddRange(keyModels.GetRange(index, colums * 2));
+                if (index + colums * 2 > keyModels.Count)
+                {
+                    group.AddRange(keyModels.GetRange(index, keyModels.Count - index));
+                }
+                else
+                {
+                    group.AddRange(keyModels.GetRange(index, colums * 2));
+                }
+
                 groups.Add(group);
             }
             list.Add(groups);

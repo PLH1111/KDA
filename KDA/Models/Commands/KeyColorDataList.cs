@@ -23,9 +23,9 @@ public class KeyColorDataList : List<KeyColorData>
 
     public void ClearColorDatas()
     {
-        foreach (KeyColorData data in this)
+        foreach (var data in this)
         {
-            data.Clear();
+            data?.ResetColor();
         }
     }
 }

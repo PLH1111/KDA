@@ -19,13 +19,23 @@ public class KeyBar
 
     public List<KeyModel> Keys05 { get; set; } = new List<KeyModel>();
 
+
+    Random random = new Random();
+    byte[] bytes = new byte[3];
+
+    private Color RandomColor()
+    {
+        random.NextBytes(bytes);
+        return Color.FromRgb(bytes[0], bytes[1], bytes[2]);
+    }
+
     public void SetValue(double value)
     {
         if (value > 15)
         {
             foreach (var key in Keys01)
             {
-                key.AnimationColor = Colors.Lime;
+                key.AnimationColor = RandomColor();
             }
         }
         else
@@ -40,7 +50,7 @@ public class KeyBar
         {
             foreach (var key in Keys02)
             {
-                key.AnimationColor = Colors.Cyan;
+                key.AnimationColor = RandomColor();
             }
         }
         else
@@ -55,7 +65,7 @@ public class KeyBar
         {
             foreach (var key in Keys03)
             {
-                key.AnimationColor = Colors.Yellow;
+                key.AnimationColor = RandomColor();
             }
         }
         else
@@ -70,7 +80,7 @@ public class KeyBar
         {
             foreach (var key in Keys04)
             {
-                key.AnimationColor = Colors.Orange;
+                key.AnimationColor = RandomColor();
             }
         }
         else
@@ -85,7 +95,7 @@ public class KeyBar
         {
             foreach (var key in Keys05)
             {
-                key.AnimationColor = Colors.OrangeRed;
+                key.AnimationColor = RandomColor();
             }
         }
         else

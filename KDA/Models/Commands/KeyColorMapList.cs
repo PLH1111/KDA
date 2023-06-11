@@ -54,8 +54,8 @@ public class KeyColorMapList : List<KeyColorMap>
                 data.ColorG = model.AnimationColor.G;
                 data.ColorB = model.AnimationColor.B;
                 data.ColorA = (byte)(model.AnimationColor.A/255.0*100);
+                datas.Add(data);
             }
-            datas.Add(data);
         }
         return datas;
     }

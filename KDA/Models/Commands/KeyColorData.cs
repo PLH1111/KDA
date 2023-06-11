@@ -77,7 +77,7 @@ public class KeyColorData
         ColorA = a;
     }
 
-    public void Clear()
+    public void ResetColor()
     {
         ColorR = 0;
         ColorB = 0;

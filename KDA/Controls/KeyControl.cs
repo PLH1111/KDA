@@ -127,20 +127,6 @@ public class KeyControl : ButtonBase
 
 
 
-
-    public Brush AnimationBrush
-    {
-        get { return (Brush)GetValue(AnimationBrushProperty); }
-        set { SetValue(AnimationBrushProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for AnimationBrush.  This enables animation, styling, binding, etc...
-    /// <summary>Identifies the <see cref="AnimationBrush"/> dependency property.</summary>
-    public static readonly DependencyProperty AnimationBrushProperty =
-        DependencyProperty.Register(nameof(AnimationBrush), typeof(Brush), typeof(KeyControl));
-
-
-
     public Color AnimationColor
     {
         get { return (Color)GetValue(AnimationColorProperty); }

@@ -16,14 +16,6 @@ public class AnimationKeyGroups : List<AnimationKeyGroup>
         }
     }
 
-    public void ClearAnimation()
-    {
-        foreach (var item in this)
-        {
-            item.ClearAnimation();
-        }
-    }
-
 
     public List<KeyModel> GetKeyModels()
     {

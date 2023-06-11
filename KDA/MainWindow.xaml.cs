@@ -921,7 +921,7 @@ public partial class MainWindow : FilletWindow
                 if (spectrumData.Any())
                 {
                     List<double> data = spectrumData.ToList();
-                    List<double> range = null;
+                    List<double> range;
                     for (int i = 0; i < keyBars.Count; i++)
                     {
                         range = data.GetRange(6 * i, 6);
@@ -969,22 +969,25 @@ public partial class MainWindow : FilletWindow
 
         List<Color> brushes = new();
 
-        Color[] colors= new Color[settings.ColorCount];
+        Color[] colors= new Color[settings.ColorCount+1];
         if (settings.IsAutoColor)
         {
             byte[] rbg = new byte[3];
-            for (int i = 0; i < settings.ColorCount; i++)
+            for (int i = 1; i < settings.ColorCount+1; i++)
             {
                 random.NextBytes(rbg);
                 Color color = Color.FromRgb(rbg[0], rbg[1], rbg[2]);
                 colors[i] = color;
             }
+            
         }
         else
         {
             colors = settings.CustomColors.GetBrushes();
         }
 
+
+        KeyColorDataList keyColorDatas = new();
 
         await Task.Run(() =>
         {
@@ -1006,9 +1009,9 @@ public partial class MainWindow : FilletWindow
                 {
                     group.SetAnimation();
                     var datas = KeyColorMaps.SetColorDatas(group);
+                    keyColorDatas.AddRange(TianWeiToolsPro.Extensions.SerializerExtension.DeepCopyByXml(datas));
                     TimeHelper.Delay(settings.AnimationDuration);
-                    group.ClearAnimation();
-                    datas?.Clear();
+                    datas?.ClearColorDatas();
                     if (CanStartSimulating)
                     {
                         break;
