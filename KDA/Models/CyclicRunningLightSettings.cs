@@ -16,9 +16,14 @@ public class CyclicRunningLightSettings
                 MsgBoxService.ShowError("键的列数数目不能小于1！");
                 return;
             }
-            if ((IsAutoColor && (colorCount + 1) * value > 42) || (IsAutoColor == false && (CustomColors.Count + 1) * value > 42))
+            if ((IsAutoColor && (colorCount + 1) * value > 42))
             {
-                MsgBoxService.ShowError("列数与（颜色数+1）相乘不能大于42!");
+                MsgBoxService.ShowError("列数与自动（颜色数+1）相乘不能大于42!");
+                return;
+            }
+            if ((IsAutoColor == false && (CustomColors.Count + 1) * value > 42))
+            {
+                MsgBoxService.ShowError("列数与手动（颜色数+1）相乘不能大于42!");
                 return;
             }
             col = value;
@@ -36,9 +41,9 @@ public class CyclicRunningLightSettings
                 MsgBoxService.ShowError("自动生成随机颜色的数目不能小于1！");
                 return;
             }
-            if (IsAutoColor == false && (value + 1) * col > 42)
+            if (IsAutoColor && (value + 1) * col > 42)
             {
-                MsgBoxService.ShowError("列数与（颜色数+1）相乘不能大于42!");
+                MsgBoxService.ShowError("列数与自动（颜色数+1）相乘不能大于42!");
                 return;
             }
             colorCount = value;
