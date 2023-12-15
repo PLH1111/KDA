@@ -17,7 +17,6 @@ public class CycleAnimationKeyModel : List<KeyModel>
 
     }
 
-
     public List<AnimationKeyGroups> GetSetAnimationGroupsList(int colums, Color[] brushes)
     {
         if (colums <= 0 || brushes == null || brushes.Length == 0)

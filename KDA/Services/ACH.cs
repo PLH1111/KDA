@@ -6,6 +6,8 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Linq;
 using System.Text;
+using System.Windows.Documents;
+using TianWeiToolsPro.Extensions;
 
 namespace KDA.Services;
 
@@ -21,6 +23,7 @@ public class ACH
     const byte SetColorMapCommand = 0x06;
     const byte SetLanguageCommand = 0x07;
     const byte SetMarcoMapCommand = 0x10;
+    const byte ResetDefaultCommand = 0x0F;
     const byte SetProfileMapCommand = 0x11;
     const byte SetBootUpMapCommand = 0x12;
 
@@ -37,6 +40,13 @@ public class ACH
     const byte GetBootUpMapCommand = 0x92;
 
 
+    
+     public static bool ResetDefaultSetting()
+    {
+        byte[] bytes = new byte[1];
+        bytes[0] = 0;
+        return GCH.WriteCommand(ResetDefaultCommand, bytes);
+    }
     /// <summary> Get device model name </summary>
     public static string GetModel()
     {
@@ -71,7 +81,7 @@ public class ACH
         }
         else
         {
-            SleepModel model = new((SleepTimes)bytes[0], (LightingModes)bytes[1]);
+            SleepModel model = new((SleepTimes)bytes[1], (LightingModes)bytes[2]);
             return model;
         }
     }
@@ -83,23 +93,24 @@ public class ACH
     /// <summary> Set single key macro </summary>
     public static bool SetKeyMacro(KeyMacroModel model)
     {
-        byte[] bytes = new byte[2];
+        byte[] bytes = new byte[3];
         bytes[0] = model.KeyIndex;
         bytes[1] = (byte)(model.KeyMode);
+        bytes[2] = (byte)(model.KeyCode);
         return GCH.WriteCommand(SetKeyMacroCommand, bytes);
     }
 
     /// <summary> Get single key macro </summary>
-    public static KeyMacroModel GetKeyMacro()
+    public static KeyMacroModel GetKeyMacro(byte[] KeyIndex)
     {
-        byte[] bytes = GCH.ReadCommand(GetKeyMacroCommand);
+        byte[] bytes = GCH.ReadCommand(GetKeyMacroCommand, KeyIndex);
         if (bytes == null || bytes.Length < 3)
         {
             return null;
         }
         else
         {
-            KeyMacroModel model = new(bytes[0], (KeyModes)bytes[1], bytes[2]);
+            KeyMacroModel model = new(bytes[1], (KeyModes)bytes[2], bytes[3]);
             return model;
         }
     }
@@ -132,7 +143,7 @@ public class ACH
         }
         else
         {
-            KeyColorModel model = new(bytes[0], bytes[1], bytes[2], bytes[3], bytes[4]);
+            KeyColorModel model = new(bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]);
             return model;
         }
     }
@@ -166,8 +177,8 @@ public class ACH
         }
         else
         {
-            AnimationModel model = new((AnimationIds)bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5],
-                                       (AnimationDisplays)bytes[6], (AnimationDirections)bytes[7]);
+            AnimationModel model = new((AnimationIds)bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6],
+                                       (AnimationDisplays)bytes[7], (AnimationDirections)bytes[8]);
 
             return model;
         }
@@ -278,15 +289,20 @@ public class ACH
     /// <summary>Set active profile </summary>
     public static bool SetMarcoMap(MarcoMap map)
     {
-        byte[] bytes = new byte[46];
-        bytes[0] = map.Number;
-        bytes[1] = map.Index;
-        for (byte i = 0; i < 11; i++)
+        byte[] bytes = new byte[34];
+        for (int i = 0; i < bytes.Length; i++)
         {
-            bytes[(4 * i) + 2] = map.MapDatas[i].Code;
-            bytes[(4 * i) + 3] = (byte)map.MapDatas[i].Mode;
-            bytes[(4 * i) + 4] = map.MapDatas[i].Times;
+            bytes[i] = 0xFF;
         }
+        var str = map.MapDatas[0].Code.Replace(" ", "");
+        bytes[0] = map.Number;
+        bytes[1] = (byte)(bytes.Length - 2);
+        
+        for (int i = 0, j = 0; j < str.Length; i++, j += 2)                               //掐头去尾
+        {
+            bytes[2 + i] = (byte)Convert.ToInt32(str.Substring(j, 2), 16);                 //将截取的字符串转为16进制存储在数组中        
+        }
+
         return GCH.WriteCommand(SetMarcoMapCommand, bytes);
     }
 
@@ -305,11 +321,11 @@ public class ACH
             {
                 Index = bytes[1]
             };
-            for (byte i = 0; i < 11; i++)
+
+
+            for (byte i = 0; i < bytes[2]; i++)
             {
-                map.MapDatas[i].Code = bytes[(4 * i) + 2];
-                map.MapDatas[i].Mode = (KeyMarcoModes)bytes[(4 * i) + 3];
-                map.MapDatas[i].Times = bytes[(4 * i) + 4];
+                map.MapDatas[0].Code += bytes[3 + i].ToString("X2");
             }
             return map;
         }

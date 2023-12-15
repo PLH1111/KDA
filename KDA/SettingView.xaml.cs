@@ -271,7 +271,7 @@ public partial class SettingView : FilletWindow
             usbMonitor.DeviceAttached -= UsbDevices_DeviceAttached;
             //usbMonitor.Dispose();
             usbMonitor = null;
-            GC.Collect();
+            GC.Collect(); 
         }
     }
 
@@ -320,6 +320,7 @@ public partial class SettingView : FilletWindow
             HidDeviceList.Clear();
             foreach (var device in usbDevices)
             {
+                //if (device is CyHidDevice hid )
                 if (device is CyHidDevice hid && hid.Outputs.RptByteLen == 64)
                 {
                     HidDeviceModel model = new(hid.Manufacturer,
@@ -498,6 +499,7 @@ public partial class SettingView : FilletWindow
                 break;
 
             case KeyCommandNames.Reset_Default:
+                ACH.ResetDefaultSetting();
                 break;
 
             default:
@@ -597,7 +599,8 @@ public partial class SettingView : FilletWindow
 
     private static void GetMacroModel()
     {
-        var marco = ACH.GetKeyMacro();
+        byte[] bytes = new byte[1] { KeyMacroModel.KeyIndex };
+        var marco = ACH.GetKeyMacro(bytes);
         if (marco != null)
         {
             KeyMacroModel.KeyName = marco.KeyName;
@@ -624,13 +627,13 @@ public partial class SettingView : FilletWindow
         if (animation != null)
         {
             AnimationModel.AnimationId = animation.AnimationId;
-            AnimationModel.ColorRHex = animation.ColorRHex;
-            AnimationModel.ColorBHex = animation.ColorBHex;
-            AnimationModel.ColorGHex = animation.ColorGHex;
-            AnimationModel.ColorAHex = animation.ColorAHex;
-            AnimationModel.SpeedHex = animation.SpeedHex;
-            AnimationModel.Display = animation.Display;
-            AnimationModel.Direction = animation.Direction;
+            AnimationModel.ColorRHex   = animation.ColorRHex;
+            AnimationModel.ColorBHex   = animation.ColorBHex;
+            AnimationModel.ColorGHex   = animation.ColorGHex;
+            AnimationModel.ColorAHex   = animation.ColorAHex;
+            AnimationModel.SpeedHex    = animation.SpeedHex;
+            AnimationModel.Display     = animation.Display;
+            AnimationModel.Direction   = animation.Direction;
         }
     }
 

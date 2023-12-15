@@ -13,7 +13,7 @@ public class MarcoMap
 
     public byte Index { get; set; }
 
-    public MarcoDataList MapDatas { get; set; } = new(11);
+    public MarcoDataList MapDatas { get; set; } = new(64);
 
     public MarcoMap()
     {
@@ -27,6 +27,6 @@ public class MarcoMap
 
     public override string ToString()
     {
-        return $"#{Number:X2}";
+        return $"#{Number:D2}";
     }
 }

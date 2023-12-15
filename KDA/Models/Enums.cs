@@ -18,15 +18,29 @@ public enum ResponseCodes : byte
 
 public enum AnimationIds : byte
 {
-    Off,
-    Solid,
-    Breathing,
-    Reactive,
-    Rain,
-    Gradient,
-    Fade,
-    Ripple,
-    Wave
+    STATIC = 0,
+    SINGLE_ON = 1,// 单点亮
+    SINGLE_OFF = 2,// 单熄灭
+    PIANO = 3,// 随波逐流
+    VORTEX = 4,// 峰回路转
+    TIDE = 5,// 多彩纵横
+    SNOW = 6,// 漫天飞雪
+    STAR = 7,// 繁星点点
+    DIMPLE = 8,// 涟漪扩散
+    TOUCH = 9,// 一触即发
+    BIRD = 10,// 一石二鸟
+    FLOWER = 11,// 百花争艳
+    FOUNTAIN = 12,// 彩泉涌动
+    BREATHE = 13,// 动态呼吸
+    SPECTRUM = 14,// 光谱循环
+    WAVEBAND = 15,// 重峦叠嶂
+    FLOW = 16,// 川流不息
+    WAVE_LIGHT = 17,// 斜风细雨
+    WAVE = 18,// 左右穿梭
+    DEFINE = 19,
+    DEFINE1 = 20,
+    DEFINE2 = 21,
+    POWER_UP = 22,
 }
 
 public enum AnimationDisplays : byte

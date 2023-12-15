@@ -11,13 +11,13 @@ public class MarcoData
 
     public string NumberStr => $"#{Number}";
 
-    public byte Code { get; set; }
+    public string Code { get; set; }
 
-    public string CodeHex
-    {
-        get => Code.ToHex();
-        set => Code = value.HexToByte();
-    }
+    //public string CodeHex
+    //{
+    //    get => Code.ToHex();
+    //    set => Code = value.HexToByte();
+    //}
 
     public static List<KeyMarcoModes> MarcoModes { get; set; } = EnumHelper.ToList<KeyMarcoModes>();
 
@@ -40,7 +40,7 @@ public class MarcoData
         Number = no;
     }
 
-    public MarcoData(byte number, byte code, byte times) : this(number)
+    public MarcoData(byte number, string code, byte times) : this(number)
     {
         Number = number;
         Code = code;

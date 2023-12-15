@@ -126,7 +126,6 @@ public class KeyControl : ButtonBase
         DependencyProperty.Register(nameof(IsAnimationing), typeof(bool), typeof(KeyControl));
 
 
-
     public Color AnimationColor
     {
         get { return (Color)GetValue(AnimationColorProperty); }

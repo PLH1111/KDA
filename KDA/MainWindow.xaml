@@ -5,7 +5,7 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:twc="clr-namespace:TianWeiToolsPro.Controls;assembly=TianWeiToolsPro"
                   xmlns:ctrls="clr-namespace:KDA.Controls" ResizeMode="CanMinimize"
-                  mc:Ignorable="d" Title="AudioListener" Height="800" Width="1280"
+                  mc:Ignorable="d" Title="AudioListener" Height="768" Width="1280"
                   TitleBarBackground="Transparent" TitleBarBorderThickness="0"
                   WindowStartupLocation="CenterScreen">
     <twc:FilletWindow.Background>

@@ -121,9 +121,9 @@ public partial class MainWindow : FilletWindow
     public KeyModel KeyHome { get; set; } = new KeyModel(Key.Home);
 
     public KeyModel KeyPageUp { get; set; } = new KeyModel(Key.PageUp);
-
+    
     public KeyModel KeyNumLock { get; set; } = new KeyModel(Key.NumLock);
-
+    
     public KeyModel KeyDivide { get; set; } = new KeyModel(Key.Divide);
 
     public KeyModel KeyMultiply { get; set; } = new KeyModel(Key.Multiply);
@@ -795,7 +795,8 @@ public partial class MainWindow : FilletWindow
     private void Hook_OnKeyDown(object sender, KeyEventArgs e)
     {
         var models = KeyModelList.FindAll(x => x.Key == e.Key);
-        System.Diagnostics.Trace.WriteLine(e.Key.ToString());
+        var keyStr = e.Key.ToString();
+        System.Diagnostics.Trace.WriteLine(keyStr);
         if (models != null || models.Count > 0)
         {
             foreach (var m in models)

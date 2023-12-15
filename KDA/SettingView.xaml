@@ -5,8 +5,7 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:twc="clr-namespace:TianWeiToolsPro.Controls;assembly=TianWeiToolsPro"
-                  mc:Ignorable="d"  Title="调试" Height="640" Width="960"
-                  ResizeMode="CanMinimize"
+                  mc:Ignorable="d"  Title="调试" Height="720" Width="1080"
                   WindowStartupLocation="CenterScreen" TitleBarBorderThickness="0" >
     <twc:FilletWindow.Resources>
         <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
@@ -46,9 +45,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="296*"/>
+            <RowDefinition Height="305*"/>
         </Grid.RowDefinitions>
-        <StackPanel Margin="0,5">
+        <StackPanel Margin="0,5,0,5">
             <Grid  Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -76,7 +76,7 @@
         </StackPanel>
         <TabControl Grid.Row="1"  
                     Background="Transparent"
-                    Margin="10,20" >
+                    Margin="10,20,10,20" Grid.RowSpan="2" >
             <TabItem Header="Comunication"  >
                 <Grid Margin="0,5">
                     <Grid.ColumnDefinitions>
@@ -199,8 +199,8 @@
                                         Width="200" >
                                     <TextBox Text="{Binding KeyMacroModel.KeyCodeHex}" />
                                 </twc:FilletHeaderControl>
-                                <Button Style="{StaticResource CommandReadButton}" CommandParameter="KeyMacro"/>
-                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="KeyMacro"/>
+                                <Button Style="{StaticResource CommandReadButton}" CommandParameter="Key_Macro"/>
+                                <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Key_Macro"/>
                             </WrapPanel>
                         </twc:GroupPanel>
 
@@ -371,7 +371,8 @@
                                     <Button Style="{StaticResource CommandReadButton}" CommandParameter="Macro_Data"/>
                                     <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Macro_Data"/>
                                 </StackPanel>
-                                <DataGrid ItemsSource="{Binding SelectedMarcoMap.MapDatas}"
+                                <DataGrid Name="MacroDataGrid"
+                                    ItemsSource="{Binding SelectedMarcoMap.MapDatas}"
                                               BorderBrush="{StaticResource MahApps.Brushes.Accent}"
                                               BorderThickness="1" Margin="0,10"
                                               AutoGenerateColumns="False" 
@@ -387,15 +388,17 @@
                                     </DataGrid.ColumnHeaderStyle>
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Data No." Binding="{Binding NumberStr}" IsReadOnly="True"/>
-                                        <DataGridTextColumn Header="Code(Hex)" Binding="{Binding CodeHex}" />
-                                        <DataGridTemplateColumn Header="Mode" >
+                                        <DataGridTemplateColumn Header="RW">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <ComboBox ItemsSource="{Binding MarcoModes}" SelectedValue="{Binding Mode, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                                        <Button Content="Read" ></Button>
+                                                        <Button Content="Write" ></Button>
+                                                    </StackPanel>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="Times" Binding="{Binding Times}"/>
+                                        <DataGridTextColumn Header="Code(hex,hex)" Width="592" Binding="{Binding Code}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </StackPanel>
@@ -464,8 +467,8 @@
                                         Width="180" >
                                         <ComboBox ItemsSource="{Binding DirectionList}" SelectedValue="{Binding SelectedProfileMap.Direction}" />
                                     </twc:FilletHeaderControl>
-                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="Animation"/>
-                                    <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Animation"/>
+                                    <Button Style="{StaticResource CommandReadButton}" CommandParameter="Profile_Data"/>
+                                    <Button Style="{StaticResource CommandWriteButton}" CommandParameter="Profile_Data"/>
                                 </WrapPanel>
                                 <DataGrid ItemsSource="{Binding SelectedProfileMap.MapDatas}"
                                           BorderBrush="{StaticResource MahApps.Brushes.Accent}"
@@ -538,7 +541,7 @@
                             </StackPanel>
                         </twc:GroupPanel>
 
-                        <twc:GroupPanel x:Name="Flash_Data" Header="Flash_Data">
+                        <twc:GroupPanel x:Name="Flash_Data" Visibility="Collapsed" Header="Flash_Data">
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
