@@ -214,8 +214,6 @@ public partial class SettingView : FilletWindow
 
     }
 
-
-
     protected override void InitProperties()
     {
 
@@ -231,7 +229,6 @@ public partial class SettingView : FilletWindow
             .ObservesProperty(() => IsDeviceConnect);
 
         RefreshCommand = new DelegateCommand(RefreshDevices);
-
 
         ReadDataCommand = new DelegateCommand(ReadData, CanExcuteRead).ObservesProperty(() => IsDeviceConnect);
         WriteDataCommand = new DelegateCommand(WriteData, CanExcuteWrite)
@@ -249,7 +246,6 @@ public partial class SettingView : FilletWindow
             .ObservesProperty(() => IsDeviceConnect);
         BootLoaderReadCommand = new DelegateCommand<string>(BootLoaderRead, CanExcuteCommandRead)
             .ObservesProperty(() => IsDeviceConnect);
-
     }
 
 
@@ -383,8 +379,6 @@ public partial class SettingView : FilletWindow
         return Device != null && Device.InputReportByteLength > 0 && IsDeviceConnect;
     }
 
-
-
     #endregion
 
     #region Excute
@@ -413,9 +407,6 @@ public partial class SettingView : FilletWindow
         GCH.Device = null;
         IsDeviceConnect = false;
     }
-
-
-
 
     private void ReadData()
     {

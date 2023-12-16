@@ -36,6 +36,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="FftSharp" Version="2.0.0" />
+		<PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+		<PackageReference Include="HandyControl" Version="3.4.0" />
 		<PackageReference Include="hidlibrary" Version="3.3.40" />
 		<PackageReference Include="MahApps.Metro" Version="2.4.9" />
 		<PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.11.0" />

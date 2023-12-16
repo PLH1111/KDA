@@ -158,8 +158,6 @@
                             </StackPanel>
                         </twc:GroupPanel>
 
-
-
                         <twc:GroupPanel Header="Sleep" Width="650">
                             <StackPanel Orientation="Horizontal">
                                 <twc:FilletHeaderControl Header="Sleep Time" 

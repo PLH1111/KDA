@@ -53,36 +53,25 @@ public partial class MainWindow : FilletWindow
     #region 第一行按键
 
     public KeyModel KeyEscape { get; set; } = new KeyModel(Key.Escape);
-
     public KeyModel KeyF1 { get; set; } = new KeyModel(Key.F1);
-
     public KeyModel KeyF2 { get; set; } = new KeyModel(Key.F2);
-
     public KeyModel KeyF3 { get; set; } = new KeyModel(Key.F3);
-
     public KeyModel KeyF4 { get; set; } = new KeyModel(Key.F4);
-
     public KeyModel KeyF5 { get; set; } = new KeyModel(Key.F5);
-
     public KeyModel KeyF6 { get; set; } = new KeyModel(Key.F6);
-
     public KeyModel KeyF7 { get; set; } = new KeyModel(Key.F7);
-
     public KeyModel KeyF8 { get; set; } = new KeyModel(Key.F8);
-
     public KeyModel KeyF9 { get; set; } = new KeyModel(Key.F9);
-
     public KeyModel KeyF10 { get; set; } = new KeyModel(Key.F10);
-
     public KeyModel KeyF11 { get; set; } = new KeyModel(Key.F11);
-
     public KeyModel KeyF12 { get; set; } = new KeyModel(Key.F12);
-
     public KeyModel KeyPrintScreen { get; set; } = new KeyModel(Key.PrintScreen);
-
     public KeyModel KeyScroll { get; set; } = new KeyModel(Key.Scroll);
-
     public KeyModel KeyPause { get; set; } = new KeyModel(Key.Pause);
+    public KeyModel KeyVolumeMute { get; set; } = new KeyModel(Key.VolumeMute);
+    public KeyModel KeyVolumeDown { get; set; } = new KeyModel(Key.VolumeDown);
+    public KeyModel KeyVolumeUp { get; set; } = new KeyModel(Key.VolumeUp);
+    public KeyModel KeyClac { get; set; } = new KeyModel(Key.LaunchApplication1);
 
     #endregion
 
@@ -831,8 +820,6 @@ public partial class MainWindow : FilletWindow
     #region 方法
 
     #region Can Excute
-
-
 
     private bool CanExcuteStartRecording()
     {
