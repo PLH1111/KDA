@@ -18,13 +18,14 @@ public class KeyboardHook : HookBase
 
     }
 
-
     public override int HookProcCallback(int nCode, int wParam, IntPtr lParam)
     {
         if (nCode >= 0)
         {
             KeyboardData data = (KeyboardData)Marshal.PtrToStructure(lParam, typeof(KeyboardData));
+            
             KeyEventArgs keyEventArgs = new(KeyInterop.KeyFromVirtualKey(data.KeyCode));
+
             switch (wParam)
             {
                 case 256:

@@ -24,8 +24,6 @@ public class GCH
 
     public static CyHidReport Output => Device?.Outputs;
 
-
-
     public static bool IsDeviceConnect => Device != null && Device.RwAccessible;
 
     public static bool IsDeviceAvailable
@@ -117,8 +115,8 @@ public class GCH
         {
             return null;
         }
-        var data = new byte[bytesIn.Length - 2];
-        Array.Copy(bytesIn, 2, data, 0, data.Length);
+        var data = new byte[bytesIn.Length - 3];
+        Array.Copy(bytesIn, 3, data, 0, data.Length);
         return data;
     }
 

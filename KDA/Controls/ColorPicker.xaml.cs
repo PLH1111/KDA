@@ -33,7 +33,6 @@ public partial class ColorPicker : UserControl
         DependencyProperty.Register(nameof(SelectedColor), typeof(Color), typeof(ColorPicker));
 
 
-
     public ColorPicker()
     {
         InitializeComponent();

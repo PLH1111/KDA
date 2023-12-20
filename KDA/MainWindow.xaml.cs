@@ -1,30 +1,29 @@
-﻿using HidLibrary;
+﻿using CyUSB;
+using HandyControl.Controls;
 using KDA.Audio;
+using KDA.Controls;
 using KDA.Hooks;
 using KDA.Models;
 using KDA.Models.Commands;
 using KDA.Services;
-using Microsoft.VisualBasic.Devices;
-using Microsoft.Win32;
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TianWeiToolsPro.Commands;
-using TianWeiToolsPro.Controls;
-using TianWeiToolsPro.Events;
-using TianWeiToolsPro.Service;
 
 namespace KDA;
 
 [AddINotifyPropertyChangedInterface]
-public partial class MainWindow : FilletWindow
+public partial class MainWindow
 {
     #region 字段
 
@@ -44,6 +43,8 @@ public partial class MainWindow : FilletWindow
 
     private KeyColorMapList KeyColorMaps { get; set; } = new(11);
 
+    Protocol protocol = new();
+
     #endregion
 
     #region 属性
@@ -52,7 +53,7 @@ public partial class MainWindow : FilletWindow
 
     #region 第一行按键
 
-    public KeyModel KeyEscape { get; set; } = new KeyModel(Key.Escape);
+    public KeyModel KeyEscape { get; set; } = new KeyModel(Key.Escape, "ESC");
     public KeyModel KeyF1 { get; set; } = new KeyModel(Key.F1);
     public KeyModel KeyF2 { get; set; } = new KeyModel(Key.F2);
     public KeyModel KeyF3 { get; set; } = new KeyModel(Key.F3);
@@ -65,45 +66,45 @@ public partial class MainWindow : FilletWindow
     public KeyModel KeyF10 { get; set; } = new KeyModel(Key.F10);
     public KeyModel KeyF11 { get; set; } = new KeyModel(Key.F11);
     public KeyModel KeyF12 { get; set; } = new KeyModel(Key.F12);
-    public KeyModel KeyPrintScreen { get; set; } = new KeyModel(Key.PrintScreen);
-    public KeyModel KeyScroll { get; set; } = new KeyModel(Key.Scroll);
-    public KeyModel KeyPause { get; set; } = new KeyModel(Key.Pause);
-    public KeyModel KeyVolumeMute { get; set; } = new KeyModel(Key.VolumeMute);
-    public KeyModel KeyVolumeDown { get; set; } = new KeyModel(Key.VolumeDown);
-    public KeyModel KeyVolumeUp { get; set; } = new KeyModel(Key.VolumeUp);
-    public KeyModel KeyClac { get; set; } = new KeyModel(Key.LaunchApplication1);
+    public KeyModel KeyPrintScreen { get; set; } = new KeyModel(Key.PrintScreen, "PrintScreen");
+    public KeyModel KeyScroll { get; set; } = new KeyModel(Key.Scroll, "ScrollLock");
+    public KeyModel KeyPause { get; set; } = new KeyModel(Key.Pause, "Pause");
+    public KeyModel KeyVolumeMute { get; set; } = new KeyModel(Key.VolumeMute, "静音");
+    public KeyModel KeyVolumeDown { get; set; } = new KeyModel(Key.VolumeDown, "音量减");
+    public KeyModel KeyVolumeUp { get; set; } = new KeyModel(Key.VolumeUp, "音量+");
+    public KeyModel KeyCalc { get; set; } = new KeyModel(Key.LaunchApplication1, "计算器");
 
     #endregion
 
     #region 第二行按键
 
-    public KeyModel KeyOem3 { get; set; } = new KeyModel(Key.Oem3);
+    public KeyModel KeyOem3 { get; set; } = new KeyModel(Key.Oem3, "`");
 
-    public KeyModel KeyD1 { get; set; } = new KeyModel(Key.D1);
+    public KeyModel KeyD1 { get; set; } = new KeyModel(Key.D1, "1");
 
-    public KeyModel KeyD2 { get; set; } = new KeyModel(Key.D2);
+    public KeyModel KeyD2 { get; set; } = new KeyModel(Key.D2, "2");
 
-    public KeyModel KeyD3 { get; set; } = new KeyModel(Key.D3);
+    public KeyModel KeyD3 { get; set; } = new KeyModel(Key.D3, "3");
 
-    public KeyModel KeyD4 { get; set; } = new KeyModel(Key.D4);
+    public KeyModel KeyD4 { get; set; } = new KeyModel(Key.D4, "4");
 
-    public KeyModel KeyD5 { get; set; } = new KeyModel(Key.D5);
+    public KeyModel KeyD5 { get; set; } = new KeyModel(Key.D5, "5");
 
-    public KeyModel KeyD6 { get; set; } = new KeyModel(Key.D6);
+    public KeyModel KeyD6 { get; set; } = new KeyModel(Key.D6, "6");
 
-    public KeyModel KeyD7 { get; set; } = new KeyModel(Key.D7);
+    public KeyModel KeyD7 { get; set; } = new KeyModel(Key.D7, "7");
 
-    public KeyModel KeyD8 { get; set; } = new KeyModel(Key.D8);
+    public KeyModel KeyD8 { get; set; } = new KeyModel(Key.D8, "8");
 
-    public KeyModel KeyD9 { get; set; } = new KeyModel(Key.D9);
+    public KeyModel KeyD9 { get; set; } = new KeyModel(Key.D9, "9");
 
-    public KeyModel KeyD0 { get; set; } = new KeyModel(Key.D0);
+    public KeyModel KeyD0 { get; set; } = new KeyModel(Key.D0, "0");
 
-    public KeyModel KeyOemMinus { get; set; } = new KeyModel(Key.OemMinus);
+    public KeyModel KeyOemMinus { get; set; } = new KeyModel(Key.OemMinus, "−");
 
-    public KeyModel KeyOemPlus { get; set; } = new KeyModel(Key.OemPlus);
+    public KeyModel KeyOemPlus { get; set; } = new KeyModel(Key.OemPlus, "=");
 
-    public KeyModel KeyBack { get; set; } = new KeyModel(Key.Back);
+    public KeyModel KeyBack { get; set; } = new KeyModel(Key.Back, "Backspace");
 
     public KeyModel KeyInsert { get; set; } = new KeyModel(Key.Insert);
 
@@ -113,11 +114,11 @@ public partial class MainWindow : FilletWindow
     
     public KeyModel KeyNumLock { get; set; } = new KeyModel(Key.NumLock);
     
-    public KeyModel KeyDivide { get; set; } = new KeyModel(Key.Divide);
+    public KeyModel KeyDivide { get; set; } = new KeyModel(Key.Divide, "/");
 
-    public KeyModel KeyMultiply { get; set; } = new KeyModel(Key.Multiply);
+    public KeyModel KeyMultiply { get; set; } = new KeyModel(Key.Multiply, "×");
 
-    public KeyModel KeySubtract { get; set; } = new KeyModel(Key.Subtract);
+    public KeyModel KeySubtract { get; set; } = new KeyModel(Key.Subtract, "−");
 
     #endregion
 
@@ -145,31 +146,31 @@ public partial class MainWindow : FilletWindow
 
     public KeyModel KeyP { get; set; } = new KeyModel(Key.P);
 
-    public KeyModel KeyOem4 { get; set; } = new KeyModel(Key.Oem4);
+    public KeyModel KeyOem4 { get; set; } = new KeyModel(Key.Oem4, "[");
 
-    public KeyModel KeyOem6 { get; set; } = new KeyModel(Key.Oem6);
+    public KeyModel KeyOem6 { get; set; } = new KeyModel(Key.Oem6, "]");
 
-    public KeyModel KeyOem5 { get; set; } = new KeyModel(Key.Oem5);
+    public KeyModel KeyOem5 { get; set; } = new KeyModel(Key.Oem5, "\\");
 
     public KeyModel KeyDelete { get; set; } = new KeyModel(Key.Delete);
 
     public KeyModel KeyEnd { get; set; } = new KeyModel(Key.End);
 
-    public KeyModel KeyPageDown { get; set; } = new KeyModel(Key.PageDown);
+    public KeyModel KeyPageDown { get; set; } = new KeyModel(Key.PageDown, "PageDown");
 
-    public KeyModel KeyNumPad7 { get; set; } = new KeyModel(Key.NumPad7);
+    public KeyModel KeyNumPad7 { get; set; } = new KeyModel(Key.NumPad7, "7");
 
-    public KeyModel KeyNumPad8 { get; set; } = new KeyModel(Key.NumPad8);
+    public KeyModel KeyNumPad8 { get; set; } = new KeyModel(Key.NumPad8, "8");
 
-    public KeyModel KeyNumPad9 { get; set; } = new KeyModel(Key.NumPad9);
+    public KeyModel KeyNumPad9 { get; set; } = new KeyModel(Key.NumPad9, "9");
 
-    public KeyModel KeyAdd { get; set; } = new KeyModel(Key.Add);
+    public KeyModel KeyAdd { get; set; } = new KeyModel(Key.Add, "+");
 
     #endregion
 
     #region 第四行按键
 
-    public KeyModel KeyCapsLock { get; set; } = new KeyModel(Key.CapsLock);
+    public KeyModel KeyCapsLock { get; set; } = new KeyModel(Key.CapsLock, "CapsLock");
 
     public KeyModel KeyA { get; set; } = new KeyModel(Key.A);
 
@@ -189,17 +190,17 @@ public partial class MainWindow : FilletWindow
 
     public KeyModel KeyL { get; set; } = new KeyModel(Key.L);
 
-    public KeyModel KeyOemSemicolon { get; set; } = new KeyModel(Key.OemSemicolon);
+    public KeyModel KeyOemSemicolon { get; set; } = new KeyModel(Key.OemSemicolon, ";");
 
-    public KeyModel KeyOemQuotes { get; set; } = new KeyModel(Key.OemQuotes);
+    public KeyModel KeyOemQuotes { get; set; } = new KeyModel(Key.OemQuotes, "'");
 
-    public KeyModel KeyEnter { get; set; } = new KeyModel(Key.Enter);
+    public KeyModel KeyEnter { get; set; } = new KeyModel(Key.Enter, "Enter");
 
-    public KeyModel KeyNumPad4 { get; set; } = new KeyModel(Key.NumPad4);
+    public KeyModel KeyNumPad4 { get; set; } = new KeyModel(Key.NumPad4, "4");
 
-    public KeyModel KeyNumPad5 { get; set; } = new KeyModel(Key.NumPad5);
+    public KeyModel KeyNumPad5 { get; set; } = new KeyModel(Key.NumPad5, "5");
 
-    public KeyModel KeyNumPad6 { get; set; } = new KeyModel(Key.NumPad6);
+    public KeyModel KeyNumPad6 { get; set; } = new KeyModel(Key.NumPad6, "6");
 
 
     #endregion
@@ -214,15 +215,15 @@ public partial class MainWindow : FilletWindow
     public KeyModel KeyB { get; set; } = new KeyModel(Key.B);
     public KeyModel KeyN { get; set; } = new KeyModel(Key.N);
     public KeyModel KeyM { get; set; } = new KeyModel(Key.M);
-    public KeyModel KeyOemComma { get; set; } = new KeyModel(Key.OemComma);
-    public KeyModel KeyOemPeriod { get; set; } = new KeyModel(Key.OemPeriod);
-    public KeyModel KeyOemQuestion { get; set; } = new KeyModel(Key.OemQuestion);
+    public KeyModel KeyOemComma { get; set; } = new KeyModel(Key.OemComma, ",");
+    public KeyModel KeyOemPeriod { get; set; } = new KeyModel(Key.OemPeriod, ".");
+    public KeyModel KeyOemQuestion { get; set; } = new KeyModel(Key.OemQuestion, "/");
     public KeyModel KeyRightShift { get; set; } = new KeyModel(Key.RightShift);
     public KeyModel KeyModelUp { get; set; } = new KeyModel(Key.Up);
-    public KeyModel KeyNumPad1 { get; set; } = new KeyModel(Key.NumPad1);
-    public KeyModel KeyNumPad2 { get; set; } = new KeyModel(Key.NumPad2);
-    public KeyModel KeyNumPad3 { get; set; } = new KeyModel(Key.NumPad3);
-    public KeyModel KeyReturn { get; set; } = new KeyModel(Key.Enter);
+    public KeyModel KeyNumPad1 { get; set; } = new KeyModel(Key.NumPad1, "1");
+    public KeyModel KeyNumPad2 { get; set; } = new KeyModel(Key.NumPad2, "2");
+    public KeyModel KeyNumPad3 { get; set; } = new KeyModel(Key.NumPad3, "3");
+    public KeyModel KeyReturn { get; set; } = new KeyModel(Key.Enter, "Enter");
 
 
     #endregion
@@ -231,7 +232,7 @@ public partial class MainWindow : FilletWindow
 
     public KeyModel KeyLeftCtrl { get; set; } = new KeyModel(Key.LeftCtrl);
 
-    public KeyModel KeyFn { get; set; } = new KeyModel(Key.FinalMode);
+    public KeyModel KeyFn { get; set; } = new KeyModel(Key.FinalMode, "Fn");
 
     public KeyModel KeyLWin { get; set; } = new KeyModel(Key.LWin);
 
@@ -239,9 +240,11 @@ public partial class MainWindow : FilletWindow
 
     public KeyModel KeySpace { get; set; } = new KeyModel(Key.Space);
 
+    public KeyModel KeyRWin { get; set; } = new KeyModel(Key.RWin);
+
     public KeyModel KeyRightAlt { get; set; } = new KeyModel(Key.RightAlt);
 
-    public KeyModel KeyApps { get; set; } = new KeyModel(Key.Apps);
+    //public KeyModel KeyApps { get; set; } = new KeyModel(Key.FinalMode);
 
     public KeyModel KeyRightCtrl { get; set; } = new KeyModel(Key.RightCtrl);
 
@@ -251,7 +254,7 @@ public partial class MainWindow : FilletWindow
 
     public KeyModel KeyModelRight { get; set; } = new KeyModel(Key.Right);
 
-    public KeyModel KeyNumPad0 { get; set; } = new KeyModel(Key.NumPad0);
+    public KeyModel KeyNumPad0 { get; set; } = new KeyModel(Key.NumPad0, "0");
 
     public KeyModel KeyDecimal { get; set; } = new KeyModel(Key.Decimal);
 
@@ -283,22 +286,21 @@ public partial class MainWindow : FilletWindow
 
     #endregion
 
+    public MacroList MacroList { get; set; } = new MacroList();
+
+    public Macro Macro { get; set; } = new Macro();
+
+    public List<string> Animations { get; set; }
+
     #endregion
 
     #region 命令
 
     public DelegateCommand ShowDebugViewCommand { get; private set; }
-
     public DelegateCommand StartRecordingCommand { get; private set; }
-
     public DelegateCommand StopRecordingCommand { get; private set; }
-
-
     public DelegateCommand StartSimulatingCommand { get; private set; }
-
     public DelegateCommand StopSimulatingCommand { get; private set; }
-
-
 
     #endregion
 
@@ -314,7 +316,7 @@ public partial class MainWindow : FilletWindow
         DataContext = this;
     }
 
-    protected override void InitFields()
+    protected void InitFields()
     {
         InitAnimationKeyGroups();
         InitKeyBars();
@@ -408,7 +410,7 @@ public partial class MainWindow : FilletWindow
             KeyRightCtrl,
 
             KeyOemQuestion,
-            KeyApps,
+            KeyFn,
 
             KeyOemPeriod,
             KeyRightAlt,
@@ -538,7 +540,7 @@ public partial class MainWindow : FilletWindow
         keyBars.Add(bar10);
 
         KeyBar bar11 = new();
-        bar11.Keys01.Add(KeyApps);
+        bar11.Keys01.Add(KeyFn);
         bar11.Keys02.Add(KeyOemQuestion);
         bar11.Keys03.Add(KeyOemSemicolon);
         bar11.Keys04.Add(KeyP);
@@ -625,8 +627,10 @@ public partial class MainWindow : FilletWindow
 
     }
 
-    protected override void InitProperties()
+    protected void InitProperties()
     {
+        Animations = Enum.GetNames(typeof(AnimationId)).ToList();
+
         //第一行按键
         KeyModelList.Add(KeyEscape);
         KeyModelList.Add(KeyF1);
@@ -644,6 +648,10 @@ public partial class MainWindow : FilletWindow
         KeyModelList.Add(KeyPrintScreen);
         KeyModelList.Add(KeyScroll);
         KeyModelList.Add(KeyPause);
+        KeyModelList.Add(KeyVolumeMute);
+        KeyModelList.Add(KeyVolumeDown);
+        KeyModelList.Add(KeyVolumeUp);
+        KeyModelList.Add(KeyCalc);
 
         //第二行按键
         KeyModelList.Add(KeyOem3);
@@ -735,18 +743,17 @@ public partial class MainWindow : FilletWindow
         KeyModelList.Add(KeyLeftAlt);
         KeyModelList.Add(KeySpace);
         KeyModelList.Add(KeyRightAlt);
-        KeyModelList.Add(KeyApps);
+        KeyModelList.Add(KeyRWin);
+        KeyModelList.Add(KeyFn);
         KeyModelList.Add(KeyRightCtrl);
         KeyModelList.Add(KeyModelLeft);
         KeyModelList.Add(KeyModelDown);
         KeyModelList.Add(KeyModelRight);
         KeyModelList.Add(KeyNumPad0);
         KeyModelList.Add(KeyDecimal);
-
-
     }
 
-    protected override void InitCommands()
+    protected void InitCommands()
     {
         ShowDebugViewCommand = new DelegateCommand(ShowDebugView);
 
@@ -761,9 +768,7 @@ public partial class MainWindow : FilletWindow
             .ObservesProperty(() => CanStartSimulating);
     }
 
-
-
-    protected override void InitEvents()
+    protected void InitEvents()
     {
         Loaded += MainWindow_Loaded;
     }
@@ -774,11 +779,13 @@ public partial class MainWindow : FilletWindow
 
     private void MainWindow_Loaded(object sender, System.Windows.RoutedEventArgs e)
     {
-
         hook = new KeyboardHook();
         hook.OnKeyDown += Hook_OnKeyDown;
         hook.OnKeyUp += Hook_OnKeyUp;
         hook.Start();
+
+        InitUsbMonitor();
+        RefreshDevices();
     }
 
     private void Hook_OnKeyDown(object sender, KeyEventArgs e)
@@ -786,6 +793,9 @@ public partial class MainWindow : FilletWindow
         var models = KeyModelList.FindAll(x => x.Key == e.Key);
         var keyStr = e.Key.ToString();
         System.Diagnostics.Trace.WriteLine(keyStr);
+
+        MacroManageInput.SetCurrentValue(System.Windows.Controls.TextBox.TextProperty, keyStr);
+
         if (models != null || models.Count > 0)
         {
             foreach (var m in models)
@@ -813,6 +823,34 @@ public partial class MainWindow : FilletWindow
         base.OnClosed(e);
         hook?.Stop();
         Environment.Exit(0);
+    }
+
+    private void ColorPicker_SelectedColorChanged(object sender, HandyControl.Data.FunctionEventArgs<Color> e)
+    {
+
+    }
+
+    private void MenuItemMacro_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var item = sender as MenuItem;
+        var contextMenu = (ContextMenu)item.Parent;
+        var keyControl = (KeyControl)contextMenu.PlacementTarget;
+        var key = keyControl.KeyModel;
+
+        MacroEditWindow macroEditWindow = new MacroEditWindow(key, MacroList);
+        macroEditWindow.ShowDialog();
+    }
+
+    private void MenuItemKey_Click(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuItem;
+        var contextMenu = (ContextMenu)item.Parent;
+        var keyControl = (KeyControl)contextMenu.PlacementTarget;
+        var key = keyControl.KeyModel;
+
+        KeyEditWindow keyEditWindow = new KeyEditWindow(key);
+        hook.OnKeyDown += keyEditWindow.Hook_OnKeyDown;
+        keyEditWindow.ShowDialog();
     }
 
     #endregion
@@ -1016,4 +1054,190 @@ public partial class MainWindow : FilletWindow
     }
 
     #endregion
+
+    private void ButtonAddMacroData_Click(object sender, RoutedEventArgs e)
+    {
+        if(Enum.TryParse(typeof(Key), MacroManageInput.Text, out var key))
+        {
+            Macro.MacroContents.Add(new MacroContent((Key)key));
+        }
+    }
+
+    private void ButtonSetMacroData_Click(object sender, RoutedEventArgs e)
+    {
+        ACH.SetMarcoMap(Macro);
+    }
+
+    private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var item = ((System.Windows.Controls.Primitives.Selector)e.Source).SelectedItem.ToString();
+        var id = (AnimationId)Enum.Parse(typeof(AnimationId), item);
+        AnimationModel model = new AnimationModel()
+        {
+            AnimationId = (AnimationIds)(byte)id,
+            Speed = (byte)PreviewSliderSpeed.Value,
+            ColorA = (byte)PreviewSliderLight.Value,
+        };
+
+        ACH.SetAnimation(model);
+    }
+
+    private void MenuItemDefult_Click(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuItem;
+        var contextMenu = (ContextMenu)item.Parent;
+        var keyControl = (KeyControl)contextMenu.PlacementTarget;
+        var keyIndex = (byte)KeyMap.GetKeyIndex(keyControl.KeyModel.Key);
+        KeyMacroModel model = new KeyMacroModel(keyIndex, KeyModes.NormalKey, 0);
+
+        ACH.SetKeyMacro(model);
+    }
+
+    private void ButtonReset_Click(object sender, RoutedEventArgs e)
+    {
+        ACH.ResetDefaultSetting();
+    }
+
+    #region Usb Driver Control
+
+    private void InitUsbMonitor()
+    {
+        //必须从UI线程创建该对象，与窗口挂钩，否则无法监控设备拔
+        usbMonitor = new USBDeviceList(CyConst.DEVICES_HID);
+        usbMonitor.DeviceRemoved += UsbDevices_DeviceRemoved;
+        usbMonitor.DeviceAttached += UsbDevices_DeviceAttached;
+    }
+
+    void UsbDevices_DeviceAttached(object sender, EventArgs e)
+    {
+        RefreshDevices();
+        Growl.Info("键盘插入");
+    }
+
+    void UsbDevices_DeviceRemoved(object sender, EventArgs e)
+    {
+        //RefreshDevices();
+        Growl.Info("键盘拔出");
+    }
+
+    private async void RefreshDevices()
+    {
+        Device = null;
+        GCH.Device = null;
+        IsDeviceConnect = false;
+        await Task.Run(() =>
+        {
+            usbDevices = new(CyConst.DEVICES_HID);
+        });
+        if (usbDevices != null && usbDevices.Count > 0)
+        {
+            HidDeviceList.Clear();
+            foreach (var device in usbDevices)
+            {
+                //if (device is CyHidDevice hid )
+                if (device is CyHidDevice hid && hid.Outputs.RptByteLen == 64)
+                {
+                    HidDeviceModel model = new(hid.Manufacturer,
+                                               hid.Product,
+                                               null,
+                                               hid.Version,
+                                               hid.SerialNumber,
+                                               hid.VendorID,
+                                               hid.ProductID,
+                                               hid.Inputs.RptByteLen,
+                                               hid.Outputs.RptByteLen,
+                                               hid.Features.RptByteLen,
+                                               hid.Path,
+                                               hid.FriendlyName);
+
+                    HidDeviceList.Add(model);
+
+                    Device = model;
+                }
+            }
+
+            if (HidDeviceList.Count > 0)
+            {
+                ConncetDevice();
+            }
+        }
+    }
+
+    private void ConncetDevice()
+    {
+        if (usbDevices != null && Device != null)
+        {
+            foreach (CyHidDevice x in usbDevices)
+            {
+                if (x.Path == Device.DevicePath)
+                {
+                    GCH.Device = x;
+                    //读写超时，单位：毫秒
+                    GCH.Device.TimeOut = 100;
+                }
+            }
+            IsDeviceConnect = GCH.Device.RwAccessible;
+        }
+
+        if(IsDeviceConnect) Growl.Success("连接成功");
+        //IsDeviceConnect = GCH.OpenDevice();
+    }
+
+    public ObservableCollection<HidDeviceModel> HidDeviceList { get; set; } = new();
+    public HidDeviceModel Device { get; set; }
+    public bool IsDeviceConnect { get; set; }
+
+    USBDeviceList usbDevices;
+    USBDeviceList usbMonitor;
+
+    #endregion
+
+    private void PreviewSliderLight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (List1.SelectedItem == null) { return; }
+        var item = List1.SelectedItem.ToString();
+        var id = (AnimationId)Enum.Parse(typeof(AnimationId), item);
+        AnimationModel model = new AnimationModel()
+        {
+            AnimationId = (AnimationIds)(byte)id,
+            Speed = (byte)PreviewSliderSpeed.Value,
+            ColorA = (byte)PreviewSliderLight.Value,
+        };
+
+        ACH.SetAnimation(model);
+    }
+
+    private void PreviewSliderSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (List1.SelectedItem == null) { return; }
+
+        var item = List1.SelectedItem.ToString();
+        var id = (AnimationId)Enum.Parse(typeof(AnimationId), item);
+        AnimationModel model = new AnimationModel()
+        {
+            AnimationId = (AnimationIds)(byte)id,
+            Speed = (byte)PreviewSliderSpeed.Value,
+            ColorA = (byte)PreviewSliderLight.Value,
+        };
+
+        ACH.SetAnimation(model);
+    }
+
+    private void ButtonReadMacro_Click(object sender, RoutedEventArgs e)
+    {
+        MacroList.Refersh();
+    }
+
+    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        if (usbDevices != null)
+        {
+            usbMonitor.DeviceRemoved -= UsbDevices_DeviceRemoved;
+            usbMonitor.DeviceAttached -= UsbDevices_DeviceAttached;
+            //usbMonitor.Dispose();
+            usbMonitor = null;
+            GC.Collect();
+        }
+    }
 }
+

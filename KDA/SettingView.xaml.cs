@@ -32,7 +32,6 @@ public partial class SettingView : FilletWindow
 
     #region 属性
 
-
     public ObservableCollection<HidDeviceModel> HidDeviceList { get; set; } = new();
     public HidDeviceModel Device { get; set; }
 
@@ -64,7 +63,6 @@ public partial class SettingView : FilletWindow
     public static KeyMacroModel KeyMacroModel { get; set; } = new KeyMacroModel();
 
     public static List<KeyModes> KeyModeList => EnumHelper.ToList<KeyModes>();
-
 
     #endregion
 
@@ -294,8 +292,6 @@ public partial class SettingView : FilletWindow
     {
         RefreshDevices();
     }
-
-
 
     void UsbDevices_DeviceRemoved(object sender, EventArgs e)
     {

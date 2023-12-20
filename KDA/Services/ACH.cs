@@ -306,6 +306,42 @@ public class ACH
         return GCH.WriteCommand(SetMarcoMapCommand, bytes);
     }
 
+    /// <summary>Set active profile </summary>
+    public static bool SetMarcoMap(Macro macro)
+    {
+        byte[] bytes = new byte[34];
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            bytes[i] = 0xFF;
+        }
+        
+        bytes[0] = macro.Index;
+        bytes[1] = (byte)(bytes.Length - 2);
+
+        var vaildBytes = macro.GetBytes();
+
+        Array.Copy(vaildBytes, 0, bytes, 2, vaildBytes.Length);
+       
+        return GCH.WriteCommand(SetMarcoMapCommand, bytes);
+    }
+
+    /// <summary> Get active profile </summary>
+    public static Macro GetMarcoMap(int index)
+    {
+        byte[] paras = new byte[] { (byte)index };
+        byte[] bytes = GCH.ReadCommand(GetMarcoMapCommand, paras);
+        if (bytes == null || bytes.Length < 48)
+        {
+            return null;
+        }
+        else
+        {
+            Macro macro = new Macro(bytes);
+
+            return macro;
+        }
+    }
+
     /// <summary> Get active profile </summary>
     public static MarcoMap GetMarcoMap(byte mapNo)
     {

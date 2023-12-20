@@ -1,19 +1,31 @@
-﻿<twc:FilletWindow x:Class="KDA.MainWindow"
+﻿<Window x:Class="KDA.MainWindow"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:local ="clr-namespace:KDA"
+                  xmlns:uc ="clr-namespace:KDA.Controls"
+                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:twc="clr-namespace:TianWeiToolsPro.Controls;assembly=TianWeiToolsPro"
+                  xmlns:hc="https://handyorg.github.io/handycontrol"
                   xmlns:fa="http://schemas.fontawesome.io/icons/"
-                  xmlns:ctrls="clr-namespace:KDA.Controls" ResizeMode="CanMinimize"
+                  xmlns:ctrls="clr-namespace:KDA.Controls" ResizeMode="CanResize"
                   d:DataContext="{d:DesignInstance local:MainWindow}"
-                  mc:Ignorable="d" Title="AudioListener" Height="400" Width="1280"
-                  TitleBarBackground="Transparent" TitleBarBorderThickness="0"
-                  WindowStartupLocation="CenterScreen">
-    <twc:FilletWindow.Background>
-        <ImageBrush ImageSource="/Background/Sky07.jpg"/>
-    </twc:FilletWindow.Background>
+                  mc:Ignorable="d" Title="" Width="1280"
+                  WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Window.Resources>
+        <ContextMenu x:Key="ContextMenu1" Width="120" Style="{StaticResource ContextMenu.Small}">
+            <MenuItem Header="默认按键" Click="MenuItemDefult_Click"/>
+            <MenuItem Header="修改按键" Click="MenuItemKey_Click"/>
+            <MenuItem Header="宏功能" Click="MenuItemMacro_Click"/>
+        </ContextMenu>
+        <Style x:Key="TagCustomStyle" BasedOn="{StaticResource TagBaseStyle}" TargetType="hc:Tag">
+            <Setter Property="Content" Value="{Binding KeyName}"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Selectable" Value="True"/>
+            <Setter Property="IsSelected" Value="True"/>
+        </Style>
+    </Window.Resources>
     <!--<twc:FilletWindow.MenuBar>
         <StackPanel Height="40" Orientation="Horizontal" Margin="15,0">
             <twc:FilletButton Content="Debug"
@@ -21,412 +33,531 @@
                               Style="{StaticResource FilletButtonStyle}"/>
         </StackPanel>
     </twc:FilletWindow.MenuBar>-->
-    <Grid >
+
+    <Grid>
+        <Image Source="/Background/Sky01.jpg" Stretch="Fill" Grid.RowSpan="2" >
+            <Image.Effect>
+                <BlurEffect Radius="0"/>
+            </Image.Effect>
+        </Image>
+        <TabControl Margin="4,4,4,4" Background="Transparent" Style="{StaticResource TabControlCapsule}" BorderThickness="0" Grid.RowSpan="2">
+            <TabItem Header="灯光管理" Foreground="White" Background="Transparent">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Column="0"  Margin="20,12,12,12">
+                        <TextBlock DockPanel.Dock="Top" Margin="8">键盘灯效</TextBlock>
+                        <ListView SelectedIndex="0" x:Name="List1" Background="#000915" SelectionChanged="ListView_SelectionChanged" Style="{StaticResource MahApps.Styles.ListView}" ItemsSource="{Binding Animations}" Width="100" BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DockPanel>
+
+                    <StackPanel Grid.Column="1" Margin="12,12,12,12">
+                        <TextBlock Margin="8,4,0,4">亮度</TextBlock>
+                        <Slider TickFrequency="1" TickPlacement ="TopLeft" ValueChanged="PreviewSliderLight_ValueChanged"  Name="PreviewSliderLight" Width="300" Value="5" Maximum="5">
+                           
+                        </Slider>
+                        <TextBlock Margin="8,4,0,4">速度</TextBlock>
+                        <Slider TickFrequency="1" TickPlacement ="TopLeft"  ValueChanged="PreviewSliderSpeed_ValueChanged"  Name="PreviewSliderSpeed" Width="300" Value="5" Maximum="5">
+                            
+                        </Slider>
+
+                        <TextBlock Visibility="Collapsed" Margin="8,4,0,4">颜色选择</TextBlock>
+                        <hc:ColorPicker Visibility="Collapsed" Background="#000611" BorderThickness="0" Margin="12" SelectedColorChanged="ColorPicker_SelectedColorChanged" ></hc:ColorPicker>
+
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="按键设定" Foreground="White" Background="Transparent">
+                <StackPanel>
+                    <Viewbox>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="330" Width="1250">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,10">
+                                    <ctrls:KeyControl KeyCode="Esc" KeyModel="{Binding KeyEscape}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
+                                        <ctrls:KeyControl KeyCode="F1" KeyModel="{Binding KeyF1}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F2" KeyModel="{Binding KeyF2}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F3" KeyModel="{Binding KeyF3}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F4" KeyModel="{Binding KeyF4}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="30,0,0,0">
+                                        <ctrls:KeyControl KeyCode="F5" KeyModel="{Binding KeyF5}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F6" KeyModel="{Binding KeyF6}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F7" KeyModel="{Binding KeyF7}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F8" KeyModel="{Binding KeyF8}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
+                                        <ctrls:KeyControl KeyCode="F9" KeyModel="{Binding KeyF9}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F10" KeyModel="{Binding KeyF10}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F11" KeyModel="{Binding KeyF11}" ContextMenu="{StaticResource ContextMenu1}" />
+                                        <ctrls:KeyControl KeyCode="F12" KeyModel="{Binding KeyF12}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyPrintScreen}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="Print" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Sc" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyScroll}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel>
+                                                    <TextBlock Text="Scroll" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Lock" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+
+                                        <ctrls:KeyControl KeyModel="{Binding KeyPause}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel>
+                                                    <TextBlock Text="Pause" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="[Break]" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyVolumeMute}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <fa:FontAwesome Icon="VolumeOff" FontSize="16"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyVolumeDown}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <fa:FontAwesome Icon="VolumeDown" FontSize="16"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyVolumeUp}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <fa:FontAwesome Icon="VolumeUp" FontSize="16"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyCalc}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <fa:FontAwesome Icon="Calculator" FontSize="16"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <ctrls:KeyControl KeyCode="`" KeyModel="{Binding KeyOem3}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="1" KeyModel="{Binding KeyD1}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="2" KeyModel="{Binding KeyD2}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="3" KeyModel="{Binding KeyD3}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="4" KeyModel="{Binding KeyD4}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="5" KeyModel="{Binding KeyD5}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="6" KeyModel="{Binding KeyD6}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="7" KeyModel="{Binding KeyD7}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="8" KeyModel="{Binding KeyD8}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="9" KeyModel="{Binding KeyD9}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="0" KeyModel="{Binding KeyD0}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="-" KeyModel="{Binding KeyOemMinus}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="=" KeyModel="{Binding KeyOemPlus}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl Width="80" KeyModel="{Binding KeyBack}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                        <ctrls:KeyControl.KeyCode>
+                                            <StackPanel >
+                                                <TextBlock Text="Backspace" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="←" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </ctrls:KeyControl.KeyCode>
+                                    </ctrls:KeyControl>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyInsert}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="插入" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Insert" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyHome}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel>
+                                                    <TextBlock Text="起始" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Home" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+
+                                        <ctrls:KeyControl KeyModel="{Binding KeyPageUp}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel>
+                                                    <TextBlock Text="上页" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Pg Up" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumLock}" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="Num" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Lock" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyDivide}" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel>
+                                                    <TextBlock Text="/" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+
+                                        <ctrls:KeyControl KeyModel="{Binding KeyMultiply}" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <TextBlock Text="*" HorizontalAlignment="Center"/>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <ctrls:KeyControl KeyCode="Tab" KeyModel="{Binding KeyTab}" Width="80" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="Q" KeyModel="{Binding KeyQ}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="W" KeyModel="{Binding KeyW}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="E" KeyModel="{Binding KeyE}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="R" KeyModel="{Binding KeyR}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="T" KeyModel="{Binding KeyT}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="Y" KeyModel="{Binding KeyY}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="U" KeyModel="{Binding KeyU}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="I" KeyModel="{Binding KeyI}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="O" KeyModel="{Binding KeyO}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="P" KeyModel="{Binding KeyP}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="[" KeyModel="{Binding KeyOem4}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="]" KeyModel="{Binding KeyOem6}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="\" KeyModel="{Binding KeyOem5}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyDelete}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="删除" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Delete" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyEnd}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel>
+                                                    <TextBlock Text="结束" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="End" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyPageDown}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel>
+                                                    <TextBlock Text="上页" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Pg Dn" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad7}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="7" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Home" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad8}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="8" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="↑" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad9}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="9" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Pg Up" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <ctrls:KeyControl KeyCode="CapsLock" KeyModel="{Binding KeyCapsLock}" Width="92" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="A" KeyModel="{Binding KeyA}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="S" KeyModel="{Binding KeyS}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="D" KeyModel="{Binding KeyD}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="F" KeyModel="{Binding KeyF}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="G" KeyModel="{Binding KeyG}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="H" KeyModel="{Binding KeyH}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="J" KeyModel="{Binding KeyJ}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="K" KeyModel="{Binding KeyK}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="L" KeyModel="{Binding KeyL}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode=";" KeyModel="{Binding KeyOemSemicolon}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="'" KeyModel="{Binding KeyOemQuotes}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="Enter" KeyModel="{Binding KeyEnter}"  Width="94" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="208,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad4}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="4" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="←" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad5}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="5" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="---" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad6}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="6" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="→" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <ctrls:KeyControl KeyCode="Shift" Width="121" KeyModel="{Binding KeyLeftShift}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="Z" KeyModel="{Binding KeyZ}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="X" KeyModel="{Binding KeyX}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="C" KeyModel="{Binding KeyC}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="V" KeyModel="{Binding KeyV}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="B" KeyModel="{Binding KeyB}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="N" KeyModel="{Binding KeyN}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="M" KeyModel="{Binding KeyM}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="," KeyModel="{Binding KeyOemComma}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="." KeyModel="{Binding KeyOemPeriod}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="/" KeyModel="{Binding KeyOemQuestion}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="Shift" Width="121" KeyModel="{Binding KeyRightShift}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="↑"  Margin="80,0,0,0" KeyModel="{Binding KeyModelUp}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <StackPanel Orientation="Horizontal" Margin="78,0,0,0">
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad1}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="1" HorizontalAlignment="Center" />
+                                                    <TextBlock Text="End" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad2}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="2" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="↓" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad3}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}"> 
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="3" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Pg Dn" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" KeyModel="{Binding KeyLeftCtrl}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyModel="{Binding KeyLWin}" ContextMenu="{StaticResource ContextMenu1}">
+                                        <ctrls:KeyControl.KeyCode>
+                                            <StackPanel >
+                                                <fa:FontAwesome Icon="Apple" FontSize="16"/>
+                                            </StackPanel>
+                                        </ctrls:KeyControl.KeyCode>
+                                    </ctrls:KeyControl>
+                                    <ctrls:KeyControl KeyCode="Alt" KeyModel="{Binding KeyLeftAlt}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="Space" Width="356" KeyModel="{Binding KeySpace}" ContextMenu="{StaticResource ContextMenu1}" />
+                                    <ctrls:KeyControl KeyCode="Alt" KeyModel="{Binding KeyRightAlt}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyModel="{Binding KeyRWin}" ContextMenu="{StaticResource ContextMenu1}">
+                                        <ctrls:KeyControl.KeyCode>
+                                            <StackPanel >
+                                                <fa:FontAwesome Icon="Apple" FontSize="16"/>
+                                            </StackPanel>
+                                        </ctrls:KeyControl.KeyCode>
+                                    </ctrls:KeyControl>
+                                    <ctrls:KeyControl KeyCode="Fn" KeyModel="{Binding KeyFn}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" KeyModel="{Binding KeyRightCtrl}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0" >
+                                        <ctrls:KeyControl KeyCode="←" KeyModel="{Binding KeyModelLeft}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                        <ctrls:KeyControl KeyCode="↓" KeyModel="{Binding KeyModelDown}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                        <ctrls:KeyControl KeyCode="→" KeyModel="{Binding KeyModelRight}" ContextMenu="{StaticResource ContextMenu1}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                        <ctrls:KeyControl Width="106" IsPressedZoomIn="False" KeyModel="{Binding KeyNumPad0}" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="0" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Insert" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+
+                                        <ctrls:KeyControl IsPressedZoomIn="False" KeyModel="{Binding KeyDecimal}" ContextMenu="{StaticResource ContextMenu1}">
+                                            <ctrls:KeyControl.KeyCode>
+                                                <StackPanel >
+                                                    <TextBlock Text="." HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="Delete" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </ctrls:KeyControl.KeyCode>
+                                        </ctrls:KeyControl>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel  VerticalAlignment="Bottom" Margin="-56 0 0 4">
+                                <ctrls:KeyControl KeyModel="{Binding KeySubtract}" ContextMenu="{StaticResource ContextMenu1}">
+                                    <ctrls:KeyControl.KeyCode>
+                                        <StackPanel >
+                                            <TextBlock Text="-" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </ctrls:KeyControl.KeyCode>
+                                </ctrls:KeyControl>
+                                <ctrls:KeyControl Height="96" KeyModel="{Binding KeyAdd}" KeyCode="+" ContextMenu="{StaticResource ContextMenu1}"/>
+
+                                <ctrls:KeyControl KeyModel="{Binding KeyReturn}" Height="96" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
+                                    <ctrls:KeyControl.KeyCode>
+                                        <StackPanel >
+                                            <TextBlock Text="回车" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="Enter" HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </ctrls:KeyControl.KeyCode>
+                                </ctrls:KeyControl>
+                            </StackPanel>
+                        </StackPanel>
+                    </Viewbox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="宏管理" Foreground="White" Background="Transparent">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Margin="12" Grid.Column="0" >
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <TextBlock Margin="6">宏列表</TextBlock>
+                            <!--<Button Style="{StaticResource ButtonPrimary.Small}" BorderThickness="0" Content="增加" Margin="4" Click="ButtonAdd_Click"/>
+                            <Button Style="{StaticResource ButtonPrimary.Small}" BorderThickness="0" Content="重命名" Margin="4" Click="ButtonRename_Click"/>
+                            <Button Style="{StaticResource ButtonPrimary.Small}" BorderThickness="0" Content="删除" Margin="4" Click="ButtonDelete_Click"/>-->
+                        </StackPanel>
+
+                        <ListView SelectedItem="{Binding Macro}" Style="{StaticResource MahApps.Styles.ListView}" Background="Transparent" ItemsSource="{Binding MacroList.macros}" MinWidth="100"  x:Name="dataGrid1">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Label  Content="{Binding Name}" Background="#000915" Style="{StaticResource MahApps.Styles.Label}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <!--<ListView Background="Transparent" SelectedItem="{Binding Macro}" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" HeadersVisibility="Row" CanUserSortColumns="False" ItemsSource="{Binding MacroList.macros}" MinWidth="100" CanUserAddRows="False" AutoGenerateColumns="False" x:Name="dataGrid1">-->
+                            <!--<DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Name}"/>
+                            </DataGrid.Columns>-->
+                        </ListView>
+                    </DockPanel>
+
+                    <DockPanel Grid.Column="1" Margin="12,12,12,12">
+                        <TextBlock DockPanel.Dock="Top" Margin="6">按键列表</TextBlock>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,12" DockPanel.Dock="Top">
+                            <TextBox Width="200" x:Name="MacroManageInput" IsReadOnly="True"/>
+                            <Button Content="添加按键" Style="{StaticResource ButtonPrimary}" Margin="12,0,0,0" DockPanel.Dock="Right" Click="ButtonAddMacroData_Click"/>
+                            <Button Content="应用" Style="{StaticResource ButtonPrimary}" Margin="12,0,0,0" DockPanel.Dock="Right" Click="ButtonSetMacroData_Click"/>
+                            <Button Visibility="Collapsed" Content="读取键盘中的宏" Style="{StaticResource ButtonPrimary}" Margin="12,0,0,0" DockPanel.Dock="Right" Click="ButtonReadMacro_Click"/>
+                        </StackPanel>
+                        <hc:TagContainer ItemsSource="{Binding Macro.MacroContents}" BorderBrush="#0e345a" ItemContainerStyle="{StaticResource TagCustomStyle}" Padding="4">
+                            <hc:TagContainer.Background>
+                                <LinearGradientBrush Opacity="0" EndPoint="0,0" StartPoint="0.5,0" >
+                                    <GradientStop Color="#F0F0F0" Offset="0.5"/>
+                                </LinearGradientBrush>
+                            </hc:TagContainer.Background>
+                        </hc:TagContainer>
+                    </DockPanel>
+                    
+                </Grid>
+            </TabItem>
+            <TabItem Header="更多设置" Foreground="White" Background="Transparent">
+                <Grid Margin="50">
+                    <Grid.Background>
+                        <LinearGradientBrush Opacity="0.5" EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="White"/>
+                            <GradientStop Color="White" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20">
+                        <Button Content="恢复出厂设置" Style="{StaticResource ButtonDanger}" Click="ButtonReset_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+
+    <!--<Grid Grid.Row="2" >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition />
+            <RowDefinition/>
         </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Height="330" Width="1250">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,10">
-                    <ctrls:KeyControl KeyCode="Esc" KeyModel="{Binding KeyEscape}"  />
-                    <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
-                        <ctrls:KeyControl KeyCode="F1" KeyModel="{Binding KeyF1}" />
-                        <ctrls:KeyControl KeyCode="F2" KeyModel="{Binding KeyF2}" />
-                        <ctrls:KeyControl KeyCode="F3" KeyModel="{Binding KeyF3}" />
-                        <ctrls:KeyControl KeyCode="F4" KeyModel="{Binding KeyF4}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="30,0,0,0">
-                        <ctrls:KeyControl KeyCode="F5" KeyModel="{Binding KeyF5}" />
-                        <ctrls:KeyControl KeyCode="F6" KeyModel="{Binding KeyF6}" />
-                        <ctrls:KeyControl KeyCode="F7" KeyModel="{Binding KeyF7}" />
-                        <ctrls:KeyControl KeyCode="F8" KeyModel="{Binding KeyF8}" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="28,0,0,0">
-                        <ctrls:KeyControl KeyCode="F9" KeyModel="{Binding KeyF9}" />
-                        <ctrls:KeyControl KeyCode="F10" KeyModel="{Binding KeyF10}" />
-                        <ctrls:KeyControl KeyCode="F11" KeyModel="{Binding KeyF11}" />
-                        <ctrls:KeyControl KeyCode="F12" KeyModel="{Binding KeyF12}" />
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyPrintScreen}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="Print" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Sc" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyScroll}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel>
-                                    <TextBlock Text="Scroll" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Lock" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-
-                        <ctrls:KeyControl KeyModel="{Binding KeyPause}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel>
-                                    <TextBlock Text="Pause" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="[Break]" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyVolumeMute}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <fa:FontAwesome Icon="VolumeOff" FontSize="16"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyVolumeDown}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <fa:FontAwesome Icon="VolumeDown" FontSize="16"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyVolumeUp}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <fa:FontAwesome Icon="VolumeUp" FontSize="16"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyClac}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <fa:FontAwesome Icon="Calculator" FontSize="16"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="`" KeyModel="{Binding KeyOem3}" />
-                    <ctrls:KeyControl KeyCode="1" KeyModel="{Binding KeyD1}"/>
-                    <ctrls:KeyControl KeyCode="2" KeyModel="{Binding KeyD2}"/>
-                    <ctrls:KeyControl KeyCode="3" KeyModel="{Binding KeyD3}"/>
-                    <ctrls:KeyControl KeyCode="4" KeyModel="{Binding KeyD4}"/>
-                    <ctrls:KeyControl KeyCode="5" KeyModel="{Binding KeyD5}"/>
-                    <ctrls:KeyControl KeyCode="6" KeyModel="{Binding KeyD6}"/>
-                    <ctrls:KeyControl KeyCode="7" KeyModel="{Binding KeyD7}"/>
-                    <ctrls:KeyControl KeyCode="8" KeyModel="{Binding KeyD8}"/>
-                    <ctrls:KeyControl KeyCode="9" KeyModel="{Binding KeyD9}"/>
-                    <ctrls:KeyControl KeyCode="0" KeyModel="{Binding KeyD0}"/>
-                    <ctrls:KeyControl KeyCode="-" KeyModel="{Binding KeyOemMinus}"/>
-                    <ctrls:KeyControl KeyCode="=" KeyModel="{Binding KeyOemPlus}"/>
-                    <ctrls:KeyControl Width="80" KeyModel="{Binding KeyBack}" IsPressedZoomIn="False">
-                        <ctrls:KeyControl.KeyCode>
-                            <StackPanel >
-                                <TextBlock Text="Backspace" HorizontalAlignment="Center"/>
-                                <TextBlock Text="←" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </ctrls:KeyControl.KeyCode>
-                    </ctrls:KeyControl>
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyInsert}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="插入" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Insert" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyHome}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel>
-                                    <TextBlock Text="起始" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Home" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-
-                        <ctrls:KeyControl KeyModel="{Binding KeyPageUp}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel>
-                                    <TextBlock Text="上页" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Pg Up" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumLock}">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="Num" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Lock" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyDivide}">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel>
-                                    <TextBlock Text="/" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-
-                        <ctrls:KeyControl KeyModel="{Binding KeyMultiply}">
-                            <ctrls:KeyControl.KeyCode>
-                                <TextBlock Text="*" HorizontalAlignment="Center"/>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="Tab" KeyModel="{Binding KeyTab}" Width="80"/>
-                    <ctrls:KeyControl KeyCode="Q" KeyModel="{Binding KeyQ}"/>
-                    <ctrls:KeyControl KeyCode="W" KeyModel="{Binding KeyW}"/>
-                    <ctrls:KeyControl KeyCode="E" KeyModel="{Binding KeyE}"/>
-                    <ctrls:KeyControl KeyCode="R" KeyModel="{Binding KeyR}"/>
-                    <ctrls:KeyControl KeyCode="T" KeyModel="{Binding KeyT}"/>
-                    <ctrls:KeyControl KeyCode="Y" KeyModel="{Binding KeyY}"/>
-                    <ctrls:KeyControl KeyCode="U" KeyModel="{Binding KeyU}"/>
-                    <ctrls:KeyControl KeyCode="I" KeyModel="{Binding KeyI}"/>
-                    <ctrls:KeyControl KeyCode="O" KeyModel="{Binding KeyO}"/>
-                    <ctrls:KeyControl KeyCode="P" KeyModel="{Binding KeyP}"/>
-                    <ctrls:KeyControl KeyCode="[" KeyModel="{Binding KeyOem4}"/>
-                    <ctrls:KeyControl KeyCode="]" KeyModel="{Binding KeyOem6}"/>
-                    <ctrls:KeyControl KeyCode="\" KeyModel="{Binding KeyOem5}"/>
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyDelete}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="删除" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Delete" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyEnd}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel>
-                                    <TextBlock Text="结束" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="End" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyPageDown}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel>
-                                    <TextBlock Text="上页" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Pg Dn" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad7}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="7" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Home" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad8}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="8" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="↑" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad9}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="9" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Pg Up" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="CapsLock" KeyModel="{Binding KeyCapsLock}" Width="92"/>
-                    <ctrls:KeyControl KeyCode="A" KeyModel="{Binding KeyA}" />
-                    <ctrls:KeyControl KeyCode="S" KeyModel="{Binding KeyS}" />
-                    <ctrls:KeyControl KeyCode="D" KeyModel="{Binding KeyD}" />
-                    <ctrls:KeyControl KeyCode="F" KeyModel="{Binding KeyF}" />
-                    <ctrls:KeyControl KeyCode="G" KeyModel="{Binding KeyG}" />
-                    <ctrls:KeyControl KeyCode="H" KeyModel="{Binding KeyH}" />
-                    <ctrls:KeyControl KeyCode="J" KeyModel="{Binding KeyJ}" />
-                    <ctrls:KeyControl KeyCode="K" KeyModel="{Binding KeyK}" />
-                    <ctrls:KeyControl KeyCode="L" KeyModel="{Binding KeyL}" />
-                    <ctrls:KeyControl KeyCode=";" KeyModel="{Binding KeyOemSemicolon}" />
-                    <ctrls:KeyControl KeyCode="'" KeyModel="{Binding KeyOemQuotes}" />
-                    <ctrls:KeyControl KeyCode="Enter" KeyModel="{Binding KeyEnter}"  Width="94" />
-                    <StackPanel Orientation="Horizontal" Margin="208,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad4}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="4" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="←" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad5}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="5" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="---" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad6}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="6" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="→" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="Shift" Width="121" KeyModel="{Binding KeyLeftShift}"/>
-                    <ctrls:KeyControl KeyCode="Z" KeyModel="{Binding KeyZ}"/>
-                    <ctrls:KeyControl KeyCode="X" KeyModel="{Binding KeyX}"/>
-                    <ctrls:KeyControl KeyCode="C" KeyModel="{Binding KeyC}"/>
-                    <ctrls:KeyControl KeyCode="V" KeyModel="{Binding KeyV}"/>
-                    <ctrls:KeyControl KeyCode="B" KeyModel="{Binding KeyB}"/>
-                    <ctrls:KeyControl KeyCode="N" KeyModel="{Binding KeyN}"/>
-                    <ctrls:KeyControl KeyCode="M" KeyModel="{Binding KeyM}"/>
-                    <ctrls:KeyControl KeyCode="," KeyModel="{Binding KeyOemComma}"/>
-                    <ctrls:KeyControl KeyCode="." KeyModel="{Binding KeyOemPeriod}"/>
-                    <ctrls:KeyControl KeyCode="/" KeyModel="{Binding KeyOemQuestion}"/>
-                    <ctrls:KeyControl KeyCode="Shift" Width="121" KeyModel="{Binding KeyRightShift}"/>
-                    <ctrls:KeyControl KeyCode="↑"  Margin="80,0,0,0" KeyModel="{Binding KeyModelUp}"/>
-                    <StackPanel Orientation="Horizontal" Margin="78,0,0,0">
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad1}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="1" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="End" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad2}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="2" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="↓" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-
-                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad3}" IsPressedZoomIn="False">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="3" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Pg Dn" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" >
-                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" KeyModel="{Binding KeyLeftCtrl}"/>
-                    <ctrls:KeyControl KeyCode="Win" KeyModel="{Binding KeyLWin}"/>
-                    <ctrls:KeyControl KeyCode="Alt" KeyModel="{Binding KeyLeftAlt}"/>
-                    <ctrls:KeyControl KeyCode="Space" Width="412" KeyModel="{Binding KeySpace}"/>
-                    <ctrls:KeyControl KeyCode="Alt" KeyModel="{Binding KeyRightAlt}"/>
-                    <ctrls:KeyControl KeyCode="Apps" KeyModel="{Binding KeyApps}"/>
-                    <ctrls:KeyControl KeyCode="Ctrl" Width="80" KeyModel="{Binding KeyRightCtrl}"/>
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0" >
-                        <ctrls:KeyControl KeyCode="←" KeyModel="{Binding KeyModelLeft}"/>
-                        <ctrls:KeyControl KeyCode="↓" KeyModel="{Binding KeyModelDown}"/>
-                        <ctrls:KeyControl KeyCode="→" KeyModel="{Binding KeyModelRight}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
-                        <ctrls:KeyControl Width="106" IsPressedZoomIn="False" KeyModel="{Binding KeyNumPad0}">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="0" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Insert" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-
-
-                        <ctrls:KeyControl IsPressedZoomIn="False" KeyModel="{Binding KeyDecimal}">
-                            <ctrls:KeyControl.KeyCode>
-                                <StackPanel >
-                                    <TextBlock Text="." HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Delete" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </ctrls:KeyControl.KeyCode>
-                        </ctrls:KeyControl>
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
-            <StackPanel  VerticalAlignment="Bottom" Margin="-56 0 0 4">
-                <ctrls:KeyControl KeyModel="{Binding KeySubtract}" >
-                    <ctrls:KeyControl.KeyCode>
-                        <StackPanel >
-                            <TextBlock Text="-" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </ctrls:KeyControl.KeyCode>
-                </ctrls:KeyControl>
-                <ctrls:KeyControl Height="96" KeyModel="{Binding KeyAdd}" KeyCode="+"/>
-
-
-                <ctrls:KeyControl KeyModel="{Binding KeyReturn}" Height="96" IsPressedZoomIn="False">
-                    <ctrls:KeyControl.KeyCode>
-                        <StackPanel >
-                            <TextBlock Text="回车" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Enter" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </ctrls:KeyControl.KeyCode>
-                </ctrls:KeyControl>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,5" >
+            <twc:FilletButton Content="Start Simu"  Command="{Binding StartSimulatingCommand}" Style="{StaticResource FilletButtonStyle}"/>
+            <twc:FilletButton Content="Stop Simu"  Command="{Binding StopSimulatingCommand}" Style="{StaticResource FilletButtonStyle}"/>
+            <twc:FilletButton Content="Start Rec"  Command="{Binding StartRecordingCommand}" Style="{StaticResource FilletButtonStyle}"/>
+            <twc:FilletButton Content="Stop Rec"  Command="{Binding StopRecordingCommand}" Style="{StaticResource FilletButtonStyle}"/>
         </StackPanel>
-        <!--<Grid Grid.Row="2" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,5" >
-                <twc:FilletButton Content="Start Simu"  Command="{Binding StartSimulatingCommand}" Style="{StaticResource FilletButtonStyle}"/>
-                <twc:FilletButton Content="Stop Simu"  Command="{Binding StopSimulatingCommand}" Style="{StaticResource FilletButtonStyle}"/>
-                <twc:FilletButton Content="Start Rec"  Command="{Binding StartRecordingCommand}" Style="{StaticResource FilletButtonStyle}"/>
-                <twc:FilletButton Content="Stop Rec"  Command="{Binding StopRecordingCommand}" Style="{StaticResource FilletButtonStyle}"/>
-            </StackPanel>
-            <Border Grid.Row="1"  HorizontalAlignment="Right" Margin="25">
-                <ItemsControl ItemsSource="{Binding FFTBars}"  >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="models:FFTBar">
-                            <Border Width="8" Margin="0 0 0 0"
-                                    Height="{Binding Height}" 
-                                    VerticalAlignment="Bottom" >
-                                <Border.Background>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5" >
-                                        <GradientStop Color="OrangeRed" Offset="0"/>
-                                        <GradientStop Color="Lime" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Border>
-        </Grid>-->
-    </Grid>
-</twc:FilletWindow>
+        <Border Grid.Row="1"  HorizontalAlignment="Right" Margin="25">
+            <ItemsControl ItemsSource="{Binding FFTBars}"  >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="models:FFTBar">
+                        <Border Width="8" Margin="0 0 0 0"
+                                Height="{Binding Height}" 
+                                VerticalAlignment="Bottom" >
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.5" >
+                                    <GradientStop Color="OrangeRed" Offset="0"/>
+                                    <GradientStop Color="Lime" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+    </Grid>-->
+
+
+</Window>

@@ -74,4 +74,10 @@
 	  <Resource Include="Background\Sky16.jpg" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="MacroEditWindow.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using KDA.Models;
@@ -8,7 +9,6 @@ namespace KDA.Controls;
 
 public class KeyControl : ButtonBase
 {
-
     public object KeyCode
     {
         get { return GetValue(KeyCodeProperty); }
@@ -19,9 +19,6 @@ public class KeyControl : ButtonBase
     /// <summary>Identifies the <see cref="KeyCode"/> dependency property.</summary>
     public static readonly DependencyProperty KeyCodeProperty =
         DependencyProperty.Register(nameof(KeyCode), typeof(object), typeof(KeyControl));
-
-
-
 
     public KeyModel KeyModel
     {
@@ -35,8 +32,6 @@ public class KeyControl : ButtonBase
         DependencyProperty.Register(nameof(KeyModel), typeof(KeyModel), typeof(KeyControl));
 
 
-
-
     public bool IsKeyPressed
     {
         get { return (bool)GetValue(IsKeyPressedProperty); }
@@ -47,8 +42,6 @@ public class KeyControl : ButtonBase
     /// <summary>Identifies the <see cref="IsKeyPressed"/> dependency property.</summary>
     public static readonly DependencyProperty IsKeyPressedProperty =
         DependencyProperty.Register(nameof(IsKeyPressed), typeof(bool), typeof(KeyControl));
-
-
 
     public bool IsPressedZoomIn
     {
@@ -61,8 +54,6 @@ public class KeyControl : ButtonBase
         DependencyProperty.Register(nameof(IsPressedZoomIn), typeof(bool), typeof(KeyControl));
 
 
-
-
     public Brush KeyPressedBrush
     {
         get { return (Brush)GetValue(KeyPressedBrushProperty); }
@@ -73,8 +64,6 @@ public class KeyControl : ButtonBase
     /// <summary>Identifies the <see cref="KeyPressedBrush"/> dependency property.</summary>
     public static readonly DependencyProperty KeyPressedBrushProperty =
         DependencyProperty.Register(nameof(KeyPressedBrush), typeof(Brush), typeof(KeyControl));
-
-
 
     public Brush MouseOverBrush
     {
@@ -136,9 +125,6 @@ public class KeyControl : ButtonBase
     /// <summary>Identifies the <see cref="AnimationColor"/> dependency property.</summary>
     public static readonly DependencyProperty AnimationColorProperty =
         DependencyProperty.Register(nameof(AnimationColor), typeof(Color), typeof(KeyControl));
-
-
-
 
     static KeyControl()
     {

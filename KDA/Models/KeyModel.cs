@@ -6,7 +6,6 @@ namespace KDA.Models;
 [AddINotifyPropertyChangedInterface]
 public class KeyModel
 {
-
     public Key Key { get; set; }
 
     public string KeyStr { get; set; }
@@ -16,7 +15,6 @@ public class KeyModel
         get;
         set;
     }
-
 
     private Color animationColor;
     public Color AnimationColor

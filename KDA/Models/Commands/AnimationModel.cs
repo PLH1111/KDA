@@ -56,7 +56,6 @@ public class AnimationModel
 
     public AnimationDisplays Display { get; set; }
 
-
     public AnimationDirections Direction { get; set; } = AnimationDirections.LeftToRight;
 
     public AnimationModel()

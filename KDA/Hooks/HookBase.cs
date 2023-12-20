@@ -6,11 +6,6 @@ using System.Windows.Input;
 
 namespace KDA;
 
-
-
-
-
-
 [StructLayout(LayoutKind.Sequential)]
 public class KeyboardData
 {
