@@ -11,11 +11,13 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using TianWeiToolsPro.Commands;
@@ -265,7 +267,6 @@ public partial class MainWindow
     #endregion
 
     #region Wave Peak
-
 
     public bool CanStartRecording { get; set; } = true;
 
@@ -1118,6 +1119,8 @@ public partial class MainWindow
     {
         //RefreshDevices();
         Growl.Info("键盘拔出");
+
+        IsDeviceConnect = false;
     }
 
     private async void RefreshDevices()
@@ -1238,6 +1241,33 @@ public partial class MainWindow
             usbMonitor = null;
             GC.Collect();
         }
+    }
+}
+
+public class BoolToNoVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value == null)
+        {
+            return Visibility.Collapsed;
+        }
+        else
+        {
+            if ((bool)value)
+            {
+                return Visibility.Collapsed;
+            }
+            else
+            {
+                return Visibility.Visible;
+            }
+        }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }
 

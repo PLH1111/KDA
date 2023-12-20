@@ -25,6 +25,7 @@
             <Setter Property="Selectable" Value="True"/>
             <Setter Property="IsSelected" Value="True"/>
         </Style>
+        <local:BoolToNoVisibilityConverter  x:Key="BoolToNoVisibilityConverter"></local:BoolToNoVisibilityConverter>
     </Window.Resources>
     <!--<twc:FilletWindow.MenuBar>
         <StackPanel Height="40" Orientation="Horizontal" Margin="15,0">
@@ -35,12 +36,12 @@
     </twc:FilletWindow.MenuBar>-->
 
     <Grid>
-        <Image Source="/Background/Sky01.jpg" Stretch="Fill" Grid.RowSpan="2" >
+        <Image Visibility="{Binding IsDeviceConnect, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" Source="/Background/Sky01.jpg" Stretch="Fill">
             <Image.Effect>
                 <BlurEffect Radius="0"/>
             </Image.Effect>
         </Image>
-        <TabControl Margin="4,4,4,4" Background="Transparent" Style="{StaticResource TabControlCapsule}" BorderThickness="0" Grid.RowSpan="2">
+        <TabControl Visibility="{Binding IsDeviceConnect, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="4,4,4,4" Background="Transparent" Style="{StaticResource TabControlCapsule}" BorderThickness="0" Grid.RowSpan="2">
             <TabItem Header="灯光管理" Foreground="White" Background="Transparent">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -61,11 +62,11 @@
                     <StackPanel Grid.Column="1" Margin="12,12,12,12">
                         <TextBlock Margin="8,4,0,4">亮度</TextBlock>
                         <Slider TickFrequency="1" TickPlacement ="TopLeft" ValueChanged="PreviewSliderLight_ValueChanged"  Name="PreviewSliderLight" Width="300" Value="5" Maximum="5">
-                           
+
                         </Slider>
                         <TextBlock Margin="8,4,0,4">速度</TextBlock>
                         <Slider TickFrequency="1" TickPlacement ="TopLeft"  ValueChanged="PreviewSliderSpeed_ValueChanged"  Name="PreviewSliderSpeed" Width="300" Value="5" Maximum="5">
-                            
+
                         </Slider>
 
                         <TextBlock Visibility="Collapsed" Margin="8,4,0,4">颜色选择</TextBlock>
@@ -376,7 +377,7 @@
                                             </ctrls:KeyControl.KeyCode>
                                         </ctrls:KeyControl>
 
-                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad3}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}"> 
+                                        <ctrls:KeyControl KeyModel="{Binding KeyNumPad3}" IsPressedZoomIn="False" ContextMenu="{StaticResource ContextMenu1}">
                                             <ctrls:KeyControl.KeyCode>
                                                 <StackPanel >
                                                     <TextBlock Text="3" HorizontalAlignment="Center"/>
@@ -499,7 +500,7 @@
                             </hc:TagContainer.Background>
                         </hc:TagContainer>
                     </DockPanel>
-                    
+
                 </Grid>
             </TabItem>
             <TabItem Header="更多设置" Foreground="White" Background="Transparent">
@@ -521,6 +522,10 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <StackPanel Visibility="{Binding IsDeviceConnect, Mode=OneWay, Converter={StaticResource BoolToNoVisibilityConverter}}"  Margin="200">
+            <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="50">未检测到设备!</TextBlock>
+            <TextBlock Foreground="White" Margin="0,20,0,0"  HorizontalAlignment="Center" FontSize="20">请确认键盘是否连接到电脑!</TextBlock>
+        </StackPanel>
     </Grid>
 
     <!--<Grid Grid.Row="2" >
