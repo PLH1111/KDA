@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
+using PropertyChanged;
 
-namespace KDA.Models.Commands;
+namespace KDA.Models.Commands
+{
+
 
 [AddINotifyPropertyChangedInterface]
 public class ProfileMap
@@ -65,7 +68,7 @@ public class ProfileMap
     public AnimationDisplays Display { get; set; }
 
 
-    public AnimationDirections Direction { get; set; } = AnimationDirections.LeftToRight;
+    public ColorNum Direction { get; set; } = ColorNum.七彩;
 
 
 
@@ -79,4 +82,5 @@ public class ProfileMap
     public ProfileDataList MapDatas { get; set; }=new ProfileDataList(11);
 
 
+}
 }

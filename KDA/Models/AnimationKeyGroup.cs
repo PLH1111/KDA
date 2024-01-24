@@ -5,23 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace KDA.Models;
-
-public class AnimationKeyGroup : List<KeyModel>
+namespace KDA.Models
 {
 
-    public Color AnimationColor { get; set; }
-
-    public AnimationKeyGroup(Color color)
+    public class AnimationKeyGroup : List<KeyModel>
     {
-        AnimationColor = color;
-    }
 
-    public void SetAnimation()
-    {
-        foreach (var item in this)
+        public Color AnimationColor { get; set; }
+
+        public AnimationKeyGroup(Color color)
         {
-            item.AnimationColor = AnimationColor;
+            AnimationColor = color;
+        }
+
+        public void SetAnimation()
+        {
+            foreach (var item in this)
+            {
+                item.AnimationColor = AnimationColor;
+            }
         }
     }
 }

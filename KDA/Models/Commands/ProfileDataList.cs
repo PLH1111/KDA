@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models.Commands;
+namespace KDA.Models.Commands
+{
+
+
 
 public class ProfileDataList : List<ProfileData>
 {
@@ -19,4 +22,5 @@ public class ProfileDataList : List<ProfileData>
             Add(new ProfileData(i));
         }
     }
+}
 }

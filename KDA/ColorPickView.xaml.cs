@@ -13,24 +13,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TianWeiToolsPro.Controls;
 
-namespace KDA;
-
-/// <summary>
-/// ColorPickView.xaml 的交互逻辑
-/// </summary>
-public partial class ColorPickView : FilletWindow
+namespace KDA
 {
-    public Color SelectedColor { get; set; }
-
-    public ColorPickView()
+    /// <summary>
+    /// ColorPickView.xaml 的交互逻辑
+    /// </summary>
+    public partial class ColorPickView : FilletWindow
     {
-        InitializeComponent();
-    }
+        public Color SelectedColor { get; set; }
 
-    public Color ShowView(Color color)
-    {
-        SelectedColor = color;
-        ShowDialog();
-        return SelectedColor;
+        public ColorPickView()
+        {
+            InitializeComponent();
+        }
+
+        public Color ShowView(Color color)
+        {
+            SelectedColor = color;
+            ShowDialog();
+            return SelectedColor;
+        }
     }
 }

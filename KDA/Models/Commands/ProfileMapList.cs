@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models.Commands;
+namespace KDA.Models.Commands
+{
 
 public class ProfileMapList : List<ProfileMap>
 {
@@ -20,4 +21,6 @@ public class ProfileMapList : List<ProfileMap>
             Add(new ProfileMap());
         }
     }
+}
+
 }

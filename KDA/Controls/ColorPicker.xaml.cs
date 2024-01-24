@@ -13,7 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace KDA.Controls;
+namespace KDA.Controls
+{
+
 
 /// <summary>
 /// ColorPicker.xaml 的交互逻辑
@@ -41,8 +43,10 @@ public partial class ColorPicker : UserControl
     protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
     {
         base.OnMouseDoubleClick(e);
-        ColorPickView view = new();
+        ColorPickView view = new ColorPickView();
         var color = view.ShowView(SelectedColor);
         SetCurrentValue(SelectedColorProperty, color);
     }
+}
+
 }

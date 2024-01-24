@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace KDA.Models.Commands;
-
+namespace KDA.Models.Commands
+{
 public class BootUpMapList : List<BootUpMap>
 {
     public BootUpMapList()
@@ -17,4 +17,5 @@ public class BootUpMapList : List<BootUpMap>
             Add(new BootUpMap(i));
         }
     }
+}
 }

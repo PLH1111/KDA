@@ -4,34 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
+using PropertyChanged;
 
-namespace KDA.Models.Commands;
-
-[AddINotifyPropertyChangedInterface]
-public class ProfileModel
+namespace KDA.Models.Commands
 {
-    public byte Number { get; set; }
-
-    public string NumberHex
+    [AddINotifyPropertyChangedInterface]
+    public class ProfileModel
     {
-        get => Number.ToHex();
-        set => Number = value.HexToByte();
-    }
+        public byte Number { get; set; }
+
+        public string NumberHex
+        {
+            get => Number.ToHex();
+            set => Number = value.HexToByte();
+        }
 
 
-    public ProfileModel()
-    {
+        public ProfileModel()
+        {
 
-    }
+        }
 
 
-    public ProfileModel(byte number)
-    {
-        Number = number;
-    }
+        public ProfileModel(byte number)
+        {
+            Number = number;
+        }
 
-    public ProfileModel(string number)
-    {
-        NumberHex = number;
+        public ProfileModel(string number)
+        {
+            NumberHex = number;
+        }
     }
 }

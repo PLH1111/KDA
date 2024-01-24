@@ -4,28 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models.Commands;
-public class KeyColorDataList : List<KeyColorData>
+namespace KDA.Models.Commands
 {
-    public KeyColorDataList()
+    public class KeyColorDataList : List<KeyColorData>
     {
-
-    }
-
-    public KeyColorDataList(byte mapIndex)
-    {
-        byte startIndex = (byte)(11 * mapIndex);
-        for (byte i = startIndex; i < startIndex + 11; i++)
+        public KeyColorDataList()
         {
-            Add(new KeyColorData(i));
+
         }
-    }
 
-    public void ClearColorDatas()
-    {
-        foreach (var data in this)
+        public KeyColorDataList(byte mapIndex)
         {
-            data?.ResetColor();
+            byte startIndex = (byte)(11 * mapIndex);
+            for (byte i = startIndex; i < startIndex + 11; i++)
+            {
+                Add(new KeyColorData(i));
+            }
+        }
+
+        public void ClearColorDatas()
+        {
+            foreach (var data in this)
+            {
+                data?.ResetColor();
+            }
         }
     }
 }

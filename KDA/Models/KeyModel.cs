@@ -1,40 +1,42 @@
 ﻿using System.Windows.Input;
 using System.Windows.Media;
+using PropertyChanged;
 
-namespace KDA.Models;
-
-[AddINotifyPropertyChangedInterface]
-public class KeyModel
+namespace KDA.Models
 {
-    public Key Key { get; set; }
-
-    public string KeyStr { get; set; }
-
-    public bool IsKeyPressed
+    [AddINotifyPropertyChangedInterface]
+    public class KeyModel
     {
-        get;
-        set;
-    }
+        public Key Key { get; set; }
 
-    private Color animationColor;
-    public Color AnimationColor
-    {
-        get => animationColor;
-        set
+        public string KeyStr { get; set; }
+
+        public bool IsKeyPressed
         {
-            animationColor = value;
+            get;
+            set;
         }
-    }
+
+        private Color animationColor;
+        public Color AnimationColor
+        {
+            get => animationColor;
+            set
+            {
+                animationColor = value;
+            }
+        }
 
 
-    public KeyModel()
-    {
+        public KeyModel()
+        {
 
-    }
+        }
 
-    public KeyModel(Key key, string keyStr = null)
-    {
-        Key = key;
-        KeyStr = string.IsNullOrEmpty(keyStr) ? key.ToString() : keyStr;
+        public KeyModel(Key key, string keyStr = null)
+        {
+            Key = key;
+            KeyStr = string.IsNullOrEmpty(keyStr) ? key.ToString() : keyStr;
+        }
     }
 }

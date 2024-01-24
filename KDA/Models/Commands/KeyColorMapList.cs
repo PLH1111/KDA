@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace KDA.Models.Commands;
-
+namespace KDA.Models.Commands
+{
 public class KeyColorMapList : List<KeyColorMap>
 {
     public KeyColorMapList()
@@ -24,7 +24,7 @@ public class KeyColorMapList : List<KeyColorMap>
 
     private List<KeyColorData> GetColorDatas()
     {
-        List<KeyColorData> keyColorDatas = new();
+        List<KeyColorData> keyColorDatas = new List<KeyColorData>();
         foreach (KeyColorMap x in this)
         {
             keyColorDatas.AddRange(x.MapDatas);
@@ -44,7 +44,7 @@ public class KeyColorMapList : List<KeyColorMap>
 
     public KeyColorDataList SetColorDatas(AnimationKeyGroups groups)
     {
-        KeyColorDataList datas = new();
+        KeyColorDataList datas = new KeyColorDataList();
         foreach (var model in groups.GetKeyModels())
         {
             KeyColorData data = GetColorData(model.Key);
@@ -59,4 +59,5 @@ public class KeyColorMapList : List<KeyColorMap>
         }
         return datas;
     }
+}
 }

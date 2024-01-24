@@ -14,10 +14,11 @@
                 <ResourceDictionary Source="pack://application:,,,/TianWeiToolsPro;component/Themes/Geometries.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Red.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/KDA;component/Themes/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/KDA;component/Themes/ColorsLocal.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
 

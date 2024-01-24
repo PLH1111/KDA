@@ -1,53 +1,55 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
 
-namespace KDA.Models.Bootloader;
-
-[AddINotifyPropertyChangedInterface]
-public class RangeModel
+namespace KDA.Models.Bootloader
 {
-    public ResponseCodes ResponseCode { get; set; } = ResponseCodes.TBA;
-
-
-    public uint Adderss { get; set; }
-
-    public string AdderssHex
+    [AddINotifyPropertyChangedInterface]
+    public class RangeModel
     {
-        get => Adderss.ToBytes().ToHex();
-        set => Adderss = value.HexToBytes().ToUint();
-    }
-
-    public uint Size { get; set; }
-
-    public string SizeHex
-    {
-        get => Size.ToBytes().ToHex();
-        set => Size = value.HexToBytes().ToUint();
-    }
-
-    public byte[] RangeData => Adderss.ToBytes().Concat(Size.ToBytes()).ToArray();
+        public ResponseCodes ResponseCode { get; set; } = ResponseCodes.TBA;
 
 
-    public RangeModel()
-    {
+        public uint Adderss { get; set; }
 
-    }
+        public string AdderssHex
+        {
+            get => Adderss.ToBytes().ToHex();
+            set => Adderss = value.HexToBytes().ToUint();
+        }
 
-    public RangeModel(ResponseCodes responseCode, string adderssHex, string sizeHex)
-    {
-        ResponseCode = responseCode;
-        AdderssHex = adderssHex;
-        SizeHex = sizeHex;
-    }
+        public uint Size { get; set; }
 
-    public RangeModel(ResponseCodes responseCode, uint adderss, uint size)
-    {
-        ResponseCode = responseCode;
-        Adderss = adderss;
-        Size = size;
+        public string SizeHex
+        {
+            get => Size.ToBytes().ToHex();
+            set => Size = value.HexToBytes().ToUint();
+        }
+
+        public byte[] RangeData => Adderss.ToBytes().Concat(Size.ToBytes()).ToArray();
+
+
+        public RangeModel()
+        {
+
+        }
+
+        public RangeModel(ResponseCodes responseCode, string adderssHex, string sizeHex)
+        {
+            ResponseCode = responseCode;
+            AdderssHex = adderssHex;
+            SizeHex = sizeHex;
+        }
+
+        public RangeModel(ResponseCodes responseCode, uint adderss, uint size)
+        {
+            ResponseCode = responseCode;
+            Adderss = adderss;
+            Size = size;
+        }
     }
 }

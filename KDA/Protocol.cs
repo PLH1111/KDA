@@ -26,7 +26,7 @@ namespace KDA
 
         #region 属性
 
-        public ObservableCollection<HidDeviceModel> HidDeviceList { get; set; } = new();
+        public ObservableCollection<HidDeviceModel> HidDeviceList { get; set; } = new ObservableCollection<HidDeviceModel>();
         public HidDeviceModel Device { get; set; }
 
         public string InputMessage { get; set; }
@@ -62,7 +62,7 @@ namespace KDA
 
         #region Key Color
 
-        public static KeyColorModel KeyColorModel { get; set; } = new();
+        public static KeyColorModel KeyColorModel { get; set; } = new KeyColorModel();
 
         #endregion
 
@@ -74,13 +74,13 @@ namespace KDA
 
         public static List<AnimationDisplays> DisplayList => EnumHelper.ToList<AnimationDisplays>();
 
-        public static List<AnimationDirections> DirectionList => EnumHelper.ToList<AnimationDirections>();
+        public static List<ColorNum> DirectionList => EnumHelper.ToList<ColorNum>();
 
         #endregion
 
         #region Profile
 
-        public static ProfileModel ProfileModel => new();
+        public static ProfileModel ProfileModel => new ProfileModel();
 
         #endregion
 
@@ -94,7 +94,7 @@ namespace KDA
 
         #region RBG_Map
 
-        public static KeyColorMapList KeyColorMaps { get; set; } = new(11);
+        public static KeyColorMapList KeyColorMaps { get; set; } = new KeyColorMapList(11);
 
         public KeyColorMap SelectedKeyColorMap { get; set; } = KeyColorMaps[0];
 
@@ -102,7 +102,7 @@ namespace KDA
 
         #region MarcoMap
 
-        public static MarcoMapList MarcoMaps { get; set; } = new(0x40);
+        public static MarcoMapList MarcoMaps { get; set; } = new MarcoMapList(0x40);
 
         public MarcoMap SelectedMarcoMap { get; set; } = MarcoMaps[0];
 
@@ -110,7 +110,7 @@ namespace KDA
 
         #region ProfileMaps
 
-        public static ProfileMapList ProfileMaps { get; set; } = new(0x04);
+        public static ProfileMapList ProfileMaps { get; set; } = new ProfileMapList(0x04);
 
         public ProfileMap SelectedProfileMap { get; set; } = ProfileMaps[0];
 
@@ -118,7 +118,7 @@ namespace KDA
 
         #region BootupMap
 
-        public static BootUpMapList BootUpMaps { get; set; } = new(0x04);
+        public static BootUpMapList BootUpMaps { get; set; } = new BootUpMapList(0x04);
 
         public BootUpMap SelectedBootUpMap { get; set; } = BootUpMaps[0];
 
@@ -128,21 +128,21 @@ namespace KDA
 
         #region Bootloader
 
-        public static ConfigModel ConfigModel { get; set; } = new();
+        public static ConfigModel ConfigModel { get; set; } = new ConfigModel();
 
-        public static RangeModel RangeModel { get; set; } = new();
+        public static RangeModel RangeModel { get; set; } = new RangeModel();
 
-        public static FlashModel FlashModel { get; set; } = new();
+        public static FlashModel FlashModel { get; set; } = new FlashModel();
 
-        public static CheckSumModel CheckSumModel { get; set; } = new();
+        public static CheckSumModel CheckSumModel { get; set; } = new CheckSumModel();
 
-        public static RunModel RunModel { get; set; } = new();
+        public static RunModel RunModel { get; set; } = new RunModel();
 
         #endregion
 
         #region CmdFlashModel
 
-        public static CmdFlashModel CmdFlashModel { get; set; } = new();
+        public static CmdFlashModel CmdFlashModel { get; set; } = new CmdFlashModel();
 
         #endregion
 
@@ -211,7 +211,7 @@ namespace KDA
             IsDeviceConnect = false;
             await Task.Run(() =>
             {
-                usbDevices = new(CyConst.DEVICES_HID);
+                usbDevices = new USBDeviceList(CyConst.DEVICES_HID);
             });
             if (usbDevices != null && usbDevices.Count > 0)
             {
@@ -221,7 +221,7 @@ namespace KDA
                     //if (device is CyHidDevice hid )
                     if (device is CyHidDevice hid && hid.Outputs.RptByteLen == 64)
                     {
-                        HidDeviceModel model = new(hid.Manufacturer,
+                        HidDeviceModel model = new HidDeviceModel(hid.Manufacturer,
                                                    hid.Product,
                                                    null,
                                                    hid.Version,
@@ -353,13 +353,13 @@ namespace KDA
             }
         }
 
-        readonly Random random = new();
+        readonly Random random = new Random();
         public void SetKeysRGBRandom()
         {
             Task.Run(() =>
             {
                 byte[] bytes = new byte[3];
-                KeyColorModel model = new();
+                KeyColorModel model = new KeyColorModel();
                 for (byte i = 0; i < 100; i++)
                 {
                     random.NextBytes(bytes);

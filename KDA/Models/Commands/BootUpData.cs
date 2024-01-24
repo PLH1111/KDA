@@ -5,77 +5,79 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
+using PropertyChanged;
 
-namespace KDA.Models.Commands;
-
-[AddINotifyPropertyChangedInterface]
-public class BootUpData
+namespace KDA.Models.Commands
 {
-
-    public byte Number { get; set; }
-
-    public string NumberStr => $"#{Number}";
-
-
-    public byte KeyIndex { get; set; }
-
-    public string KeyIndexHex
+    [AddINotifyPropertyChangedInterface]
+    public class BootUpData
     {
-        get => KeyIndex.ToHex();
-        set => KeyIndex = value.HexToByte();
-    }
 
-    public byte ColorR { get; set; }
+        public byte Number { get; set; }
 
-    public string ColorRHex
-    {
-        get => ColorR.ToHex();
-        set => ColorR = value.HexToByte();
-    }
-
-    public byte ColorG { get; set; }
-
-    public string ColorGHex
-    {
-        get => ColorG.ToHex();
-        set => ColorG = value.HexToByte();
-    }
+        public string NumberStr => $"#{Number}";
 
 
-    public byte ColorB { get; set; }
+        public byte KeyIndex { get; set; }
 
-    public string ColorBHex
-    {
-        get => ColorB.ToHex();
-        set => ColorB = value.HexToByte();
-    }
+        public string KeyIndexHex
+        {
+            get => KeyIndex.ToHex();
+            set => KeyIndex = value.HexToByte();
+        }
 
-    public byte ColorA { get; set; }
+        public byte ColorR { get; set; }
 
-    public string ColorAHex
-    {
-        get => ColorA.ToHex();
-        set => ColorA = value.HexToByte();
-    }
+        public string ColorRHex
+        {
+            get => ColorR.ToHex();
+            set => ColorR = value.HexToByte();
+        }
 
-    public byte Times { get; set; }
+        public byte ColorG { get; set; }
+
+        public string ColorGHex
+        {
+            get => ColorG.ToHex();
+            set => ColorG = value.HexToByte();
+        }
 
 
-    public BootUpData()
-    {
-    }
+        public byte ColorB { get; set; }
 
-    public BootUpData(byte no)
-    {
-        Number = no;
-    }
+        public string ColorBHex
+        {
+            get => ColorB.ToHex();
+            set => ColorB = value.HexToByte();
+        }
 
-    public BootUpData(byte keyIndex, byte r, byte b, byte g, byte a)
-    {
-        KeyIndex = keyIndex;
-        ColorR = r;
-        ColorB = b;
-        ColorG = g;
-        ColorA = a;
+        public byte ColorA { get; set; }
+
+        public string ColorAHex
+        {
+            get => ColorA.ToHex();
+            set => ColorA = value.HexToByte();
+        }
+
+        public byte Times { get; set; }
+
+
+        public BootUpData()
+        {
+        }
+
+        public BootUpData(byte no)
+        {
+            Number = no;
+        }
+
+        public BootUpData(byte keyIndex, byte r, byte b, byte g, byte a)
+        {
+            KeyIndex = keyIndex;
+            ColorR = r;
+            ColorB = b;
+            ColorG = g;
+            ColorA = a;
+        }
     }
 }

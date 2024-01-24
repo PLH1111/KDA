@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace KDA.Models.Commands;
-
-public class KeyIndexMap
+namespace KDA.Models.Commands
 {
-    public static Dictionary<byte, Key> Keys { get; set; } = new()
+    public class KeyIndexMap
+    {
+        public static Dictionary<byte, Key> Keys { get; set; } = new Dictionary<byte, Key>()
     {
         { 0x00,Key.Escape},
         { 0x01,Key.None},
@@ -148,4 +148,5 @@ public class KeyIndexMap
         { 0x7E,Key.Space},
         { 0x7F,Key.None},
     };
+    }
 }

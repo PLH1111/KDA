@@ -1,50 +1,53 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
 
-namespace KDA.Models.Bootloader;
-
-[AddINotifyPropertyChangedInterface]
-public class ConfigModel
+namespace KDA.Models.Bootloader
 {
-    public ResponseCodes ResponseCode { get; set; } = ResponseCodes.TBA;
 
-
-    public uint Adderss { get; set; }
-
-    public string AdderssHex
+    [AddINotifyPropertyChangedInterface]
+    public class ConfigModel
     {
-        get => Adderss.ToBytes().ToHex();
-        set => Adderss = value.HexToBytes().ToUint();
-    }
+        public ResponseCodes ResponseCode { get; set; } = ResponseCodes.TBA;
 
-    public uint Version { get; set; }
 
-    public string VersionHex
-    {
-        get => Version.ToBytes().ToHex();
-        set => Version = value.HexToBytes().ToUint();
-    }
+        public uint Adderss { get; set; }
 
-    public ConfigModel()
-    {
+        public string AdderssHex
+        {
+            get => Adderss.ToBytes().ToHex();
+            set => Adderss = value.HexToBytes().ToUint();
+        }
 
-    }
+        public uint Version { get; set; }
 
-    public ConfigModel(ResponseCodes responseCode, string adderssHex, string versionHex)
-    {
-        ResponseCode = responseCode;
-        AdderssHex = adderssHex;
-        VersionHex = versionHex;
-    }
+        public string VersionHex
+        {
+            get => Version.ToBytes().ToHex();
+            set => Version = value.HexToBytes().ToUint();
+        }
 
-    public ConfigModel(ResponseCodes responseCode, uint adderss, uint version)
-    {
-        ResponseCode = responseCode;
-        Adderss = adderss;
-        Version = version;
+        public ConfigModel()
+        {
+
+        }
+
+        public ConfigModel(ResponseCodes responseCode, string adderssHex, string versionHex)
+        {
+            ResponseCode = responseCode;
+            AdderssHex = adderssHex;
+            VersionHex = versionHex;
+        }
+
+        public ConfigModel(ResponseCodes responseCode, uint adderss, uint version)
+        {
+            ResponseCode = responseCode;
+            Adderss = adderss;
+            Version = version;
+        }
     }
 }

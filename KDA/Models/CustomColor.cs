@@ -4,23 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using PropertyChanged;
 
-namespace KDA.Models;
-
-[AddINotifyPropertyChangedInterface]
-[Serializable]
-public class CustomColor
+namespace KDA.Models
 {
-    public Color Color { get; set; }
-
-    public CustomColor()
+    [AddINotifyPropertyChangedInterface]
+    [Serializable]
+    public class CustomColor
     {
-    }
+        public Color Color { get; set; }
 
-    public CustomColor(Color color)
-    {
-        Color = color;
-    }
+        public CustomColor()
+        {
+        }
 
-  
+        public CustomColor(Color color)
+        {
+            Color = color;
+        }
+    }
 }

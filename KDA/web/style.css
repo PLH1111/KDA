@@ -1,0 +1,13 @@
+body {
+  overflow: hidden; /* 隐藏滚动条 */
+}
+#imgBoard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  background: url(./keyboard.png) no-repeat;
+  background-size: 100%;
+}

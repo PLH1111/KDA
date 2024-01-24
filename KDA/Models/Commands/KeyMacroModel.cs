@@ -4,41 +4,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TianWeiToolsPro.Extensions;
+using PropertyChanged;
 
-namespace KDA.Models.Commands;
-
-
-
-[AddINotifyPropertyChangedInterface]
-public class KeyMacroModel
+namespace KDA.Models.Commands
 {
-    public byte KeyIndex { get; set; }
-
-    public string KeyName
+    [AddINotifyPropertyChangedInterface]
+    public class KeyMacroModel
     {
-        get => KeyIndex.ToHex();
-        set => KeyIndex = value.HexToByte();
-    }
+        public byte KeyIndex { get; set; }
 
-    public KeyModes KeyMode { get; set; } = KeyModes.NormalKey;
+        public string KeyName
+        {
+            get => KeyIndex.ToHex();
+            set => KeyIndex = value.HexToByte();
+        }
 
-    public byte KeyCode { get; set; }
+        public KeyModes KeyMode { get; set; } = KeyModes.NormalKey;
 
-    public string KeyCodeHex
-    {
-        get => KeyCode.ToHex();
-        set => KeyCode = value.HexToByte();
-    }
+        public byte KeyCode { get; set; }
 
-    public KeyMacroModel()
-    {
+        public string KeyCodeHex
+        {
+            get => KeyCode.ToHex();
+            set => KeyCode = value.HexToByte();
+        }
 
-    }
+        public KeyMacroModel()
+        {
 
-    public KeyMacroModel(byte keyIndex, KeyModes keyMode, byte keyCode)
-    {
-        KeyIndex = keyIndex;
-        KeyMode = keyMode;
-        KeyCode = keyCode;
+        }
+
+        public KeyMacroModel(byte keyIndex, KeyModes keyMode, byte keyCode)
+        {
+            KeyIndex = keyIndex;
+            KeyMode = keyMode;
+            KeyCode = keyCode;
+        }
     }
 }

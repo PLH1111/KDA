@@ -16,8 +16,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TianWeiToolsPro.Controls;
+using TianWeiToolsPro.Service;
 
-namespace KDA;
+namespace KDA
+{
+
+
 
 /// <summary>
 /// CyclicRunningLightSettingsView.xaml 的交互逻辑
@@ -63,7 +67,7 @@ public partial class CyclicRunningLightSettingsView : FilletWindow
         return SelectedColor != null;
     }
 
-    readonly Random random = new();
+    readonly Random random = new Random();
     private void AddCustomColor()
     {
         if (!Settings.IsAutoColor && Settings.Columns * (Settings.CustomColors.Count + 1) > 42)
@@ -91,4 +95,6 @@ public partial class CyclicRunningLightSettingsView : FilletWindow
         }
         return Settings;
     }
+}
+
 }

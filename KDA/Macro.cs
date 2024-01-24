@@ -1,6 +1,7 @@
 ﻿using KDA.Models;
 using KDA.Models.Commands;
 using KDA.Services;
+using PropertyChanged;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

@@ -4,26 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models;
-
-public class AnimationKeyGroups : List<AnimationKeyGroup>
+namespace KDA.Models
 {
-    public void SetAnimation()
-    {
-        foreach (var item in this)
-        {
-            item.SetAnimation();
-        }
-    }
 
 
-    public List<KeyModel> GetKeyModels()
+    public class AnimationKeyGroups : List<AnimationKeyGroup>
     {
-        List<KeyModel> result = new();
-        foreach (var item in this)
+        public void SetAnimation()
         {
-            result.AddRange(item);
+            foreach (var item in this)
+            {
+                item.SetAnimation();
+            }
         }
-        return result;
+
+
+        public List<KeyModel> GetKeyModels()
+        {
+            List<KeyModel> result = new List<KeyModel>();
+            foreach (var item in this)
+            {
+                result.AddRange(item);
+            }
+            return result;
+        }
     }
 }

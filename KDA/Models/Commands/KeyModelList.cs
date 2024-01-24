@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace KDA.Models.Commands;
-public class KeyModelList : List<KeyModel>
+namespace KDA.Models.Commands
 {
-    public KeyModel this[Key key]
+    public class KeyModelList : List<KeyModel>
     {
-        get => this.FirstOrDefault(x => x.Key == key);
+        public KeyModel this[Key key]
+        {
+            get => this.FirstOrDefault(x => x.Key == key);
+        }
     }
 }

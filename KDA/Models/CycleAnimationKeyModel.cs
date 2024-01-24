@@ -7,48 +7,49 @@ using System.Windows;
 using System.Windows.Media;
 using TianWeiToolsPro.Service;
 
-namespace KDA.Models;
-
-public class CycleAnimationKeyModel : List<KeyModel>
+namespace KDA.Models
 {
-
-    public CycleAnimationKeyModel()
+    public class CycleAnimationKeyModel : List<KeyModel>
     {
 
-    }
-
-    public List<AnimationKeyGroups> GetSetAnimationGroupsList(int colums, Color[] brushes)
-    {
-        if (colums <= 0 || brushes == null || brushes.Length == 0)
+        public CycleAnimationKeyModel()
         {
-            return null;
+
         }
 
-        int keyCountPerCycle = colums * brushes.Length * 2;
-        List<KeyModel> keyModels = this.Concat(this.Take(keyCountPerCycle).ToList()).ToList();
-
-        var list = new List<AnimationKeyGroups>();
-
-        for (int i = 0; i < Count / 2; i += 1)
+        public List<AnimationKeyGroups> GetSetAnimationGroupsList(int colums, Color[] brushes)
         {
-            AnimationKeyGroups groups = new();
-            for (int j = 0; j < brushes.Length; j++)
+            if (colums <= 0 || brushes == null || brushes.Length == 0)
             {
-                AnimationKeyGroup group = new(brushes[j]);
-                int index = (2 * i) + (colums * 2 * j);
-                if (index + colums * 2 > keyModels.Count)
-                {
-                    group.AddRange(keyModels.GetRange(index, keyModels.Count - index));
-                }
-                else
-                {
-                    group.AddRange(keyModels.GetRange(index, colums * 2));
-                }
-
-                groups.Add(group);
+                return null;
             }
-            list.Add(groups);
+
+            int keyCountPerCycle = colums * brushes.Length * 2;
+            List<KeyModel> keyModels = this.Concat(this.Take(keyCountPerCycle).ToList()).ToList();
+
+            var list = new List<AnimationKeyGroups>();
+
+            for (int i = 0; i < Count / 2; i += 1)
+            {
+                AnimationKeyGroups groups = new AnimationKeyGroups();
+                for (int j = 0; j < brushes.Length; j++)
+                {
+                    AnimationKeyGroup group = new AnimationKeyGroup(brushes[j]);
+                    int index = (2 * i) + (colums * 2 * j);
+                    if (index + colums * 2 > keyModels.Count)
+                    {
+                        group.AddRange(keyModels.GetRange(index, keyModels.Count - index));
+                    }
+                    else
+                    {
+                        group.AddRange(keyModels.GetRange(index, colums * 2));
+                    }
+
+                    groups.Add(group);
+                }
+                list.Add(groups);
+            }
+            return list;
         }
-        return list;
     }
 }

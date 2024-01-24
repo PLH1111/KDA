@@ -4,21 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models.Commands;
-
-public class BootUpDataList:List<BootUpData>
+namespace KDA.Models.Commands
 {
-    public BootUpDataList()
-    {
 
-    }
-
-    public BootUpDataList(int count)
+    public class BootUpDataList : List<BootUpData>
     {
-        for (byte i = 1; i < count + 1; i++)
+        public BootUpDataList()
         {
-            Add(new BootUpData(i));
-        }
-    }
 
+        }
+
+        public BootUpDataList(int count)
+        {
+            for (byte i = 1; i < count + 1; i++)
+            {
+                Add(new BootUpData(i));
+            }
+        }
+
+    }
 }

@@ -5,11 +5,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models;
-public static class EnumHelper
+namespace KDA.Models
 {
-    public static List<T> ToList<T>() where T : Enum
+    public static class EnumHelper
     {
-        return Enum.GetValues(typeof(T)).OfType<T>().ToList();
+        public static List<T> ToList<T>() where T : Enum
+        {
+            return Enum.GetValues(typeof(T)).OfType<T>().ToList();
+        }
     }
 }

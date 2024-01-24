@@ -173,10 +173,26 @@ namespace KDA.Models
             return _dict[key.ToString()].Index;
         }
 
+        public static byte GetKeyIndex(string key)
+        {
+            if (_dict == null) return 0;
+            if (!_dict.ContainsKey(key)) return 0;
+
+            return (byte)_dict[key].Index;
+        }
+
         public static byte GetKeyValue(Key key)
         {
             if (_dict == null) return 0xFF;
             if (!_dict.ContainsKey(key.ToString())) return 0XFF;
+
+            return _dict[key.ToString()].Value;
+        }
+
+        public static byte GetKeyValue(string key)
+        {
+            if (_dict == null) return 0xFF;
+            if (!_dict.ContainsKey(key)) return 0XFF;
 
             return _dict[key.ToString()].Value;
         }

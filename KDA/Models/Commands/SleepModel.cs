@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PropertyChanged;
 
-namespace KDA.Models.Commands;
+namespace KDA.Models.Commands
 
-
-[AddINotifyPropertyChangedInterface]
-public class SleepModel
 {
-    public SleepTimes SleepTime { get; set; }
-
-    public LightingModes SleepMode { get; set; }
-
-    public SleepModel()
+    [AddINotifyPropertyChangedInterface]
+    public class SleepModel
     {
+        public SleepTimes SleepTime { get; set; }
 
-    }
+        public LightingModes SleepMode { get; set; }
 
-    public SleepModel(SleepTimes sleepTime, LightingModes sleepMode)
-    {
-        SleepTime = sleepTime;
-        SleepMode = sleepMode;
+        public SleepModel()
+        {
+
+        }
+
+        public SleepModel(SleepTimes sleepTime, LightingModes sleepMode)
+        {
+            SleepTime = sleepTime;
+            SleepMode = sleepMode;
+        }
     }
 }

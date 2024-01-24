@@ -1,43 +1,45 @@
 ﻿using System.Windows.Media;
 using TianWeiToolsPro.Extensions;
+using PropertyChanged;
 
-namespace KDA.Models;
-
-[AddINotifyPropertyChangedInterface]
-public class FFTBar
+namespace KDA.Models
 {
-
-    private double heigth = 100;
-    public double Height
+    [AddINotifyPropertyChangedInterface]
+    public class FFTBar
     {
-        get => heigth;
-        set
+
+        private double heigth = 100;
+        public double Height
         {
-            heigth = value;
-            if (heigth.InRange(0, 50))
+            get => heigth;
+            set
             {
-                Fill = Brushes.Green;
-            }
-            else if (heigth.InRange(50, 150))
-            {
-                Fill = Brushes.Lime;
-            }
-            else if (heigth.InRange(150, 250))
-            {
-                Fill = Brushes.Yellow;
-            }
-            else if (heigth.InRange(250, 400))
-            {
-                Fill = Brushes.Gold;
-            }
-            else
-            {
-                Fill = Brushes.Orange;
+                heigth = value;
+                if (heigth.InRange(0, 50))
+                {
+                    Fill = Brushes.Green;
+                }
+                else if (heigth.InRange(50, 150))
+                {
+                    Fill = Brushes.Lime;
+                }
+                else if (heigth.InRange(150, 250))
+                {
+                    Fill = Brushes.Yellow;
+                }
+                else if (heigth.InRange(250, 400))
+                {
+                    Fill = Brushes.Gold;
+                }
+                else
+                {
+                    Fill = Brushes.Orange;
+                }
             }
         }
+
+
+        public Brush Fill { get; set; } = Brushes.Lime;
+
     }
-
-
-    public Brush Fill { get; set; } = Brushes.Lime;
-
 }

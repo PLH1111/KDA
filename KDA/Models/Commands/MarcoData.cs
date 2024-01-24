@@ -1,49 +1,51 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Documents;
 using TianWeiToolsPro.Extensions;
+using PropertyChanged;
 
-namespace KDA.Models.Commands;
-
-[AddINotifyPropertyChangedInterface]
-public class MarcoData
+namespace KDA.Models.Commands
 {
-    public byte Number { get; set; }
-
-    public string NumberStr => $"#{Number}";
-
-    public string Code { get; set; }
-
-    //public string CodeHex
-    //{
-    //    get => Code.ToHex();
-    //    set => Code = value.HexToByte();
-    //}
-
-    public static List<KeyMarcoModes> MarcoModes { get; set; } = EnumHelper.ToList<KeyMarcoModes>();
-
-    public KeyMarcoModes Mode
-    { 
-        get; 
-        set; 
-    } = KeyMarcoModes.KeyMakeThenRelease;
-
-    public byte Times { get; set; }
-
-
-    public MarcoData()
+    [AddINotifyPropertyChangedInterface]
+    public class MarcoData
     {
+        public byte Number { get; set; }
 
-    }
+        public string NumberStr => $"#{Number}";
 
-    public MarcoData(byte no)
-    {
-        Number = no;
-    }
+        public string Code { get; set; }
 
-    public MarcoData(byte number, string code, byte times) : this(number)
-    {
-        Number = number;
-        Code = code;
-        Times = times;
+        //public string CodeHex
+        //{
+        //    get => Code.ToHex();
+        //    set => Code = value.HexToByte();
+        //}
+
+        public static List<KeyMarcoModes> MarcoModes { get; set; } = EnumHelper.ToList<KeyMarcoModes>();
+
+        public KeyMarcoModes Mode
+        {
+            get;
+            set;
+        } = KeyMarcoModes.KeyMakeThenRelease;
+
+        public byte Times { get; set; }
+
+
+        public MarcoData()
+        {
+
+        }
+
+        public MarcoData(byte no)
+        {
+            Number = no;
+        }
+
+        public MarcoData(byte number, string code, byte times) : this(number)
+        {
+            Number = number;
+            Code = code;
+            Times = times;
+        }
     }
 }

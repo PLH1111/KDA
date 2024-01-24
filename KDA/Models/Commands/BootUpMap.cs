@@ -4,26 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models.Commands;
-
-public class BootUpMap
+namespace KDA.Models.Commands
 {
-    public byte Number { get; set; }
-
-    public BootUpDataList MapDatas { get; set; } = new(7);
-
-    public BootUpMap()
+    public class BootUpMap
     {
+        public byte Number { get; set; }
 
-    }
+        public BootUpDataList MapDatas { get; set; } = new BootUpDataList(7);
 
-    public BootUpMap(byte no)
-    {
-        Number = no;
-    }
+        public BootUpMap()
+        {
 
-    public override string ToString()
-    {
-        return $"#{Number:X2}";
+        }
+
+        public BootUpMap(byte no)
+        {
+            Number = no;
+        }
+
+        public override string ToString()
+        {
+            return $"#{Number:X2}";
+        }
     }
 }

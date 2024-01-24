@@ -5,104 +5,105 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace KDA.Models;
-
-public class KeyBar
+namespace KDA.Models
 {
-    public List<KeyModel> Keys01 { get; set; } = new List<KeyModel>();
-
-    public List<KeyModel> Keys02 { get; set; } = new List<KeyModel>();
-
-    public List<KeyModel> Keys03 { get; set; } = new List<KeyModel>();
-
-    public List<KeyModel> Keys04 { get; set; } = new List<KeyModel>();
-
-    public List<KeyModel> Keys05 { get; set; } = new List<KeyModel>();
-
-
-    Random random = new Random();
-    byte[] bytes = new byte[3];
-
-    private Color RandomColor()
+    public class KeyBar
     {
-        random.NextBytes(bytes);
-        return Color.FromRgb(bytes[0], bytes[1], bytes[2]);
-    }
+        public List<KeyModel> Keys01 { get; set; } = new List<KeyModel>();
 
-    public void SetValue(double value)
-    {
-        if (value > 15)
-        {
-            foreach (var key in Keys01)
-            {
-                key.AnimationColor = RandomColor();
-            }
-        }
-        else
-        {
-            foreach (var key in Keys01)
-            {
-                key.AnimationColor = default;
-            }
-        }
+        public List<KeyModel> Keys02 { get; set; } = new List<KeyModel>();
 
-        if (value > 60)
+        public List<KeyModel> Keys03 { get; set; } = new List<KeyModel>();
+
+        public List<KeyModel> Keys04 { get; set; } = new List<KeyModel>();
+
+        public List<KeyModel> Keys05 { get; set; } = new List<KeyModel>();
+
+
+        Random random = new Random();
+        byte[] bytes = new byte[3];
+
+        private Color RandomColor()
         {
-            foreach (var key in Keys02)
-            {
-                key.AnimationColor = RandomColor();
-            }
-        }
-        else
-        {
-            foreach (var key in Keys02)
-            {
-                key.AnimationColor = default;
-            }
+            random.NextBytes(bytes);
+            return Color.FromRgb(bytes[0], bytes[1], bytes[2]);
         }
 
-        if (value > 120)
+        public void SetValue(double value)
         {
-            foreach (var key in Keys03)
+            if (value > 15)
             {
-                key.AnimationColor = RandomColor();
+                foreach (var key in Keys01)
+                {
+                    key.AnimationColor = RandomColor();
+                }
             }
-        }
-        else
-        {
-            foreach (var key in Keys03)
+            else
             {
-                key.AnimationColor = default;
+                foreach (var key in Keys01)
+                {
+                    key.AnimationColor = default;
+                }
             }
-        }
 
-        if (value > 180)
-        {
-            foreach (var key in Keys04)
+            if (value > 60)
             {
-                key.AnimationColor = RandomColor();
+                foreach (var key in Keys02)
+                {
+                    key.AnimationColor = RandomColor();
+                }
             }
-        }
-        else
-        {
-            foreach (var key in Keys04)
+            else
             {
-                key.AnimationColor = default;
+                foreach (var key in Keys02)
+                {
+                    key.AnimationColor = default;
+                }
             }
-        }
 
-        if (value > 240)
-        {
-            foreach (var key in Keys05)
+            if (value > 120)
             {
-                key.AnimationColor = RandomColor();
+                foreach (var key in Keys03)
+                {
+                    key.AnimationColor = RandomColor();
+                }
             }
-        }
-        else
-        {
-            foreach (var key in Keys05)
+            else
             {
-                key.AnimationColor = default;
+                foreach (var key in Keys03)
+                {
+                    key.AnimationColor = default;
+                }
+            }
+
+            if (value > 180)
+            {
+                foreach (var key in Keys04)
+                {
+                    key.AnimationColor = RandomColor();
+                }
+            }
+            else
+            {
+                foreach (var key in Keys04)
+                {
+                    key.AnimationColor = default;
+                }
+            }
+
+            if (value > 240)
+            {
+                foreach (var key in Keys05)
+                {
+                    key.AnimationColor = RandomColor();
+                }
+            }
+            else
+            {
+                foreach (var key in Keys05)
+                {
+                    key.AnimationColor = default;
+                }
             }
         }
     }

@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KDA.Models.Commands;
-
-public class MarcoMapList : List<MarcoMap>
+namespace KDA.Models.Commands
 {
-    public MarcoMapList()
+    public class MarcoMapList : List<MarcoMap>
     {
-    }
-
-    public MarcoMapList(byte count)
-    {
-        for (byte i = 1; i < count + 1; i++)
+        public MarcoMapList()
         {
-            Add(new MarcoMap(i));
+        }
+
+        public MarcoMapList(byte count)
+        {
+            for (byte i = 1; i < count + 1; i++)
+            {
+                Add(new MarcoMap(i));
+            }
         }
     }
 }
