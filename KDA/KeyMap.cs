@@ -34,17 +34,17 @@ namespace KDA.Models
 
     }
 
-    public static class KeyMap
+    //2024-4-15 L.A修改构造函数&初始化keyUnits变量
+    public class KeyMap
     {
-        public static List<KeyUnit> keyUnits { get; }
+        public static List<KeyUnit> keyUnits { get; } = new List<KeyUnit>();
 
         private static Dictionary<string, KeyUnit> _dict;
 
         private static Dictionary<byte, KeyUnit> _codeDict;
 
-        static KeyMap()
+        public static void Init()
         {
-            keyUnits = new List<KeyUnit>();
             keyUnits.Add(new KeyUnit(Key.Escape         , 0x00, 0x29));
             keyUnits.Add(new KeyUnit(Key.F1             , 0x02, 0x3A));
             keyUnits.Add(new KeyUnit(Key.F2             , 0x03, 0x3B));
@@ -167,6 +167,7 @@ namespace KDA.Models
 
         public static int GetKeyIndex(Key key)
         {
+            if (keyUnits.Count == 0) { Init(); }//L.A添加
             if (_dict == null) return 0;
             if (!_dict.ContainsKey(key.ToString())) return 0;
 
@@ -175,6 +176,7 @@ namespace KDA.Models
 
         public static byte GetKeyIndex(string key)
         {
+            if (keyUnits.Count == 0) { Init(); }//L.A添加
             if (_dict == null) return 0;
             if (!_dict.ContainsKey(key)) return 0;
 
@@ -183,6 +185,7 @@ namespace KDA.Models
 
         public static byte GetKeyValue(Key key)
         {
+            if (keyUnits.Count == 0) { Init(); }//L.A添加
             if (_dict == null) return 0xFF;
             if (!_dict.ContainsKey(key.ToString())) return 0XFF;
 
@@ -191,6 +194,7 @@ namespace KDA.Models
 
         public static byte GetKeyValue(string key)
         {
+            if (keyUnits.Count == 0) { Init(); }//L.A添加
             if (_dict == null) return 0xFF;
             if (!_dict.ContainsKey(key)) return 0XFF;
 
@@ -199,6 +203,7 @@ namespace KDA.Models
 
         public static Key GetKeyFormValue(byte value)
         {
+            if (keyUnits.Count == 0) { Init(); }//L.A添加
             if (_codeDict == null) return Key.None;
             if (!_codeDict.ContainsKey(value)) return Key.None;
 

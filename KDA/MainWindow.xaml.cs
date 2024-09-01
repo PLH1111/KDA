@@ -8,6 +8,7 @@ using KDA.Models.Commands;
 using KDA.Services;
 using MahApps.Metro.Controls;
 using NAudio.Wave;
+using Newtonsoft.Json;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
@@ -301,9 +302,6 @@ namespace KDA
 
         public Macro Macro { get; set; } = new Macro();
 
-        public List<string> Animations { get; set; }
-        public List<string> ColorNums { get; set; }
-
         #endregion
 
         #region 命令
@@ -344,8 +342,6 @@ namespace KDA
             MacroComboBox.ItemsSource = MacroList.macros.Select(p => p.Name).ToList();
 
             cefSharpExample.ShowSetting = ResetSetting;
-
-            ColorNums = Enum.GetNames(typeof(ColorNum)).ToList();
 
             logo1.Source = GetFirstImage("Logo");
 
@@ -693,8 +689,6 @@ namespace KDA
 
         protected void InitProperties()
         {
-            Animations = Enum.GetNames(typeof(AnimationId)).ToList();
-
             //第一行按键
             KeyModelList.Add(KeyEscape);
             KeyModelList.Add(KeyF1);
@@ -850,6 +844,8 @@ namespace KDA
 
             InitUsbMonitor();
             RefreshDevices();
+            
+            ListView_SelectionChanged(null, null);//L.A添加
         }
 
         private void Hook_OnKeyDown(object sender, KeyEventArgs e)
@@ -939,8 +935,9 @@ namespace KDA
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = ((System.Windows.Controls.Primitives.Selector)e.Source).SelectedItem.ToString();
-            var id = (AnimationId)Enum.Parse(typeof(AnimationId), item);
+            if (List1 == null || List1.SelectedItem == null) { return; }
+            if (PreviewSliderSpeed == null || PreviewSliderLight == null || List2 == null) { return; }
+            var id = (AnimationId)List1.SelectedIndex;//L.A修改
             AnimationModel model = new AnimationModel()
             {
                 AnimationId = (AnimationIds)(byte)id,
@@ -948,12 +945,13 @@ namespace KDA
                 ColorA = (byte)PreviewSliderLight.Value,
                 Direction = (ColorNum)List2.SelectedIndex,
             };
+            ColorSelect.SetCurrentValue(VisibilityProperty, id == AnimationId.游戏模式 ? Visibility.Visible : Visibility.Collapsed);
+            colorLabel.SetCurrentValue(VisibilityProperty, id == AnimationId.游戏模式 ? Visibility.Collapsed : Visibility.Visible);
+            List2.SetCurrentValue(VisibilityProperty, id == AnimationId.游戏模式 ? Visibility.Collapsed : Visibility.Visible);
 
-            ColorSelect.SetCurrentValue(VisibilityProperty, item == "游戏模式" ? Visibility.Visible : Visibility.Collapsed);
-            colorLabel.SetCurrentValue(VisibilityProperty, item == "游戏模式" ? Visibility.Collapsed : Visibility.Visible);
-            List2.SetCurrentValue(VisibilityProperty, item == "游戏模式" ? Visibility.Collapsed : Visibility.Visible);
-
-            ACH.SetAnimation(model);
+            //ACH.SetAnimation(model);
+            ////pyh 20240311
+            InvokeJs(new UseDataObject() {ledNum = (int)model.AnimationId, color = (int)model.Direction, brightness = model.ColorA, speed = model.Speed });
         }
 
         private void MenuItemDefult_Click(object sender, RoutedEventArgs e)
@@ -974,36 +972,33 @@ namespace KDA
 
         private void PreviewSliderLight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (List1.SelectedItem == null) { return; }
-            var item = List1.SelectedItem.ToString();
-            var id = (AnimationId)Enum.Parse(typeof(AnimationId), item);
-            AnimationModel model = new AnimationModel()
-            {
-                AnimationId = (AnimationIds)(byte)id,
-                Speed = (byte)PreviewSliderSpeed.Value,
-                ColorA = (byte)PreviewSliderLight.Value,
-                Direction = (ColorNum)List2.SelectedIndex,
-
-            };
-
-            ACH.SetAnimation(model);
+            //if (List1 == null || List1.SelectedItem == null) { return; }
+            //if (PreviewSliderSpeed == null || PreviewSliderLight == null || List2 == null) { return; }
+            //var id = (AnimationId)List1.SelectedIndex;//L.A修改
+            //AnimationModel model = new AnimationModel()
+            //{
+            //    AnimationId = (AnimationIds)(byte)id,
+            //    Speed = (byte)PreviewSliderSpeed.Value,
+            //    ColorA = (byte)PreviewSliderLight.Value,
+            //    Direction = (ColorNum)List2.SelectedIndex,
+            //};
+            //ACH.SetAnimation(model);
         }
 
         private void PreviewSliderSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (List1.SelectedItem == null) { return; }
+            //if (List1 == null || List1.SelectedItem == null) { return; }
+            //if (PreviewSliderSpeed == null || PreviewSliderLight == null || List2 == null) { return; }
+            //var id = (AnimationId)List1.SelectedIndex;//L.A修改
+            //AnimationModel model = new AnimationModel()
+            //{
+            //    AnimationId = (AnimationIds)(byte)id,
+            //    Speed = (byte)PreviewSliderSpeed.Value,
+            //    ColorA = (byte)PreviewSliderLight.Value,
+            //    Direction = (ColorNum)List2.SelectedIndex,
+            //};
 
-            var item = List1.SelectedItem.ToString();
-            var id = (AnimationId)Enum.Parse(typeof(AnimationId), item);
-            AnimationModel model = new AnimationModel()
-            {
-                AnimationId = (AnimationIds)(byte)id,
-                Speed = (byte)PreviewSliderSpeed.Value,
-                ColorA = (byte)PreviewSliderLight.Value,
-                Direction = (ColorNum)List2.SelectedIndex,
-            };
-
-            ACH.SetAnimation(model);
+            //ACH.SetAnimation(model);
         }
 
         private void ButtonReadMacro_Click(object sender, RoutedEventArgs e)
@@ -1305,6 +1300,8 @@ namespace KDA
                     }
                 }
                 IsDeviceConnect = GCH.Device.RwAccessible;
+                //L.A添加第一次进入设置页面默认选择Button相关页面
+                if (IsDeviceConnect && MainTimes == 0) { MainTimes++; StackPanelButton_MouseDown(null, null); }
             }
 
             //if(IsDeviceConnect) Growl.Success("连接成功");
@@ -1314,6 +1311,7 @@ namespace KDA
         public ObservableCollection<HidDeviceModel> HidDeviceList { get; set; } = new ObservableCollection<HidDeviceModel>();
         public HidDeviceModel Device { get; set; }
         public bool IsDeviceConnect { get; set; } = true;
+        public int MainTimes { get; set; } = 0;
 
         private void OnIsDeviceConnectChanged()
         {
@@ -1445,7 +1443,15 @@ namespace KDA
 
             CheckBox1.SetCurrentValue(System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty, false);
 
-            var result = HandyControl.Controls.MessageBox.Show("Factory reset will clear all data. Do you want to continue?", "Factory Reset", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBoxResult.Yes;
+            if (_LACurLang == "EN")
+            {
+                result = HandyControl.Controls.MessageBox.Show("Factory reset will clear all data. Do you want to continue?", "Factory Reset", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            } 
+            else if (_LACurLang == "CN") 
+            {
+                result = HandyControl.Controls.MessageBox.Show("出厂重置将清除所有数据, 是否要继续?", "出厂复位", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            }
             if (result == MessageBoxResult.Yes)
             {
                 ACH.ResetDefaultSetting();
@@ -1480,10 +1486,25 @@ namespace KDA
 
         private void List2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (List1.SelectedItem == null) { return; }
+            //if (List1 == null || List1.SelectedItem == null) { return; }
+            //if (PreviewSliderSpeed == null || PreviewSliderLight == null || List2 == null) { return; }
+            //var id = (AnimationId)List1.SelectedIndex;//L.A修改
+            //AnimationModel model = new AnimationModel()
+            //{
+            //    AnimationId = (AnimationIds)(byte)id,
+            //    Speed = (byte)PreviewSliderSpeed.Value,
+            //    ColorA = (byte)PreviewSliderLight.Value,
+            //    Direction = (ColorNum)List2.SelectedIndex,
+            //};
 
-            var item = List1.SelectedItem.ToString();
-            var id = (AnimationId)Enum.Parse(typeof(AnimationId), item);
+            //ACH.SetAnimation(model);
+        }
+
+        private void ButtonSelectColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (List1 == null || List1.SelectedItem == null) { return; }
+            if (PreviewSliderSpeed == null || PreviewSliderLight == null || List2 == null) { return; }
+            var id = (AnimationId)List1.SelectedIndex;//L.A修改
             AnimationModel model = new AnimationModel()
             {
                 AnimationId = (AnimationIds)(byte)id,
@@ -1492,18 +1513,90 @@ namespace KDA
                 Direction = (ColorNum)List2.SelectedIndex,
             };
 
+
             ACH.SetAnimation(model);
+
+            if (id == AnimationId.游戏模式)
+            {
+                Thread.Sleep(200);
+                var keyIndex = cefSharpExample.KeyIndex;
+
+                var selectColor = ColorPicker1.SelectedColor.Value;
+
+                KeyColorModel keyColor = new KeyColorModel(keyIndex, selectColor.R, selectColor.G, selectColor.B, 0) { };
+                ACH.SetKeyColor(keyColor);
+            }
+            else
+            {
+            }
         }
 
-        private void ButtonSelectColor_Click(object sender, RoutedEventArgs e)
+        //pyh 20240311
+        private void InvokeJs(UseDataObject data)
         {
-            var keyIndex = cefSharpExample.KeyIndex;
-
-            var selectColor = ColorPicker1.SelectedColor.Value;
-
-            KeyColorModel keyColor = new KeyColorModel(keyIndex, selectColor.R, selectColor.G, selectColor.B, 0) { };
-            ACH.SetKeyColor(keyColor);
+            //L.A修改，调用web函数传递参数
+            var jsCode = $"setUserData('{data.ledNum},{data.color},{data.index},{data.brightness},{data.speed}')";
+            if (Browser == null) return;
+            if (!Browser.IsBrowserInitialized) return;
+            Browser.ExecuteScriptAsync(jsCode);
         }
+
+        //pyh 20240311
+        class UseDataObject
+        {
+            public int ledNum { get; set; }
+            public int color { get; set; }
+            public int index { get; set; }
+            public int brightness { get; set; }
+            public int speed { get; set; }
+
+        }
+
+
+        #region L.A新增属性和方法
+        public static string _LACurLang = "EN";
+
+        public void LAButton_Click(object sender, RoutedEventArgs e)
+        {
+            string langName = "";
+            if (_LACurLang == "CN") 
+            {
+                langName = "LanguageDictionaryEN";
+                _LACurLang = "EN";
+                LABtnLang.Content = "中文";
+            }
+            else if (_LACurLang == "EN") 
+            {
+                langName = "LanguageDictionaryCN";
+                _LACurLang = "CN";
+                LABtnLang.Content = "EN";
+            }
+            ResourceDictionary langRd = null;
+            try
+            {
+                //根据名字载入语言文件
+                langRd = Application.LoadComponent(new Uri(@"Resources\" + langName + ".xaml", UriKind.Relative)) as ResourceDictionary;
+            }
+            catch (Exception e2)
+            {
+                MessageBox.Show(e2.Message);
+            }
+            if (langRd != null)
+            {
+                //如果已使用其他语言,先清空
+                if (Resources.MergedDictionaries.Count > 0)
+                {
+                    Resources.MergedDictionaries.Clear();
+                }
+                Resources.MergedDictionaries.Add(langRd);
+            }
+            MacroList.LALangRefersh();//宏列表也进行刷新
+
+            //设置背景图片和颜色
+            OnIsDeviceConnectChanged();
+        }
+
+        #endregion
     }
 
     public class CefSharpExample

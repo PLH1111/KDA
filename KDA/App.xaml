@@ -9,6 +9,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources\LanguageDictionaryEN.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/TianWeiToolsPro;component/Themes/Brushes.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/TianWeiToolsPro;component/Themes/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/TianWeiToolsPro;component/Themes/Geometries.xaml" />

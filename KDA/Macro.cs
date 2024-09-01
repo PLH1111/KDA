@@ -4,6 +4,7 @@ using KDA.Services;
 using PropertyChanged;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -77,7 +78,15 @@ namespace KDA
 
                 macros[i].Index = (byte)(i + 1);
 
-                macros[i].Name = $"宏{i + 1}";
+                macros[i].Name = MainWindow._LACurLang == "CN" ? $"宏{i + 1}" : $"Macro{i + 1}";
+            }
+        }
+
+        public void LALangRefersh()
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                macros[i].Name = MainWindow._LACurLang == "CN" ? $"宏{i + 1}" : $"Macro{i + 1}";
             }
         }
 
@@ -91,7 +100,7 @@ namespace KDA
 
                 macros[i] = macro;
 
-                macros[i].Name = $"宏{i + 1}";
+                macros[i].Name = MainWindow._LACurLang == "CN" ? $"宏{i + 1}" : $"Macro{i + 1}";
             }
         }
     }

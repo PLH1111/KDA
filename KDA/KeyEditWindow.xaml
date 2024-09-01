@@ -26,7 +26,7 @@
                 <StackPanel Margin="12,8,0,0" Orientation="Horizontal">
                     <TextBlock FontSize="16" Height="24">新按键：</TextBlock>
                     <TextBox IsReadOnly="True" x:Name='KeyInput' Width="100" Height="30" />
-                    <Button Margin="12,0,12,0" Content="应用" Click="Button_Click" Style="{StaticResource ButtonPrimary}"/>
+                    <Button Margin="12,0,12,0" Content="{DynamicResource Apply}" Click="Button_Click" Style="{StaticResource ButtonPrimary}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

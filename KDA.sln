@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.33530.505
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33801.447
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KDA", "KDA\KDA.csproj", "{11A68D45-26CE-4CF1-8761-B5D58A4E72E0}"
 EndProject

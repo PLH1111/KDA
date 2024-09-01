@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:KDA"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="自定义宏" Height="150" Background="White" Width="500" ResizeMode="NoResize">
+        Title="{DynamicResource CustomMacro}" Height="150" Background="White" Width="500" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="AUTO"/>
@@ -23,10 +23,10 @@
                 Foreground="White" Content="N"/>
 
             <StackPanel Margin="12,4,0,0" Orientation="Vertical">
-                <TextBlock FontSize="16" Height="24">宏类型</TextBlock>
+                <TextBlock FontSize="16" Height="24" Text="{DynamicResource MacroType}"></TextBlock>
                 <StackPanel Orientation="Horizontal">
                     <ComboBox Style="{StaticResource ComboBoxExtend}" x:Name="Combox1" Height="30" Width="150"/>
-                    <Button Margin="12,0,0,0" Content="应用" Style="{StaticResource ButtonPrimary}" Click="Button_Click"/>
+                    <Button Margin="12,0,0,0" Content="{DynamicResource Apply}" Style="{StaticResource ButtonPrimary}" Click="Button_Click"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
