@@ -78,7 +78,7 @@
         <cef:ChromiumWebBrowser Visibility="{Binding IsDeviceConnect, Mode=OneWay, Converter={StaticResource Boolean2VisibilityConverter}}"  Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="30,120,30,0" x:Name="Browser"></cef:ChromiumWebBrowser>
         <!--#endregion-->
         
-        <!--#region 设置-->
+        <!--#region 下方设置-->
         <!--按钮设置-->
         <Border Background="#3a3a3a" x:Name="ButtonSetting" Visibility="{Binding IsDeviceConnect, Mode=OneWay, Converter={StaticResource Boolean2VisibilityConverter}}" Grid.Row="2" Grid.Column="1" BorderThickness="1" BorderBrush="#555555" Margin="8,4,12,4">
             <StackPanel>

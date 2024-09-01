@@ -30,9 +30,6 @@
 	  <None Remove="Sky14.jpg" />
 	  <None Remove="Sky15.jpg" />
 	  <None Remove="Sky16.jpg" />
-	  <None Remove="web\index.html" />
-	  <None Remove="web\keyboard.png" />
-	  <None Remove="web\main.js" />
 	  <None Remove="web\style.css" />
 	</ItemGroup>
 
@@ -71,12 +68,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="web\index.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
-	  <Resource Include="web\keyboard.png">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Resource>
 	  <Resource Include="web\style.css">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Resource>
@@ -89,10 +80,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="web\js\lights.js">
+	  <None Update="web\index.html">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="web\js\main.js">
+	  <None Update="web\keyboard.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="web\lights.js">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="web\main.js">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

@@ -1460,7 +1460,7 @@ namespace KDA
 
         private void ButtonSetButton_Click(object sender, RoutedEventArgs e)
         {
-            var keyIndex = cefSharpExample.KeyIndex;
+            var keyIndex = cefSharpExample.KeyIndex;//js过来的按键index
 
             if (ButtonComboBox.SelectedIndex == 0)
             {

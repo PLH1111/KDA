@@ -2,14 +2,22 @@ let _allKeysMap = new Map();
 //C语言二维数组映射
 //[0][0]=Esc  [0][1]=Null
 //[1][0]=Oem3 [1][1]=D1
-let CMapArr2 = [
-	['Esc'      ,'Null','F1'     ,'F2'  ,'F3'  ,'F4'   ,'F5'  ,'F6'  ,'F7'      ,'F8'       ,'F9'         ,'F10'            ,'F11'    ,'F12'       ,'PrtSc' ,'ScrLk','Pause' ,'VolumeMute','VolumeDown','VolumeUp','Calculator'],
-	['Oem3'     ,'D1'  ,'D2'     ,'D3'  ,'D4'  ,'D5'   ,'D6'  ,'D7'  ,'D8'      ,'D9'       ,'D0'         ,'OemMinus'       ,'OemPlus','Back'      ,'Insert','Home' ,'PageUp','NumLock','Divide' ,'Multiply','Subtract'],
-	['Tab'      ,'Q'   ,'W'      ,'E'   ,'R'   ,'T'    ,'Y'   ,'U'   ,'I'       ,'O'        ,'P'          ,'OemOpenBrackets','Oem6'   ,'Oem5'      ,'Delete','End'  ,'Next'  ,'NumPad7','NumPad8','NumPad9' ,'Add'     ],
-	['Capital'  ,'A'   ,'S'      ,'D'   ,'F'   ,'G'    ,'H'   ,'J'   ,'K'       ,'L'        ,'Oem1'       ,'OemQuotes'      ,'Null'   ,'Enter'     ,'Null'  ,'Null' ,'Null'  ,'NumPad4','NumPad5','NumPad6' ,'Null'    ],
-	['LeftShift','Z'   ,'X'      ,'C'   ,'V'   ,'B'    ,'N'   ,'M'   ,'OemComma','OemPeriod','OemQuestion','Null'           ,'Null'   ,'RightShift','Null'  ,'Up'   ,'Null'  ,'NumPad1','NumPad2','NumPad3' ,'NumEnter'],
-	['LeftCtrl' ,'LWin','LeftAlt','Null','Null','Space','Null','Null','Null'    ,'RightAlt' ,'RWin'       ,'FinalMode'      ,'Null'   ,'RightCtrl' ,'Left'  ,'Down' ,'Right' ,'Null'   ,'NumPad0','Decimal' ,'Null'    ]
+let CMapArr = [
+//	['Esc'      ,'Null','F1'     ,'F2'  ,'F3'  ,'F4'   ,'F5'  ,'F6'  ,'F7'      ,'F8'       ,'F9'         ,'F10'            ,'F11'    ,'F12'       ,'PrtSc' ,'ScrLk','Pause' ,'VolumeMute','VolumeDown','VolumeUp','Calculator'],
+//	['Oem3'     ,'D1'  ,'D2'     ,'D3'  ,'D4'  ,'D5'   ,'D6'  ,'D7'  ,'D8'      ,'D9'       ,'D0'         ,'OemMinus'       ,'OemPlus','Back'      ,'Insert','Home' ,'PageUp','NumLock','Divide' ,'Multiply','Subtract'],
+//	['Tab'      ,'Q'   ,'W'      ,'E'   ,'R'   ,'T'    ,'Y'   ,'U'   ,'I'       ,'O'        ,'P'          ,'OemOpenBrackets','Oem6'   ,'Oem5'      ,'Delete','End'  ,'Next'  ,'NumPad7','NumPad8','NumPad9' ,'Add'     ],
+//	['Capital'  ,'A'   ,'S'      ,'D'   ,'F'   ,'G'    ,'H'   ,'J'   ,'K'       ,'L'        ,'Oem1'       ,'OemQuotes'      ,'Null'   ,'Enter'     ,'Null'  ,'Null' ,'Null'  ,'NumPad4','NumPad5','NumPad6' ,'Null'    ],
+//	['LeftShift','Z'   ,'X'      ,'C'   ,'V'   ,'B'    ,'N'   ,'M'   ,'OemComma','OemPeriod','OemQuestion','Null'           ,'Null'   ,'RightShift','Null'  ,'Up'   ,'Null'  ,'NumPad1','NumPad2','NumPad3' ,'NumEnter'],
+//	['LeftCtrl' ,'LWin','LeftAlt','Null','Null','Space','Null','Null','Null'    ,'RightAlt' ,'RWin'       ,'FinalMode'      ,'Null'   ,'RightCtrl' ,'Left'  ,'Down' ,'Right' ,'Null'   ,'NumPad0','Decimal' ,'Null'    ]
+
+//	['Esc'      ,'Null','F1'     ,'F2'  ,'F3'  ,'F4'   ,'F5'  ,'F6'  ,'F7'      ,'F8'       ,'F9'         ,'F10'            ,'F11'    ,'F12'       ,],//'PrtSc' ,'ScrLk','Pause' ,'VolumeMute','VolumeDown','VolumeUp','Calculator'],
+	['Oem3'     ,'D1'  ,'D2'     ,'D3'  ,'D4'  ,'D5'   ,'D6'  ,'D7'  ,'D8'      ,'D9'       ,'D0'         ,'OemMinus'       ,'OemPlus','Back'      ,],//'Insert','Home' ,'PageUp','NumLock','Divide' ,'Multiply','Subtract'],
+	['Tab'      ,'Q'   ,'W'      ,'E'   ,'R'   ,'T'    ,'Y'   ,'U'   ,'I'       ,'O'        ,'P'          ,'OemOpenBrackets','Oem6'   ,'Oem5'      ,],//'Delete','End'  ,'Next'  ,'NumPad7','NumPad8','NumPad9' ,'Add'     ],
+	['Capital'  ,'A'   ,'S'      ,'D'   ,'F'   ,'G'    ,'H'   ,'J'   ,'K'       ,'L'        ,'Oem1'       ,'OemQuotes'      ,'Null'   ,'Enter'     ,],//'Null'  ,'Null' ,'Null'  ,'NumPad4','NumPad5','NumPad6' ,'Null'    ],
+	['LeftShift','Z'   ,'X'      ,'C'   ,'V'   ,'B'    ,'N'   ,'M'   ,'OemComma','OemPeriod','OemQuestion','Null'           ,'Null'   ,'RightShift',],//'Null'  ,'Up'   ,'Null'  ,'NumPad1','NumPad2','NumPad3' ,'NumEnter'],
+	['LeftCtrl' ,'LWin','LeftAlt','Null','Null','Space','Null','Null','Null'    ,'RightAlt' ,'RWin'       ,'FinalMode'      ,'Null'   ,'RightCtrl' ,],//'Left'  ,'Down' ,'Right' ,'Null'   ,'NumPad0','Decimal' ,'Null'    ]
 ];
+
 //键盘布局名称
 let namesArr = new Array(
 	'Esc','D1','D2','D3','D4','D5','D6','D7','D8','D9','D0','OemMinus','OemPlus','Back','Oem3',
@@ -179,7 +187,7 @@ function keyClick(obj){
 
 	window.setClickKey(name);
 	//调用lights的function   --------1
-	// window.cefSharpExample.testMethod(name);
+	window.cefSharpExample.testMethod(name);
 }
 function clearSingleKeys(){
 	_singleKeysMap.forEach((val,key)=>{
